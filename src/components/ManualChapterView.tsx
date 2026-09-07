@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { PageWordmark } from '@/components/PageWordmark'
+import { PageHeading } from '@/components/PageHeading'
 import { ArrowLeftIcon, ArrowRightIcon } from '@/components/icons'
 import { chapterLink } from '@/components/ManualLayout'
 import type { getManualChapter } from '@/astro/data'
@@ -14,12 +14,7 @@ export function ManualChapterView({ data }: { data: ChapterData }) {
   return (
     <div className="manual-chapter">
       <article>
-        <header>
-          <PageWordmark />
-          <p className="page-subtitle mb-8 text-center text-[0.779625rem] font-normal text-text-secondary sm:text-[0.86625rem]">
-            Manual
-          </p>
-        </header>
+        <PageHeading title="Manual" as="p" className="mb-8" />
         <h1 className="mx-auto w-full max-w-(--measure) text-3xl font-semibold tracking-tight text-text">
           {chapter.title}
         </h1>

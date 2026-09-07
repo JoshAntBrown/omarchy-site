@@ -1,3 +1,4 @@
+import { PageHeading } from '@/components/PageHeading'
 import { useEffect, useState } from 'react'
 import { MeetupCover } from '@/components/MeetupCover'
 import { MeetupMap, PIN_AT, WHOLE_MAP, boxAround } from '@/components/MeetupMap'
@@ -206,19 +207,15 @@ export function MeetupsPage({ rules }: { rules: string }) {
   )
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div className="max-w-2xl">
-          <h1 className="text-3xl font-semibold tracking-tight text-text">
-            Meetups
-          </h1>
-          <p className="mt-3 text-[15px] leading-relaxed text-text-secondary [text-wrap:pretty]">
-            Omarchy meetups are popping up around the world. Find one near you,
-            or start one. They all live on the Omarchy calendar on Luma.
-          </p>
-        </div>
-        <div className="hidden shrink-0 sm:block">{calendar}</div>
-      </header>
+    <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <PageHeading title="Meetups" />
+      <div className="mx-auto mt-8 max-w-2xl text-center">
+        <p className="text-[15px] leading-relaxed text-text-secondary [text-wrap:pretty]">
+          Omarchy meetups are popping up around the world. Find one near you, or
+          start one. They all live on the Omarchy calendar on Luma.
+        </p>
+        <div className="mt-3 hidden sm:block">{calendar}</div>
+      </div>
 
       <nav aria-label="Filter the meetups by region" className="mt-10">
         <ul className="flex flex-wrap gap-2">

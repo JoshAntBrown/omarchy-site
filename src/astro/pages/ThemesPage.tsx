@@ -1,14 +1,11 @@
-import { PageWordmark } from '@/components/PageWordmark'
+import { PageHeading } from '@/components/PageHeading'
 import themes from '@/data/themes.json'
 
 export function ThemesPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <PageWordmark />
-      <header className="mx-auto max-w-2xl text-center">
-        <h1 className="text-center page-subtitle text-[0.779625rem] font-normal text-text-secondary sm:text-[0.86625rem]">
-          Community themes
-        </h1>
+      <PageHeading title="Community themes" />
+      <div className="mx-auto max-w-2xl text-center">
         <p className="mt-3 text-[15px] italic leading-relaxed text-text-secondary [text-wrap:pretty]">
           A theme restyles the whole system at once. Install these community
           themes via{' '}
@@ -18,7 +15,7 @@ export function ThemesPage() {
           in Omarchy. Want yours listed? Open a pull request on the site
           repository.
         </p>
-      </header>
+      </div>
 
       <ul className="mt-10 grid gap-x-4 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
         {themes.map((theme) => (

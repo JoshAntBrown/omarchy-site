@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { ArrowUpRightIcon, DiscordIcon, GithubIcon } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import teams from '@/data/teams.json'
-import { PageWordmark } from '@/components/PageWordmark'
+import { PageHeading } from '@/components/PageHeading'
 
 /** The line under a team, with its one link live: the security page for
  *  the Security team, the address to apply at for the Rangers. */
@@ -42,10 +42,7 @@ const noteLink =
 export function TeamsPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <PageWordmark />
-      <h1 className="text-center page-subtitle text-[0.779625rem] font-normal text-text-secondary sm:text-[0.86625rem]">
-        Teams
-      </h1>
+      <PageHeading title="Teams" />
 
       {teams.map((team) => (
         <section
