@@ -87,8 +87,7 @@ export function devPassthrough() {
           next(error)
         }
       }
-      // Astro rejects extensionless files under trailingSlash: always before
-      // ordinary Vite middleware runs. Publish our allowlisted files first.
+      // Serve published files before Astro attempts to match them as page routes.
       return () =>
         server.middlewares.stack.unshift({ route: '', handle: middleware })
     },

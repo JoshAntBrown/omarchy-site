@@ -9,7 +9,8 @@ export default defineConfig({
   server: { port: 3113 },
   output: 'static',
   site: 'https://omarchy.org',
-  trailingSlash: 'always',
+  trailingSlash: 'ignore',
+  build: { format: 'directory' },
   outDir: './dist/client',
   integrations: [react()],
   vite: {
