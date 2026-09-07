@@ -10,6 +10,8 @@ export type Locale = {
   manual: boolean
   contentLocale?: string
   direction?: 'ltr' | 'rtl'
+  flag?: string
+  navigationDomain?: string
 }
 export const locales = registry as Record<string, Locale>
 export const language = import.meta.env?.PUBLIC_SITE_LOCALE || 'en'

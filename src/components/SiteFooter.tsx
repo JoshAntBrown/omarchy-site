@@ -164,7 +164,7 @@ export function SiteFooter({ path }: { path: string }) {
             .map(([code, entry]) => (
               <a
                 key={code}
-                href={`${entry.domain}${currentPath}`}
+                href={`${entry.navigationDomain ?? entry.domain}${currentPath}`}
                 hrefLang={code}
                 lang={code}
                 aria-current={language === code ? 'page' : undefined}

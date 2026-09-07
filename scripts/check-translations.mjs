@@ -69,6 +69,21 @@ for (const [code, locale] of Object.entries(locales)) {
   }
   if (locale.direction && !['ltr', 'rtl'].includes(locale.direction))
     problems.push(`Invalid text direction: ${code}`)
+  if (locale.flag && !/^[A-Z]{2}$/.test(locale.flag))
+    problems.push(`Invalid flag country code: ${code}`)
+  if (locale.navigationDomain) {
+    const navigation = new URL(locale.navigationDomain)
+    if (
+      navigation.protocol !== 'https:' ||
+      navigation.pathname !== '/' ||
+      navigation.search ||
+      navigation.hash ||
+      navigation.username ||
+      navigation.password ||
+      navigation.port
+    )
+      problems.push(`Navigation domain must be a plain HTTPS origin: ${code}`)
+  }
   new Intl.DateTimeFormat(locale.formatLocale)
   const contentLocale = locale.contentLocale ?? code
   if (contentLocale === 'en' || (selected.length && !selected.includes(code)))

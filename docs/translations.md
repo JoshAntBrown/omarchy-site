@@ -1,6 +1,6 @@
 # Translations
 
-One site, shared components, separate static builds. English remains the source of truth. The country editions cover all Omarchy domains in INWX. Their manual links currently lead to the canonical English manual.
+One site, shared components, separate static builds. English remains the source of truth. Country editions cover our registered domains, and community editions have permanent language addresses under omarchy.org. Their manual links currently lead to the canonical English manual.
 
 ## Build and preview
 
@@ -55,6 +55,8 @@ Every country edition has two permanent addresses: its national domain (for exam
 
 Use country codes for fallback hostnames: `dk`, `jp`, `gr`, and so on. These need not match language codes (`da`, `ja`, `el`). Cloudflare custom domains handle routing and TLS directly; no manual apex CNAME is needed. The national domains use their assigned Cloudflare nameservers.
 
+The language menu links to each edition’s canonical domain by default, including working national domains such as `omarchy.dk`. If a national domain is not ready, set `navigationDomain` to its verified HTTPS fallback address; remove the override after the national domain serves the correct language over valid HTTPS. This choice is shared by the globe selector and footer, regardless of which hostname the visitor uses. A `flag` field supplies the two-letter country code for editions whose primary hostname is under omarchy.org.
+
 The language menu shows colored country flags and preserves the current pathname, query and fragment when the destination has a translation. Otherwise it opens that edition's home page. Language labels use their native spelling. The global English edition uses a globe.
 
 The Singapore, New Zealand and US editions use `contentLocale: "en"` to reuse the English source, while retaining their own domains and regional formatting. Arabic declares `direction: "rtl"`.
@@ -81,6 +83,37 @@ The Singapore, New Zealand and US editions use `contentLocale: "en"` to reuse th
 | English (SG)     | [omarchy.sg](https://omarchy.sg) | [sg.omarchy.org](https://sg.omarchy.org) |
 | Türkçe           | [omarchy.tr](https://omarchy.tr) | [tr.omarchy.org](https://tr.omarchy.org) |
 | English (US)     | [omarchy.us](https://omarchy.us) | [us.omarchy.org](https://us.omarchy.org) |
+
+## Community-owned domains
+
+Language editions also run directly on these hosts. National domains held by volunteers can forward visitors without transferring registration or nameservers.
+
+| Language            | Primary address   | Additional address                |
+| ------------------- | ----------------- | --------------------------------- |
+| Vietnamese          | vi.omarchy.org    | vn.omarchy.org                    |
+| Urdu                | ur.omarchy.org    | pk.omarchy.org                    |
+| Bengali             | bn.omarchy.org    | bd.omarchy.org                    |
+| Catalan             | ca.omarchy.org    | ad.omarchy.org                    |
+| Sinhala             | si.omarchy.org    | lk.omarchy.org                    |
+| Tamil               | ta.omarchy.org    | —                                 |
+| Thai                | th.omarchy.org    | —                                 |
+| Uzbek               | uz.omarchy.org    | —                                 |
+| Italian             | it.omarchy.org    | —                                 |
+| Simplified Chinese  | zh.omarchy.org    | cn.omarchy.org, zh-cn.omarchy.org |
+| Polish              | pl.omarchy.org    | —                                 |
+| Lithuanian          | lt.omarchy.org    | —                                 |
+| Irish               | ga.omarchy.org    | ie.omarchy.org                    |
+| English (Australia) | en-au.omarchy.org | au.omarchy.org                    |
+| English (Nigeria)   | en-ng.omarchy.org | ng.omarchy.org                    |
+| English (Zimbabwe)  | en-zw.omarchy.org | zw.omarchy.org                    |
+
+Arabic also has `ar.omarchy.org`; Turkish already has `tr.omarchy.org`. The regional English editions reuse English content.
+
+After verifying an edition is live, ask its domain owner to configure an HTTP 301 redirect from their apex and www hosts to the language address, preserving the path and query string. Both HTTP and HTTPS should work on the source domain. An existing Cloudflare redirect rule or registrar web-forwarding service may suffice. A DNS CNAME alone does not configure HTTP routing or issue a certificate for the source domain; do not present it as a substitute for a redirect or an explicitly provisioned custom domain.
+
+Once a community-owned domain redirects correctly over HTTPS to its language edition, it can be set as `navigationDomain` while the language URL remains canonical. Verify the final page language and that paths survive the redirect before changing that preference. This field does not attach a Worker custom domain or change DNS.
+
+Before promoting a community-owned national domain to canonical hosting, arrange its custom-domain routing and TLS, verify it serves the correct edition without a redirect loop, then update the registry and rebuild. Keep the language address working independently.
 
 ## Translating the manual next
 
