@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { PageWordmark } from '@/components/PageWordmark'
 import { ArrowLeftIcon, ArrowRightIcon } from '@/components/icons'
 import { chapterLink } from '@/components/ManualLayout'
-import type { getManualChapter } from '@/lib/content'
+import type { getManualChapter } from '@/astro/data'
 
 type ChapterData = Awaited<ReturnType<typeof getManualChapter>>
 
