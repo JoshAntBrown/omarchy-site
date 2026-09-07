@@ -88,7 +88,7 @@ Cloudflare custom domains handle routing and TLS directly. Registered national d
 | Polski           | [pl.omarchy.org](https://pl.omarchy.org) |
 | Lietuvių         | [lt.omarchy.org](https://lt.omarchy.org) |
 | Gaeilge          | [ga.omarchy.org](https://ga.omarchy.org) |
-| Nederlands | [nl.omarchy.org](https://nl.omarchy.org) |
+| Nederlands       | [nl.omarchy.org](https://nl.omarchy.org) |
 
 ## Pointing a new domain to a language site
 
@@ -117,7 +117,7 @@ Keep English chapters in the existing source repository. Store translations sepa
 
 ## Publish English first, translate afterward
 
-Push English component, prose, or Markdown news changes to master. The Pages workflow renders the Markdown and deploys English without waiting for any translations. After that deployment succeeds, the translation workflow regenerates the same English source, finds missing UI/prose keys and missing or stale news by source hash, and invokes Muse with up to eight concurrent batches or stories. UI/prose batches contain at most 20 strings or 8,000 source characters (an indivisible longer HTML block remains intact). Each result must preserve HTML structure and links before it is saved; UI/prose also validates placeholders, numeric values, and command literals. Shared layout, styling, images, and code changes reach every language through the same builds without requiring translation. Successful translations are committed by the Actions bot; failed items remain queued for the hourly retry. A newer English edit invalidates older translations automatically.
+Push English component, prose, or Markdown news changes to master. The Pages workflow renders the Markdown and deploys English without waiting for any translations. After that deployment succeeds, the translation workflow regenerates the same English source, finds missing UI/prose keys and missing or stale news by source hash, and runs the site and news queues concurrently, each with up to eight Muse batches or stories in flight (at most sixteen combined). News does not wait behind site-copy translations. UI/prose batches contain at most 20 strings or 8,000 source characters (an indivisible longer HTML block remains intact). Each result must preserve HTML structure and links before it is saved; UI/prose also validates placeholders, numeric values, and command literals. Shared layout, styling, images, and code changes reach every language through the same builds without requiring translation. Successful translations are committed by the Actions bot; failed items remain queued for the hourly retry. A newer English edit invalidates older translations automatically.
 
 The workflow builds and deploys language sites in a separate six-runner matrix. A model failure does not roll back English publication. If a language deployment fails, the hourly run retries deployment; you can also rerun failed jobs or manually dispatch the workflow. Concurrent runs are serialized; if a rebase conflicts with an editorial change, no forced push is attempted and the next run starts from current master.
 

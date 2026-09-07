@@ -92,20 +92,31 @@ jobs:
           auth.write_text(json.dumps({'schema_version': 1, 'providers': {'meta': {'api_key': key}}}))
           auth.chmod(0o600)
           PY
-      - name: Translate pending site strings in parallel
-        if: steps.pending.outputs.site != '0'
-        id: generate_site
+      - name: Translate site and news concurrently
+        if: steps.pending.outputs.count != '0'
         continue-on-error: true
         env:
           MUSE_MODEL: ${{ vars.MUSE_MODEL || 'muse-spark-1.3-contributor' }}
-        run: python3 scripts/translate-site.py --concurrency 8
-      - name: Translate pending stories in parallel
-        if: steps.pending.outputs.news != '0'
-        id: generate_news
-        continue-on-error: true
-        env:
-          MUSE_MODEL: ${{ vars.MUSE_MODEL || 'muse-spark-1.3-contributor' }}
-        run: python3 scripts/translate-news.py --concurrency 8
+          PENDING_SITE: ${{ steps.pending.outputs.site }}
+          PENDING_NEWS: ${{ steps.pending.outputs.news }}
+        run: |
+          pids=()
+          if [ "$PENDING_SITE" != '0' ]; then
+            python3 scripts/translate-site.py --concurrency 8 &
+            pids+=("$!")
+          fi
+          if [ "$PENDING_NEWS" != '0' ]; then
+            python3 scripts/translate-news.py --concurrency 8 &
+            pids+=("$!")
+          fi
+          # Wait for both queues even if one fails, retaining all valid results.
+          result=0
+          for pid in "${pids[@]}"; do
+            if ! wait "$pid"; then
+              result=1
+            fi
+          done
+          exit "$result"
       - name: Validate completed translations
         run: npm run check:translations
       - name: Commit completed translations
