@@ -53,8 +53,6 @@ export interface HomeData {
 }
 import release from '@/data/version.json'
 
-/** The two ways to run the whole desktop in a window without installing
- *  anything: an app for Apple Silicon Macs, an app for Windows 10 and 11. */
 const TRY = {
   mac: {
     label: 'Try on Mac',
@@ -81,12 +79,6 @@ function useTryDevice() {
   return device
 }
 
-/* What the section's title finishes with, in turn. The first is the claim the
-   campaign makes - everything is every + thing, so its line still types out
-   whole - and the rest are what it means on a desktop. The shared "every"
-   stays put: retyping it four times would spend the animation on the one part
-   that never changes, and holding on "We can fix every" reads as a sentence
-   about to be finished rather than one merely cut off. */
 const FIXES = [
   'thing.',
   ' missing app.',
@@ -95,12 +87,9 @@ const FIXES = [
 ] as const
 const ISO_URL = release.isoUrl
 
-/* A link inside a card's note: underlined from the start, in the border
-   colour, brand on hover - the same as the prose links under the cards. */
 const noteLink =
   'text-text-secondary underline decoration-border-strong underline-offset-4 transition-colors duration-150 ease-out hover:text-text hover:decoration-brand'
 
-// Section navigation stays light, with a full-height target for touch and focus.
 const sectionLink =
   'inline-flex min-h-10 shrink-0 items-center justify-center gap-2 py-2 text-sm font-medium whitespace-nowrap text-text underline decoration-current underline-offset-4 transition-colors duration-150 hover:text-brand hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring [&_svg]:size-5 [&_svg]:shrink-0'
 
@@ -202,15 +191,11 @@ const banner = bannerData as typeof bannerData | null
 
 const NEWS_PATH = /^\/news\/(\d{4})\/(\d{2})\/([^/]+)\/?$/
 
-/** The callout pill. A news address is a router link, so the music keeps
- *  playing across the visit; anything else is a plain link. */
 function HeroCallout({ href, html }: { href: string; html: string }) {
   const className =
     'group inline-flex max-w-full items-center gap-2 border border-brand/40 bg-bg/60 px-3.5 py-1.5 text-left font-mono text-[13px] leading-snug text-brand transition-colors duration-150 ease-out hover:border-brand hover:bg-brand hover:text-bg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring'
   const inner = (
     <>
-      {/* Wraps on a narrow screen rather than cutting the news short; the
-          <s> the old numbers wear when a figure is updated stays legible. */}
       <span
         className="min-w-0 [&_s]:text-current/60"
         dangerouslySetInnerHTML={{ __html: html }}
@@ -270,8 +255,6 @@ export function HomePage({ data }: { data: HomeData }) {
     }
   }, [])
 
-  // Each of these renders twice: in the heading row on a wide screen, at the
-  // end of its section on a narrow one.
   const allPlugins = (
     <a href="https://plugins.omarchy.org" className={sectionLink}>
       All plugins
@@ -332,23 +315,16 @@ export function HomePage({ data }: { data: HomeData }) {
 
   return (
     <main>
-      {/* hero: one screen, three elements. The field and the wordmark are
-          drawn on one shared pixel grid; nothing here repeats the nav. */}
       <section
         id="home"
         data-hero-sentinel
         className={
-          // The hero is a surface you touch, not a passage you read: a long
-          // press on it was raising a selection and the callout menu over the
-          // field instead of doing nothing.
           'pixel-container relative -mt-(--nav-h) flex min-h-svh flex-col overflow-hidden border-b border-border-subtle pt-(--nav-h) select-none [-webkit-touch-callout:none]' +
           (intro ? ' hero-intro' : '')
         }
         style={{ background: 'var(--t-field-bg)' }}
       >
         <HeroShader onPainted={() => setPainted(true)} />
-        {/* The effect panel, only for an address that asks (?etch=...), so
-            the dev server shows the same page as the live one. */}
         {etchAsked ? <EtchPicker /> : null}
 
         {/* The bar's labels, blended against the canvas. They have to live in
@@ -356,19 +332,8 @@ export function HomePage({ data }: { data: HomeData }) {
             isolates everything inside it from the page behind. */}
         <HeroNavGhost />
 
-        {/* The wordmark, the tagline and the buttons are one block, with
-            the same space above it, under the bar, as below it, at the foot
-            of the screen. Before, the word sat a third of the way down and
-            the copy at the very bottom, and the eye had to read the foot of
-            the screen. */}
         <div className="pointer-events-none relative flex flex-1 flex-col items-center px-6">
           <div className="flex-1" />
-          {/* The callout, when there is one: the line the site keeps in its
-              banner.json for the news of the moment, read at build time. A
-              pill over the word, first thing read top down, five cells
-              above it as the copy is five below. The field stands clear of
-              it like it does of the copy. Nothing shifts when there is
-              none; the block is simply shorter. */}
           {banner ? (
             <div
               data-hero-quiet
@@ -380,8 +345,6 @@ export function HomePage({ data }: { data: HomeData }) {
           {/* The slot the field measures its cell size from. Server-rendered
               as the SVG so the wordmark is there before any script runs, then
               handed over to the canvas once it has painted the same pixels. */}
-          {/* In the same bands the field paints the word at rest, so the
-              handover to the canvas changes no pixel. */}
           <OmarchyWordmark
             data-hero-wordmark
             className={
@@ -390,8 +353,6 @@ export function HomePage({ data }: { data: HomeData }) {
             }
             background={WORDMARK_BANDS}
           />
-          {/* Straight under the word, five cells of the lattice down, on
-              every screen. */}
           <div
             data-hero-quiet
             className="pointer-events-auto mt-12 flex w-full max-w-2xl flex-col items-center text-center lg:mt-[calc(var(--pxr)*5)]"
@@ -418,8 +379,6 @@ export function HomePage({ data }: { data: HomeData }) {
               style={{ '--stagger': 1 } as React.CSSProperties}
               className="mt-4 text-[15px] leading-relaxed text-text-secondary"
             >
-              {/* Each sentence keeps its own line, so balancing can never
-                  strand the opening word of the second one up on the first. */}
               <span className="block [text-wrap:balance]">
                 The malleable OS for the age of agents.
               </span>
@@ -463,9 +422,6 @@ export function HomePage({ data }: { data: HomeData }) {
                 onClick={watchLink}
                 render={<Link to="/" hash="watch" />}
               >
-                {/* Filled, and its point is its right edge, so it gets two
-                    pixels more room before the label than the outlined
-                    download glyph needs. */}
                 <PlayIcon data-icon="inline-start" className="mr-0.5" />
                 See it in action
               </Button>
@@ -475,22 +431,10 @@ export function HomePage({ data }: { data: HomeData }) {
         </div>
       </section>
 
-      {/* The case for Omarchy, in one section: what it is, what that buys
-          you, what it looks like in use, and how to get it. These were four
-          separate sections that mostly restated each other. A column of five
-          pillars used to run beside this one, restating in a list what these
-          few sentences and the quote already say; the page introduces the
-          idea here and lets the manual do the explaining. The install is
-          deliberately thin here too: this is a landing page. */}
       <section id="about">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-28">
-          {/* The words on the left, the quote across from them: with the
-              column of pillars gone, a single column left the right half of
-              the page empty. */}
           <div className="grid gap-8 lg:grid-cols-[1.35fr_1fr] lg:gap-20">
             <div>
-              {/* Unattributed on purpose: this is the site's own voice, not
-                  a quotation set apart from it. */}
               <h2
                 data-typed-block
                 className="text-2xl font-semibold tracking-tight text-text [contain:layout] [text-wrap:balance] sm:text-[1.75rem]"
@@ -525,22 +469,14 @@ export function HomePage({ data }: { data: HomeData }) {
                 </a>
               </p>
 
-              {/* A quote marked as one by being one: bigger type, real
-                  quotation marks, a name under it. The accent bar down the
-                  left was generic blockquote furniture, and it read as a
-                  rule the rest of the page does not use. */}
             </div>
 
-            {/* The grid sets the gap below the words on smaller screens. */}
             <div className="lg:justify-self-end lg:self-center lg:[&>figure]:-mt-[3px]">
               <DhhQuote />
             </div>
           </div>
         </div>
 
-        {/* seeing it, as a band across the page: the rail wants the whole
-            window, and the change of ground marks the turn from the case to
-            the evidence without starting a new section */}
         <div
           id="watch"
           data-ground
@@ -567,16 +503,6 @@ export function HomePage({ data }: { data: HomeData }) {
             action={installGuide}
           />
 
-          {/* A fork in the road reads as two things you pick between, so they
-              are cards, the same ones the plugins, themes and community use.
-              Both blurbs run to two lines and both notes to one, so the thing
-              you press sits on the same line in each. The second card used to
-              carry the curl one-liner for an existing Arch install; that route
-              is gone, and in its place are the two Try apps, which is what
-              someone not ready to wipe a drive is actually looking for. The
-              note under the download says how long it takes, and where the
-              checksum is, rather than the size and architecture, which nobody
-              would remember to keep current. */}
           <div className="mt-6 lg:mt-10 grid gap-4 md:grid-cols-2">
             <div className="@container ring-elevation flex min-w-0 flex-col bg-surface p-6">
               <div className="flex items-center gap-2.5">
@@ -630,8 +556,6 @@ export function HomePage({ data }: { data: HomeData }) {
                 taste first.
               </p>
               <div className="mt-auto pt-6">
-                {/* Both apps, the visitor's own machine's filled in once the
-                    browser has said which it is; on Linux, neither. */}
                 <div className="flex flex-wrap gap-2">
                   {(['mac', 'windows'] as const).map((key) => {
                     const Mark = TRY[key].icon
@@ -660,8 +584,6 @@ export function HomePage({ data }: { data: HomeData }) {
             </div>
           </div>
 
-          {/* The two variants worth knowing about. Getting Started is the
-              button above, so it is not repeated here. */}
           <p className="mt-6 text-[13px] leading-relaxed text-text-muted [text-wrap:pretty]">
             The manual also covers{' '}
             <ManualLink slug="dual-boot-install">
@@ -710,10 +632,6 @@ export function HomePage({ data }: { data: HomeData }) {
         </div>
       </section>
 
-      {/* themes: the ones Omarchy ships with, shown the way the picker
-          shows them. Pressing one dresses this site in it, the same trick
-          the picker does behind T, so the keystroke can be tried by hand.
-          The extra themes the community made get their link at the end. */}
       <section id="themes" className="border-t border-border-subtle">
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <SectionHeading
@@ -755,10 +673,6 @@ export function HomePage({ data }: { data: HomeData }) {
         </div>
       </section>
 
-      {/* news: what the project said lately, full width. The figures used to
-          sit beside it and made one screen answer four questions at once;
-          they have the section after this one now, so each can be read on
-          its own. */}
       <section
         id="windows"
         className="border-t border-border-subtle bg-bg-deep"
@@ -775,13 +689,7 @@ export function HomePage({ data }: { data: HomeData }) {
             title="What's been happening"
             action={allNews}
           />
-          {/* Two columns of three: six posts down one wide column read as a
-              thin list. Each item draws its own line, so the rules meet
-              across the gap where a divide-y would stagger. */}
           <ul className="mt-6 lg:mt-8 grid border-t border-border-subtle sm:grid-cols-2 sm:gap-x-10">
-            {/* Six on a wide screen, three on a phone: one column of six
-                posts is a page of scrolling before the numbers, and the
-                button under the list leads to the rest. */}
             {news.slice(0, 6).map((post, i) => (
               <li
                 key={post.slug}
@@ -808,10 +716,6 @@ export function HomePage({ data }: { data: HomeData }) {
                   <span className="font-sans text-base font-medium text-text transition-colors duration-150 ease-out group-hover:text-brand">
                     {post.title}
                   </span>
-                  {/* Two lines of the post, enough to tell what it is about;
-                      the whole first paragraph made six posts read as one
-                      wall of text, and the title carried less weight than
-                      the excerpt under it. */}
                   <span className="line-clamp-2 text-[13px] leading-relaxed text-text-secondary [text-wrap:pretty]">
                     {post.excerpt}
                   </span>
@@ -823,10 +727,6 @@ export function HomePage({ data }: { data: HomeData }) {
         </div>
       </section>
 
-      {/* the figures, on their own: the foundation's funding, the ISO
-          downloads and the repository, one card each, counting up as they
-          arrive. On the light ground, so the page keeps trading dark and
-          light section by section. */}
       <section
         id="figures"
         className="border-t border-border-subtle bg-bg-deep"
@@ -841,7 +741,6 @@ export function HomePage({ data }: { data: HomeData }) {
         </div>
       </section>
 
-      {/* voices: posts from the people who installed it, quoted as written. */}
       <section id="voices" className="border-t border-border-subtle">
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <SectionHeading
@@ -855,7 +754,6 @@ export function HomePage({ data }: { data: HomeData }) {
         </div>
       </section>
 
-      {/* the teams: who steers it, shown together as clusters of faces. */}
       <section id="teams" className="border-t border-border-subtle bg-bg-deep">
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <SectionHeading
@@ -882,7 +780,6 @@ export function HomePage({ data }: { data: HomeData }) {
         </div>
       </section>
 
-      {/* meetups: a rail across the whole window, like the videos. */}
       <section
         id="meetups"
         className="border-t border-border-subtle bg-bg-deep py-12 lg:py-24"
@@ -934,13 +831,6 @@ export function HomePage({ data }: { data: HomeData }) {
   )
 }
 
-/**
- * The quote, in the dressing that won: the glyph inside the card. The panel
- * gives it a place, the oversized green mark anchors it - at this size it
- * reads as two lit pixels, which is the identity - and the inline quotes
- * stay dropped so the mark is the only punctuation dressing the words.
- */
-/** Where he said it: the Lex Fridman conversation, at the moment. */
 const DHH_QUOTE_URL = 'https://youtu.be/NYFGCESmikA?t=7104'
 
 function DhhQuote() {
@@ -952,8 +842,6 @@ function DhhQuote() {
       >
         &ldquo;
       </div>
-      {/* Balanced, so the break lands at the comma between the two clauses
-          instead of stranding "you should" on a line. */}
       <blockquote
         cite={DHH_QUOTE_URL}
         className="font-sans text-xl leading-snug font-medium text-text [text-wrap:balance]"
@@ -962,9 +850,6 @@ function DhhQuote() {
         able to vibe code your operating system.
       </blockquote>
       <figcaption className="mt-6 flex items-center gap-3.5">
-        {/* Sized to weigh the same as the two lines beside it, and framed:
-            the photo's bright ground floated loose on the panel without the
-            hairline seating it. */}
         <img
           src="/assets/images/team/dhh.webp"
           alt=""
@@ -982,8 +867,6 @@ function DhhQuote() {
             Creator of Omarchy
           </span>
         </span>
-        {/* The whole card opens the moment he said it, through this link
-            stretched over it; the play mark is the only thing that shows. */}
         <a
           href={DHH_QUOTE_URL}
           target="_blank"

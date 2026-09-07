@@ -5,8 +5,6 @@ import { getPortedPage } from '../astro/data'
 import { headProps } from '../astro/head'
 import { meetupsSeo } from '../astro/page-seo'
 
-// The guidelines only: the calendar block of the old page is what this page
-// replaces.
 const page = getPortedPage('meetups')
 const rules = (page ? page.html : '').replace(
   /<div class="meetups__calendar">[\s\S]*?<\/div>\s*/,

@@ -1,8 +1,3 @@
-/**
- * Section labels drawn in a 3x5 pixel font, the same idea the wordmark is
- * built on. Every glyph is five rows of three cells, rendered as hard
- * squares so the label reads as pixels rather than as small type.
- */
 
 const GLYPHS: Record<string, string> = {
   A: '111 101 111 101 101',

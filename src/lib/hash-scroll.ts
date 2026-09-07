@@ -1,21 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { claimNextHashScroll, scrollToAnchor } from './anchor-scroll'
 
-/**
- * In-page anchors, made reliable.
- *
- * A router will not move for a location it is already on, so a second click on
- * the same link did nothing at all: land on /#install, scroll back up, press
- * Get Omarchy again and the page just sat there. These links are the page's
- * primary calls to action, so they scroll themselves and never depend on the
- * location having changed.
- *
- * The URL still goes through the router rather than straight into history.
- * The router owns this history stack and restores scroll positions from it,
- * so rewriting the address behind its back left it working from a location it
- * no longer had, and the page would jump somewhere unasked-for on the next
- * navigation. resetScroll is off because the scroll here is the one we want.
- */
+/** Repeated same-page anchor clicks must scroll even when the URL is unchanged. */
 
 /**
  * A click handler for a link to an anchor. On the page that holds it, it takes
@@ -51,13 +37,7 @@ export function useHashLink(hash: string) {
   }
 }
 
-/**
- * The click handler for the mark in the bar. Pressing it should always land
- * at the top of the home page - but a router will not move for a location it
- * is already on, so from anywhere down that page it did nothing at all, and
- * from another page scroll restoration could put you back wherever you last
- * were on it rather than at the top.
- */
+/** Scroll to the homepage top even when already on that route. */
 export function useTopLink() {
   const navigate = useNavigate()
 

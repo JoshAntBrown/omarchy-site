@@ -8,12 +8,6 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@/components/icons'
 import meetups from '@/data/meetups.json'
 import { cn } from '@/lib/utils'
 
-/**
- * The next meetups, on the same full-bleed rail the videos run in: swipe
- * on a phone, drag or use the arrows with a mouse, with the bar under it
- * standing in for the scrollbar. Several small cards show at a time, so
- * the arrows turn a whole view of them rather than one card.
- */
 export function MeetupShowcase({ action }: { action?: ReactNode }) {
   // Keep the first render identical to the built page, then drop past events
   // using the visitor's current time when the page opens.
@@ -68,9 +62,6 @@ export function MeetupShowcase({ action }: { action?: ReactNode }) {
           description={
             <>
               Get together with others who love computers as much as you do.{' '}
-              {/* From a tablet up the second sentence starts its own line, so
-                  the two lines read as two thoughts rather than breaking
-                  mid-sentence. Narrower screens wrap as they need to. */}
               <span className="md:block">
                 Share plugins, present work, and help newcomers into the
                 community.
@@ -96,15 +87,9 @@ export function MeetupShowcase({ action }: { action?: ReactNode }) {
           <li
             key={event.id}
             data-slide={i}
-            // Sized so a whole number of cards fills the content column,
-            // three on a tablet and four on a desktop, with the next one
-            // peeking in from the bleed the way the videos do. The rail's
-            // padding is the column's margins, so 100% here is the column
-            // itself; the gaps come out before dividing.
+            // Subtract gaps before dividing the content width into whole cards.
             className={cn(
               'w-[42.5%] shrink-0 snap-start transition-[opacity,filter] duration-300 ease-out sm:w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_4.5rem)/4)]',
-              // Cards peeking in from the bleed sit back, the way the
-              // videos' neighbours do, so the column reads as the page.
               !rail.inColumn(i) && 'opacity-40 brightness-75',
             )}
           >

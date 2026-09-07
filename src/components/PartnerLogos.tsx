@@ -1,16 +1,7 @@
 import type { SVGProps } from 'react'
 
-/**
- * Third-party marks, kept out of components/icons because they break the one
- * rule that set follows: they carry their own viewBoxes rather than the 24
- * grid. Both draw in currentColor, so they sit in a line of text as the text
- * and follow the theme with it.
- */
-
 type LogoProps = SVGProps<SVGSVGElement>
 
-/** 37signals, drawn in currentColor so the credit link can paint it in the
- *  brand red. */
 export function ThirtySevenSignalsMark(props: LogoProps) {
   return (
     <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" {...props}>
@@ -70,8 +61,6 @@ export function BasecampMark(props: LogoProps) {
   )
 }
 
-/** HEY's hand, the drawn weight rather than the hairline of their pinned-tab
- *  icon, which went spidery next to the other marks at this size. */
 export function HeyMark(props: LogoProps) {
   return (
     <svg

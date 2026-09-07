@@ -39,9 +39,6 @@ function SelectTrigger({
       data-slot="select-trigger"
       data-size={size}
       className={cn(
-        // Same 40px stature, border, fill and focus outline as a button or a search
-        // field: a filter row puts all three side by side, and they used to stand
-        // 32, 40 and 36 pixels tall with three different focus treatments.
         "flex w-fit items-center justify-between gap-2 rounded-lg border border-border-strong bg-bg-deep px-3 text-sm whitespace-nowrap transition-[background-color,border-color] duration-150 ease-out outline-none select-none hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive data-placeholder:text-text-muted data-[size=default]:h-10 data-[size=sm]:h-9 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5",
         className,
       )}
@@ -85,10 +82,7 @@ function SelectContent({
           data-slot="select-content"
           data-align-trigger={alignItemWithTrigger}
           className={cn(
-            // min-w, not w: the popup was pinned to the trigger's exact width, so any
-            // label longer than the trigger overflowed and was clipped by
-            // overflow-x-hidden. p-1 keeps the rows off the border - items were
-            // rendered straight into the panel with nothing around them.
+            // Let the popup grow wider than its trigger to avoid clipping long labels.
             'relative isolate z-50 max-h-(--available-height) min-w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto bg-surface p-1 text-text ring-elevation duration-100 data-[align-trigger=true]:animate-none data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95',
             className,
           )}

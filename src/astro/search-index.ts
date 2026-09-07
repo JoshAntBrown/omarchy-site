@@ -1,5 +1,3 @@
-// Server-only search index builder. Mirrors the getSearchIndex handler in
-// src/lib/content.ts so the palette searches the same entries.
 import manualJson from '../data/manual.json'
 import pluginsJson from '../data/plugins.json'
 import themesJson from '../data/themes.json'

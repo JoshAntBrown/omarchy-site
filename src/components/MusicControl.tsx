@@ -13,25 +13,6 @@ const clock = (seconds: number) => {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 }
 
-/**
- * The one control the track gets. The track is always going - muted from
- * the first paint, with the field moving to it - so the cover is the
- * sound button: muted, it wears the speaker-off mark and a pulsing ring
- * until the first press, so nobody misses that there is sound to be had;
- * unmuted, the mark only shows when the pointer or keyboard reaches it.
- * Beside it the title, who made it, a four-bar meter, and a progress line
- * along the foot of the card that is also where you move through the
- * track - a real range input, so it takes a drag, a tap, the arrow keys
- * and a screen reader alike, and the artist line shows the time while a
- * hand is on it.
- *
- * The sound belongs to the visit, not to a page - it keeps going through
- * scrolling and from page to page - so the control is pinned to the
- * window. It is always there on the home page. Anywhere else it appears
- * once the sound has been turned on and then stays, on or off, so the
- * track is never out of reach. On a phone the card gives way to
- * MusicMenuControl, a row in the open menu.
- */
 /** What the sound is doing, kept in step with the track, and whether this
  *  page shows a control at all: always on the home page, elsewhere only once
  *  the sound has been touched. */
@@ -59,16 +40,6 @@ function useMusicState(path = '/') {
   }
 }
 
-/**
- * The same control for a phone, where the card covered a good part of the
- * hero: a row inside the open menu, under the theme line, laid out like
- * the rows above it, and never taller. Off, it is the speaker mark and
- * "Sound off". On, the label moves up and a small line slides open under
- * it inside the same box: the cover at 18px, then artist and title, with
- * the four-bar meter at the end of the label line. The meter only runs
- * while the menu is open and the sound is on. The whole row is the button.
- * The ring and seeking stay with the card.
- */
 export function MusicMenuControl({
   open,
   path,
@@ -100,10 +71,6 @@ export function MusicMenuControl({
   if (!shown) return null
   const title = TRACK.title.replace(/ \(.*\)$/, '')
   return (
-    // The row keeps the height of the rows above it, on or off. Off, the
-    // label sits centred in it like theirs. On, the label moves up and the
-    // track fades in under it inside the same box, a small cover and one
-    // line of text. The mark and the meter at the ends do not move.
     <button
       type="button"
       onClick={() => music.toggle()}
@@ -111,24 +78,11 @@ export function MusicMenuControl({
       data-no-stamp
       className="flex h-[47px] w-full items-center gap-2.5 text-left text-[15px] text-text-secondary touch-manipulation focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
     >
-      {/* The mark and the meter stay centred in the row whatever the
-          state; only the words between them change. */}
       {on ? (
         <VolumeIcon className="size-5 shrink-0" />
       ) : (
         <VolumeOffIcon className="size-5 shrink-0" />
       )}
-      {/* Nothing here changes size. Off, the label is centred in the row.
-          On, the two part from that middle on one clock: the label moves up
-          12px and the track line, which sits absolutely under it, comes
-          down 8px from just under that middle, moving from the first frame
-          to the last with the label. Its fade runs the same 200ms but on
-          ease-in, so it is faint while it still overlaps the label and comes
-          up as it clears, a light blur melting away with it. Off again, both
-          return together, quicker and on ease-in, the line's fade on ease-out
-          so it is mostly gone before it reaches the label. Six pixels between label
-          and cover, and between cover and text. Held still for reduced
-          motion. */}
       <span className="relative flex h-full min-w-0 flex-1 items-center leading-tight">
         <span
           className={
@@ -245,16 +199,8 @@ export function MusicControl({ path = '/' }: { path?: string }) {
     <div
       data-hero-quiet
       data-no-stamp
-      // Hidden on a phone, where it covered a good part of the hero; the
-      // menu carries MusicMenuControl there instead.
       className="group/card pointer-events-auto fixed bottom-5 left-5 z-(--z-dropdown) hidden h-[46px] items-stretch border border-border-subtle bg-bg/85 supports-backdrop-filter:backdrop-blur-sm sm:flex"
     >
-      {/* The cover is the sound button. Muted it shows the speaker-off
-          mark, and until the sound has been turned on once, its edge
-          breathes in the brand ink. Once the sound is on, the mark shows only when the
-          pointer is on the card or the button was reached by keyboard (a
-          click leaves focus behind too, and that must not count). Touch
-          screens have no hover, so there the mark stays. */}
       <button
         type="button"
         onClick={() => music.toggle()}
@@ -289,8 +235,6 @@ export function MusicControl({ path = '/' }: { path?: string }) {
         <span className="font-sans text-[12px] font-medium text-text">
           {state === 'failed' ? 'The sound could not start' : title}
         </span>
-        {/* The artist line doubles as the time readout while a hand or the
-            pointer is on the bar. */}
         <span className="relative mt-0.5 font-mono text-[12px] text-text-secondary">
           <span className="transition-opacity duration-150 ease-out group-has-[input:hover]/card:opacity-0 group-has-[input:focus-visible]/card:opacity-0 group-has-[input:active]/card:opacity-0">
             {TRACK.artist}
@@ -302,8 +246,6 @@ export function MusicControl({ path = '/' }: { path?: string }) {
           />
         </span>
       </span>
-      {/* The meter: four bars of whole pixels, in the brand ink, moving
-          with the track from the start. */}
       <span
         aria-hidden="true"
         className="mr-3 flex w-[18px] items-end gap-[2px] self-center"

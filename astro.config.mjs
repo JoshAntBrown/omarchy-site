@@ -4,8 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
 import { devPassthrough } from './scripts/dev-passthrough.mjs'
 
-// Static output into dist/client, the folder GitHub Pages uploads: the same
-// shape scripts/assemble-static.mjs lays the checkout's own files over.
+// The static assembler and deployment workflows share dist/client.
 export default defineConfig({
   server: { port: 3113 },
   output: 'static',
@@ -27,8 +26,6 @@ export default defineConfig({
           find: '@/lib/plugins',
           replacement: path.resolve('./src/astro/plugins-client.ts'),
         },
-        // Components keep importing the router; in the Astro build those
-        // imports resolve to the static shim in src/astro instead.
         {
           find: '@tanstack/react-router',
           replacement: path.resolve('./src/astro/router-shim.tsx'),

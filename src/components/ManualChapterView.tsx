@@ -6,9 +6,7 @@ import type { getManualChapter } from '@/astro/data'
 
 type ChapterData = Awaited<ReturnType<typeof getManualChapter>>
 
-/** One chapter: its title, its prose and the pager. The chapter list and the
- * column around it belong to the manual's layout route. Ported chapter HTML
- * is trusted first-party content. */
+/** Chapter HTML is trusted first-party content. */
 export function ManualChapterView({ data }: { data: ChapterData }) {
   const { chapter, prev, next } = data
   if (!chapter) return null

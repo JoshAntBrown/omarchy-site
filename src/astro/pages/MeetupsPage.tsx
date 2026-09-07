@@ -8,15 +8,6 @@ import { COUNTRIES_OF, REGIONS, regionOf } from '@/lib/regions'
 import type { Region } from '@/lib/regions'
 import { cn } from '@/lib/utils'
 
-/**
- * The meetups page: what is coming up, from the Omarchy calendar on
- * Luma, month by month, then what has been, then how to run one. The
- * events are meetups.json, which the refresh job keeps current, drawn
- * the way the home page's strip draws them. The guidelines stay as HTML
- * in the site's own meetups page, so they are edited where they always
- * were. The calendar embed that used to stand here is gone: the events
- * are the page now, and the calendar is a door beside the title.
- */
 /** A meetup as the data carries it. Written out rather than read off the
  *  JSON, whose shape shifts with what the calendar happens to hold. */
 type Meetup = {
@@ -177,8 +168,6 @@ export function MeetupsPage({ rules }: { rules: string }) {
     past: Date.parse(event.start) < now,
     approximate: Boolean(event.geo?.approximate),
   }))
-  // The map glides onto the region or country being looked at: the box
-  // around its dots, past and upcoming, or the whole world.
   const focused = allUpcoming.filter(matches)
   const box =
     region || country
@@ -191,10 +180,8 @@ export function MeetupsPage({ rules }: { rules: string }) {
     setCountry(null)
   }
 
-  // The meetup the reader is on, on the map or in the list.
   const [active, setActive] = useState<string | null>(null)
 
-  // Upcoming meetups by month, in the order they come.
   const months: { name: string; id: string; meetups: Meetup[] }[] = []
   for (const meetup of upcoming) {
     const name = inZone(meetup, { month: 'long', year: 'numeric' })
@@ -208,8 +195,6 @@ export function MeetupsPage({ rules }: { rules: string }) {
       })
   }
 
-  // The way on to the calendar, in the plain link the home page's
-  // sections end on rather than a boxed button.
   const calendar = (
     <a
       href={CALENDAR_URL}
@@ -235,9 +220,6 @@ export function MeetupsPage({ rules }: { rules: string }) {
         <div className="hidden shrink-0 sm:block">{calendar}</div>
       </header>
 
-      {/* The regions as chips, a legend for the map and a filter for the
-          cards in one, with the countries of the chosen region under
-          them. Each chip carries its count. */}
       <nav aria-label="Filter the meetups by region" className="mt-10">
         <ul className="flex flex-wrap gap-2">
           {[null, ...regions].map((r) => {
@@ -328,8 +310,6 @@ export function MeetupsPage({ rules }: { rules: string }) {
         }}
         active={active}
         onActive={setActive}
-        // A world map on a phone is a postage stamp with dots too close to
-        // tell apart, so the chips carry the filtering there on their own.
         className="mt-6 hidden sm:block"
       />
 
@@ -373,9 +353,6 @@ export function MeetupsPage({ rules }: { rules: string }) {
 
       <SectionActions>{calendar}</SectionActions>
 
-      {/* What has been: a wall of small covers in grey, apart from the
-          calendar above in size and in colour, each coming back to colour
-          under the pointer. A meetup that had no cover wears the mark. */}
       {past.length > 0 ? (
         <section
           aria-labelledby="past-meetups"
@@ -445,8 +422,6 @@ export function MeetupsPage({ rules }: { rules: string }) {
         </section>
       ) : null}
 
-      {/* The guidelines, as the site's own meetups page keeps them: HTML
-          edited in place, drawn here in the ported prose. */}
       {rules ? (
         <section
           id="run-your-own"

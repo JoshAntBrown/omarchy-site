@@ -22,9 +22,7 @@ export const MUSIC_EVENT = 'omarchy-music'
 export const TRACK = {
   title: 'We Can Fix Everything (The Ultimate Machine)',
   artist: 'Kevin Koontz',
-  /** Served from the site itself, from public/music. */
   src: '/music/kevin_koontz-we_can_fix_everything.mp3',
-  /** The cover, 176px square: shown at 44 css px, sharp on dense screens. */
   art: '/music/kevin_koontz-we_can_fix_everything.webp',
 }
 
@@ -368,8 +366,6 @@ export const music = {
    */
   sample(now: number): MusicSample {
     if (!live() || !this.sounding) {
-      // The timeline, at wherever the track is. Beats are the ones between
-      // the last read and this.
       const position = live() ? audio!.currentTime : clockPosition(now)
       timelineBands(position, sample.bands)
       sample.beat = timelineAt < 0 ? 0 : timelineBeat(timelineAt, position)

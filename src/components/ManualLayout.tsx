@@ -11,18 +11,7 @@ export function chapterLink(slug: string) {
     : ({ to: '/manual/$slug/', params: { slug } } as const)
 }
 
-/**
- * The manual's shell: the chapter list, and the column the chapter itself is
- * rendered into. It belongs to the layout route rather than to either page,
- * so moving between the manual's opening page and a chapter leaves it
- * mounted: it was being rebuilt on every such move, which restarted the
- * scrollbar's fade under a pointer that had never left it.
- *
- * The list sticks at the offset it already sits at, the page's own 3rem
- * below the bar, rather than at the bar itself: catching 3rem higher than it
- * started moved the list the moment the page scrolled, and back on the way
- * home.
- */
+/** Sticky chapter navigation and the chapter content slot. */
 export function ManualLayout({
   toc,
   children,
@@ -32,23 +21,12 @@ export function ManualLayout({
 }) {
   return (
     <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      {/* Keep a minimum gutter beside the sidebar's rule. Any extra room
-          sits here too, with the chapter held to its reading measure and
-          aligned to the page's right edge. */}
       <div className="grid gap-12 lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-x-8">
-        {/* The page's own 3rem sits above the list; the same 3rem is kept
-            below it, so the list is inset equally at both ends of the
-            screen. The gutter is the list's padding, not the panel's, so the
-            scroll area reaches the panel's edge and its scrollbar sits out by
-            the rule rather than against the chapter names. */}
         <nav
           aria-label="Manual chapters"
           className="hidden self-start border-r border-border-subtle lg:sticky lg:top-[calc(var(--nav-h)+3rem)] lg:block"
         >
-          {/* The height is set here rather than left to a flex column: the
-              scroll area's viewport fills its root, and a root sized by flex
-              growth gave it nothing definite to fill, so the list ran past
-              the screen instead of scrolling inside it. */}
+          {/* The scroll viewport needs a definite height to constrain its contents. */}
           <ScrollArea className="h-[calc(100dvh-var(--nav-h)-6rem)]" scrollFade>
             <ol className="flex flex-col pr-6">
               {toc.map((entry) => (
@@ -60,8 +38,6 @@ export function ManualLayout({
                       className: 'bg-surface-2 text-text font-medium',
                     }}
                     activeOptions={{ exact: true }}
-                    // One line each; a long name is cut with an ellipsis and
-                    // shown whole on hover.
                     title={entry.title}
                   >
                     {entry.title}

@@ -1,6 +1,3 @@
-// Astro-native data layer: the same JSON the TanStack loaders read, without
-// server functions. Shapes mirror src/lib/content.ts so route components get
-// identical props.
 import manualJson from '../data/manual.json'
 import pagesJson from '../data/pages.json'
 import pluginsJson from '../data/plugins.json'

@@ -2,16 +2,6 @@ import type { ReactNode, RefObject } from 'react'
 import { SearchIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'
 
-/**
- * The one search field on the site. There were three hand-rolled copies with
- * different right padding, one stray corner radius, and a focus ring that
- * disagreed with every other control, so no two filter rows looked alike.
- *
- * It stands 40px like the buttons beside it, sets 16px text because anything
- * smaller makes iOS Safari zoom the page on focus, and puts the icon over the
- * input rather than beside it so the border tells the truth about the hit
- * area. Focus is the same accent outline the rest of the site uses.
- */
 export function SearchField({
   value,
   onChange,

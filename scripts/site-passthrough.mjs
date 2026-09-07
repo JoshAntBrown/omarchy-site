@@ -21,21 +21,14 @@ export const WHOLE = [
   'CNAME',
   '.nojekyll',
   'plans',
-  // Not yet redesigned: served as they are until each is absorbed.
   'screensaver',
   'discord',
 ]
 
-/** Copied except for the rendered pages, which the app now produces: the
- *  images beside news posts and manual chapters, the omakub page's, and
- *  the brand page's downloadable files. */
+/** Copy supporting assets, excluding index.html pages rendered by Astro. */
 export const ASSETS_ONLY = ['news', 'manual', 'omakub', 'brand']
 
-/**
- * Addresses omarchy.org still answers for that the redesign folded into
- * other pages. GitHub Pages cannot redirect, so each gets a page that does
- * - the same way the site's own /discord/ has always worked.
- */
+/** Static redirect pages for supported alternate URLs. */
 /** The standalone plugin directory. */
 export const PLUGINS_SITE = 'https://plugins.omarchy.org'
 

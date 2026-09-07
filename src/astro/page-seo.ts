@@ -1,5 +1,3 @@
-// Page metadata. The literals match the old route heads verbatim; Base.astro
-// turns them into title, description, canonical, and card tags.
 import { SITE_DESCRIPTION, excerptFromHtml, seo } from '../lib/seo'
 import type { NewsPost } from '../lib/news'
 import type { getManualChapter } from './data'

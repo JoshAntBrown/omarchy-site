@@ -86,9 +86,7 @@ export function PluginCard({ plugin }: { plugin: CatalogueEntry }) {
         </p>
       </div>
 
-      {/* Focus ring for the stretched link. It is drawn inward: the card
-          clips its own overflow, so a ring outside this overlay's box fell
-          entirely outside the card and focus looked like it never landed. */}
+      {/* Inset the focus ring to keep it inside the card clip. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 rounded-xl group-has-[a:focus-visible]:-outline-offset-2 group-has-[a:focus-visible]:outline-2 group-has-[a:focus-visible]:outline-ring"

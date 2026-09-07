@@ -5,18 +5,11 @@ import type { VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  // transition-all animated width, height and every colour at once, which is
-  // both a layout-recalculation trap and the reason hover felt mushy; the
-  // properties are listed instead. Press is a scale rather than the old 1px
-  // nudge, which shifted the label against its own icon.
   'group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding font-medium whitespace-nowrap outline-none transition-[background-color,border-color,color,transform] duration-150 ease-out select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-ring active:scale-[0.96] disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0',
   {
     variants: {
       variant: {
-        // Every fill is opaque. The translucent hovers these had (primary at
-        // 80%, input at 30%) let the hero's moving field show through the one
-        // surface on the site that is never still, and every prominent button
-        // was overriding them locally to get a solid one back.
+        // Opaque fills keep the hero animation from showing through controls.
         default:
           'bg-primary text-primary-foreground hover:bg-[color-mix(in_oklch,var(--color-primary),white_14%)]',
         outline:
@@ -29,11 +22,6 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
-        // Heights line up with the 40px search fields and clear the 40px
-        // desktop hit-area floor. The old scale topped out at 36px with the
-        // same 10px padding at every size, so a large button was as cramped
-        // as a small one and every real one overrode its own height. Padding
-        // on an icon's side is trimmed 2px, which optically centres the pair.
         xs: "h-8 gap-1.5 px-2.5 text-xs has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-4",
         sm: "h-9 gap-1.5 px-3 text-sm has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 [&_svg:not([class*='size-'])]:size-4",
         default:

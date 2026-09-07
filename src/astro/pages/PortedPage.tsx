@@ -7,8 +7,6 @@ import { PageWordmark } from '@/components/PageWordmark'
  * /workstations, /potato, /server, /omakub, /brand. Unknown paths 404. The
  * teams page has a route of its own, built from teams.json.
  */
-/** The pages that read best on the news column's measure: prose and short
- *  lists, no galleries or member grids to give the room to. */
 const NARROW = new Set([
   'patrons/badges',
   'server',
@@ -37,7 +35,6 @@ export function PortedPage({
   const path = (slug ?? '').replace(/\/+$/, '')
   const narrow = NARROW.has(path)
   const hasSubtitle = ['foundation', 'potato'].includes(path)
-  // Centre the titles beneath the security wordmark and above the badges.
   const centred =
     path === 'patrons/badges' ||
     path === 'patrons' ||

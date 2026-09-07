@@ -34,8 +34,6 @@ const meetups = JSON.parse(
 // two-letter one.
 const alpha2 = new Map(countries.map((c) => [c.ccn3, c.cca2]))
 const land = feature(atlas, atlas.objects.countries)
-// Antarctica stands out of the picture: nothing happens there, and it
-// would take a fifth of the height.
 land.features = land.features.filter((f) => f.id !== '010')
 
 const projection = geoEqualEarth().fitWidth(WIDTH, land)

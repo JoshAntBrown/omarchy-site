@@ -1,12 +1,6 @@
 import { NOT_FOUND_HEIGHT, NOT_FOUND_WIDTH } from '@/data/not-found-bitmap'
 import { cn } from '@/lib/utils'
 
-/**
- * The brand marks, drawn in currentColor so they follow the active theme:
- * text-brand where they should carry the accent. The public SVGs they
- * replace are baked #9ece6a, which only Tokyo Night could wear.
- */
-
 /** The square-spiral glyph from public/brand/omarchy-logo.svg, inlined. The
  *  favicon is drawn from this same path, so the two cannot drift apart. */
 export const OMARCHY_MARK_PATH =
@@ -30,12 +24,6 @@ export function OmarchyMark({ className }: { className?: string }) {
   )
 }
 
-/**
- * The same glyph as five strokes, so the header can draw it on hover: the
- * frame, the two stems, and the inner spiral in one sweep out to its tail.
- * Every path is normalised to a length of 1 for the dash animation, which
- * lives in styles.css under "nav mark".
- */
 export function OmarchyMarkDrawn({ className }: { className?: string }) {
   return (
     <svg
@@ -55,12 +43,6 @@ export function OmarchyMarkDrawn({ className }: { className?: string }) {
   )
 }
 
-/**
- * The bands the hero field paints the word in at rest: five rows of crest,
- * two of hover, four of lit, three of mid, five of dim, over the nineteen
- * rows of the mask. Anywhere the wordmark stands on its own it wears these,
- * so it is the same mark as the one the canvas draws.
- */
 export const WORDMARK_BANDS =
   'linear-gradient(to bottom, var(--t-field-crest) 0 26.316%, var(--t-field-hover) 26.316% 36.842%, var(--t-field-lit) 36.842% 57.895%, var(--t-field-mid) 57.895% 73.684%, var(--t-field-dim) 73.684% 100%)'
 
@@ -105,12 +87,6 @@ export function OmarchyWordmark({
   )
 }
 
-/**
- * NOT FOUND, in the wordmark's letterforms. Same construction as
- * OmarchyWordmark - a mask over currentColor - so the 404 wears whatever
- * the theme is wearing, and the two marks can never drift apart in
- * treatment. The cells come from [[not-found-bitmap]].
- */
 export function NotFoundWordmark({ className, label, ...rest }: WordmarkProps) {
   return (
     <div

@@ -17,13 +17,6 @@
  */
 export const SITE_URL = 'https://omarchy.org'
 
-/**
- * The site's own summary, and the fallback for any page without one. These
- * are the hero's two sentences, verbatim. Card and page should not disagree,
- * and the title already says "Beautiful, fun & agentic Linux by DHH" -
- * a description that repeats it spends both of the card's lines saying the
- * line above again.
- */
 export const SITE_DESCRIPTION =
   'The malleable OS for the age of agents. Vibe your way through every alteration, tweak, and desire.'
 

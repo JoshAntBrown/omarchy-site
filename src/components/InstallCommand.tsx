@@ -5,11 +5,6 @@ import { cn } from '@/lib/utils'
 
 const swapTransition = { type: 'spring', duration: 0.3, bounce: 0 } as const
 
-/**
- * A terminal-style one-liner with a copy button. The confirmation swaps the
- * icon (blur + scale cross-fade, checkmark draws itself in) for ~1.5s so the
- * user knows the copy landed.
- */
 export function InstallCommand({
   command,
   className,

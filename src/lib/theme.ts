@@ -1,10 +1,4 @@
 import { inlineJson } from './inline-json'
-/**
- * Site themes: the stock Omarchy themes, applied the way Omarchy applies
- * them. There is no light/dark switch; there are themes, opened with T
- * (Omarchy's own chord still works, but Hyprland eats it before the browser
- * sees it), and every token in styles.css resolves per theme.
- */
 
 import { OMARCHY_MARK_PATH } from '@/components/Brand'
 import { runThemeViewTransition } from '@/lib/theme-transition'
@@ -52,21 +46,8 @@ export const PICKER_STATE_EVENT = 'omarchy-picker-state'
 /** Set once the user has seen the picker or dismissed the welcome notice. */
 export const HINT_KEY = 'omarchy-theme-hint-seen'
 
-/**
- * Pre-paint script injected into <head>: stamps <html data-theme> from
- * localStorage before first paint, so there is never a flash of the wrong
- * theme. A first visit has nothing stored, and gets one of the themes at
- * random, kept from then on so every page of the visit wears the same one
- * and the picker can change it like any other choice. The draw follows
- * the system: a light theme for someone in light mode, a dark one for
- * someone in dark mode, since a page in the wrong mode is the first thing
- * a new visitor would notice. Any theme is still theirs to pick. Only when
- * storage itself is unavailable does the page fall back to Tokyo Night.
- *
- * The tab icon is created here too, outside React. paintFavicon() replaces
- * that same tagged link; it must not touch a <link> React owns, or React
- * later tries to removeChild a node whose parent is already gone.
- */
+/** Apply the saved palette before paint, or select one matching the system color scheme.
+ * The favicon is owned outside React so replacing it cannot break reconciliation. */
 export const themeInitScript = `(function(){try{var t=localStorage.getItem(${inlineJson(THEME_KEY)});var ok=${inlineJson(
   SITE_THEMES.map((t) => t.id),
 )};var light=${inlineJson(
@@ -85,16 +66,7 @@ export function readTheme(): string {
   return DEFAULT_THEME
 }
 
-/**
- * Redraws the tab icon in the active theme's accent, the same way the marks
- * in the header and footer follow it. The glyph ships as a file baked in
- * Tokyo Night green, which only that one theme could wear, so this replaces
- * the tagged link with the same path painted in the current color. Browsers
- * cache a favicon by its element, not its URL, so the link is replaced
- * outright rather than re-pointed. Only [data-theme-icon] is touched: a
- * React-owned <link rel="icon"> pulled out of <head> crashes the next
- * commit with removeChild on a null parent.
- */
+/** Replace the favicon link to invalidate browsers that cache it by element. */
 export function paintFavicon() {
   const brand = getComputedStyle(document.documentElement)
     .getPropertyValue('--color-brand')
@@ -136,11 +108,6 @@ function toBytes(color: string) {
 
 const hex = (n: number) => n.toString(16).padStart(2, '0')
 
-/**
- * The colour actually painted at the very top of the window: the first thing
- * under that edge with something opaque behind it. The bar itself is skipped
- * when it has no surface, which is most of the time on a phone.
- */
 /**
  * The page's own ground at a point: the section, main or body it sits on,
  * never the content laid over that. A plugin card is lighter than the section
@@ -223,13 +190,6 @@ function topColor() {
   return groundAt(Math.floor(document.documentElement.clientWidth / 2), 1)
 }
 
-/**
- * Keeps the browser's own chrome on the colour the page is showing it. Safari
- * tints the strip behind the status bar with this, so a value baked in at
- * build time left every other theme framed in Tokyo Night's background,
- * and a single value per theme left every section but one framed in another
- * section's. It follows the scroll instead.
- */
 export function paintChrome() {
   const root = getComputedStyle(document.documentElement)
   const fallback = root.getPropertyValue('--color-bg').trim()

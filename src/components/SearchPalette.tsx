@@ -7,18 +7,7 @@ import type { SearchHit } from '@/lib/search'
 import { KIND_LABEL, OPEN_SEARCH_EVENT, searchAll } from '@/lib/search'
 import { pluginUrl } from '@/lib/plugins'
 
-/**
- * Search the manual from anywhere, as a palette rather than a field in the
- * bar. The bar has no surface of its own over the hero and its labels are
- * painted by a blended ghost; text can be duplicated into a difference layer,
- * an input with a border and a caret cannot. A button can, so the bar carries
- * the button and the search itself opens over the page - the same shape the
- * theme picker uses, and the same shape on a phone as on a desktop.
- *
- * The index loads once on opening, not with the page. After
- * that a query is a pass over an array: results come back on the keystroke,
- * with no debounce and no request to fall out of order.
- */
+/** Site search dialog with keyboard selection and focus restoration. */
 
 const typing = (el: HTMLElement | null) =>
   !!el &&
@@ -51,8 +40,6 @@ export function SearchPalette() {
 
   const close = useCallback(() => {
     setOpen(false)
-    // Back to whatever opened it, without a ring the mouse user never asked
-    // for - the same rule the theme picker follows.
     restore.current?.focus({ focusVisible: false })
   }, [])
 
@@ -138,7 +125,6 @@ export function SearchPalette() {
       return
     }
     if (hit.kind === 'plugin') {
-      // The directory is its own site now; a new tab, like every link out.
       window.open(pluginUrl(hit.slug), '_blank', 'noopener')
       return
     }
@@ -204,8 +190,6 @@ export function SearchPalette() {
           </button>
         </div>
 
-        {/* How many landed, for a screen reader; the list itself only says
-            what they are. */}
         <div className="sr-only" aria-live="polite">
           {query.trim() && index
             ? hits.length === 0
@@ -241,8 +225,7 @@ export function SearchPalette() {
                     type="button"
                     role="option"
                     aria-selected={at === active}
-                    // Not a tab stop: the arrows walk this list, and Tab
-                    // stepping through ten results would be a worse way in.
+                    // Arrow keys move the selection; results are excluded from the tab order.
                     tabIndex={-1}
                     onPointerDown={(event) => {
                       event.preventDefault()
@@ -254,9 +237,6 @@ export function SearchPalette() {
                       (at === active ? 'bg-surface-2' : '')
                     }
                   >
-                    {/* One shape for four kinds: a manual result leads with
-                        its heading and names its chapter, everything else
-                        leads with its title and names its author or date. */}
                     <span className="flex items-baseline gap-2">
                       <span className="truncate font-sans text-sm font-medium text-text">
                         {hit.kind === 'manual'

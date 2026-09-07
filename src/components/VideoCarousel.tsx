@@ -15,15 +15,6 @@ export type CarouselVideo = {
   start?: number
 }
 
-/**
- * A full-bleed video rail, one big slide centered with its neighbours
- * peeking dimmed from the edges, the same way the themes rail runs the
- * whole page width. Swiping works natively through scroll-snap; the
- * arrows in the heading row page the same strip. Clicking a peeking
- * slide brings it to center; clicking the centered slide swaps its
- * thumbnail for the YouTube embed playing in place, and moving on
- * silences it so a video can never keep talking from off-screen.
- */
 export function VideoCarousel({
   title,
   description,
@@ -37,10 +28,6 @@ export function VideoCarousel({
   level?: 2 | 3
   anchor?: string
 }) {
-  // Narrow screens get the plain YouTube embed. The badge is a desktop
-  // affordance: it exists so a hover can promise the click, and a thumbnail
-  // you tap once to reveal a player you tap again is a step too many on a
-  // phone.
   const narrow = useIsNarrow()
   const rail = useRail({ count: videos.length, align: 'center' })
   const { index, glideTo } = rail
@@ -124,10 +111,6 @@ export function VideoCarousel({
               <button
                 type="button"
                 onClick={() => (i === index ? setPlaying(video.id) : goTo(i))}
-                // A thumbnail is something you drag; a button would otherwise
-                // claim the pointer cursor across the whole rail and leave
-                // grab showing only in the gaps. Only the play badge asks
-                // to be clicked, so only it carries the pointer.
                 className="group relative block w-full cursor-grab text-left active:cursor-grabbing"
                 aria-label={
                   i === index
@@ -151,18 +134,6 @@ export function VideoCarousel({
                     aria-hidden="true"
                     className="absolute inset-0 flex items-center justify-center"
                   >
-                    {/* The mark is already a frame: its spiral leaves the
-                        middle nine of its fifteen cells hollow, so the play
-                        glyph sits inside the logo. Both draw in currentColor
-                        and there is nothing behind them, so the badge is one
-                        accent-colored object rather than a glyph on a plate,
-                        and a single shadow lifts the whole of it off the
-                        thumbnail. At 75px a cell is exactly 5px, and nothing
-                        scales on hover, which would land the mark's edges
-                        between pixels. At rest the badge sits a little faded
-                        into the still, and hovering the thumbnail brings it
-                        back to full colour; on touch, where nothing hovers,
-                        it stays at full. */}
                     <span className="relative flex size-[75px] cursor-pointer items-center justify-center text-brand drop-shadow-[0_1px_6px_rgb(0_0_0/0.7)] transition-opacity duration-200 ease-out [@media(hover:hover)]:opacity-60 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-visible:opacity-100">
                       <OmarchyMark className="absolute inset-0 size-full" />
                       <PlayIcon className="relative size-[25px]" />
@@ -183,13 +154,8 @@ export function VideoCarousel({
         ))}
       </div>
 
-      {/* The rail's scrollbar, drawn here so it measures the content
-          column rather than the window the rail bleeds across. */}
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <RailBar rail={rail} />
-        {/* On a phone the slides are players, and a player answers a touch
-            itself rather than passing it to the rail underneath, so these
-            stop being a shortcut and become the way through. */}
         <SectionActions>{arrows}</SectionActions>
       </div>
     </>

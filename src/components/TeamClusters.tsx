@@ -4,13 +4,6 @@ import { ArrowUpRightIcon } from '@/components/icons'
 import teams from '@/data/teams.json'
 import { cn } from '@/lib/utils'
 
-/**
- * The teams on one line, each a cluster of overlapping faces. Hovering
- * a face lifts it and parts its neighbours to make room, the rest of the
- * stack stays as it is; clicking the team's name fans the whole cluster out.
- * Every face is the person's own link and names them under the cluster. The
- * motion lives in styles.css under "team clusters".
- */
 /** Faces shown per cluster before the rest fold into a "+N" that leads to
  *  the teams page, so a cluster stays one hand wide however the team grows. */
 const MAX_FACES = 8
@@ -35,7 +28,6 @@ export function TeamClusters({
   const [hovered, setHovered] = useState<string | null>(null)
   const root = useRef<HTMLUListElement>(null)
 
-  // A tap anywhere else puts the clusters back together.
   useEffect(() => {
     if (!open && !picked) return
     const away = (event: PointerEvent) => {
@@ -49,18 +41,6 @@ export function TeamClusters({
   return (
     <ul
       ref={root}
-      // One row of four on a wide screen, like the cards below, in columns
-      // sized to their content: when a cluster fans open its column grows
-      // and the others give way by wrapping their descriptions, so nothing
-      // jumps to a new row. Two columns on a tablet, one on a phone.
-      // Clipped on the x axis: a row of faces is laid out at its open width
-      // and pulled together with a transform, and a transform does not
-      // shrink the box, so without this the widest row could reach past the
-      // edge of a narrow phone and let the whole page scroll sideways.
-      // The clip runs at the padding edge, so the grid carries six pixels
-      // of padding either side and takes them back with its margin: a face
-      // at the start or the end grows past its box when lifted, ring
-      // included, and the clip was taking that slice off.
       className={cn(
         'mt-6 lg:mt-10 -mx-1.5 grid items-start gap-x-6 gap-y-2 px-1.5 lg:gap-y-8 overflow-x-clip sm:grid-cols-2 lg:grid-cols-[repeat(4,auto)]',
         className,
@@ -98,9 +78,6 @@ export function TeamClusters({
                 {team.description}
               </span>
             </button>
-            {/* Laid out at their open spacing and pulled together with a
-                transform; a negative margin trims the row to what is seen,
-                so the clusters sit close, and grows with the fan. */}
             <ul
               className="team-faces flex gap-(--team-gap)"
               style={
@@ -137,9 +114,6 @@ export function TeamClusters({
                         setPicked(isPicked ? null : key)
                       }}
                       className={
-                        // The brand ring is an outline drawn inward, over
-                        // the photo's edge: a ring outside it left a dark
-                        // hairline between the two.
                         'block size-(--team-face) overflow-hidden rounded-full ring-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring ' +
                         (isPicked
                           ? 'ring-bg-deep outline-2 -outline-offset-2 outline-brand'

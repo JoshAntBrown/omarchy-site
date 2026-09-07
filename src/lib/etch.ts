@@ -137,12 +137,6 @@ const STEPS: Record<string, number> = {
 }
 const DEFAULT_STEPS = 240
 
-/**
- * Out of the draw. Matrix and thunderstorm take their length in seconds
- * from ttfx itself, thirteen and sixteen of them, and no pace changes
- * that. Swarm, spotlights and rings just did not look right on the word.
- * All of them can still be asked for by name.
- */
 const NOT_DRAWN = new Set([
   'matrix',
   'thunderstorm',

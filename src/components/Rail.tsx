@@ -22,22 +22,8 @@ const capture = (el: Element, pointerId: number) => {
   }
 }
 
-/**
- * Where a slide sits when it is the one being shown. `center` puts it in the
- * middle of the rail, the way the videos run with their neighbours peeking
- * from the edges. `start` lines it up with the content column's left edge,
- * for a rail of several small cards at a time.
- */
 export type RailAlign = 'center' | 'start'
 
-/**
- * The mechanics of a full-bleed rail, shared by every strip that runs the
- * whole window width: swiping works natively through scroll-snap, a mouse
- * can drag the strip and flick it, arrows glide it a slide at a time, and a
- * bar drawn in the content column stands in for the scrollbar the rail
- * hides. Clicks are swallowed after a real drag so flinging the strip can
- * never accidentally follow a link or start a video.
- */
 export function useRail<T extends HTMLElement = HTMLDivElement>({
   count,
   align = 'center',
@@ -56,9 +42,6 @@ export function useRail<T extends HTMLElement = HTMLDivElement>({
   // and the first paint dim nothing rather than everything.
   const [inColumn, setInColumn] = useState<Set<number> | null>(null)
   const glide = useRef(0)
-  // Mouse drag state, with the pointer's recent speed so a release can be
-  // read as a flick. Touch scrolls and snaps natively; this brings the
-  // same gesture to the mouse.
   const drag = useRef({
     active: false,
     id: -1,
@@ -187,8 +170,6 @@ export function useRail<T extends HTMLElement = HTMLDivElement>({
     setEdges((was) =>
       was.start === start && was.end === end ? was : { start, end },
     )
-    // A glide has already said where it is going; the slides passing
-    // through the column on the way there are not news.
     if (!glide.current) showColumn(columnAt(el, el.scrollLeft))
   }, [])
 
@@ -208,8 +189,6 @@ export function useRail<T extends HTMLElement = HTMLDivElement>({
       setIndex(i)
       const from = el.scrollLeft
       const to = targetFor(el, slide)
-      // The slides arriving in the column light up as the motion starts,
-      // so the fade runs with the glide rather than after it.
       showColumn(columnAt(el, to))
       const still = window.matchMedia(
         '(prefers-reduced-motion: reduce)',
@@ -220,12 +199,7 @@ export function useRail<T extends HTMLElement = HTMLDivElement>({
         return
       }
       el.style.scrollSnapType = 'none'
-      // The clock starts on the first frame, not at the click. A rAF callback
-      // can be handed the timestamp of the frame the click was processed in,
-      // which is earlier than performance.now() was when the click arrived.
-      // That made t negative, and this ease is well under zero for negative
-      // t (-0.33 at t = -0.1), so the rail jumped a third of the way
-      // backwards before the next frame corrected it.
+      // Start the clock on the first frame: its timestamp can precede the click handler.
       let start: number | null = null
       const frame = (now: number) => {
         if (start === null) start = now
@@ -261,10 +235,7 @@ export function useRail<T extends HTMLElement = HTMLDivElement>({
     }
     // Snap fights direct scrollLeft writes; suspend it for the drag.
     el.style.scrollSnapType = 'none'
-    // Capture is deliberately NOT taken here. A captured pointer retargets
-    // the click that follows to the capturing element, which swallowed
-    // every press on the play button; the rail takes it only once the
-    // pointer has moved far enough to be a drag rather than a click.
+    // Delay pointer capture until dragging so button clicks keep their original target.
   }
 
   const onPointerMove = (e: ReactPointerEvent) => {
@@ -283,8 +254,6 @@ export function useRail<T extends HTMLElement = HTMLDivElement>({
     const dx = e.clientX - d.startX
     const wasClick = d.moved <= DRAG_SLOP
     d.moved = Math.max(d.moved, Math.abs(dx))
-    // Past the slop this is a drag, so take the pointer and let it run off
-    // the rail's edges. Before that it may still turn out to be a click.
     if (wasClick && d.moved > DRAG_SLOP) capture(el, d.id)
     el.scrollLeft = d.startLeft - dx
   }
@@ -301,11 +270,6 @@ export function useRail<T extends HTMLElement = HTMLDivElement>({
       first && second
         ? second.offsetLeft - first.offsetLeft
         : el.clientWidth || 1
-    // Where the strip would coast to if it kept the speed it was released
-    // at. A quick flick turns the page from anywhere; a slow drag has to
-    // actually carry the slide most of the way, and a pause before letting
-    // go means the position alone decides. A drag long enough to cover
-    // several small slides lands that many further along.
     const coasting = performance.now() - d.lastT < STALE_MS
     const travelled =
       el.scrollLeft - d.startLeft + (coasting ? -d.speed * FLICK_MS : 0)
@@ -358,8 +322,6 @@ export function useRail<T extends HTMLElement = HTMLDivElement>({
   const onThumbUp = () => {
     if (!thumbDrag.current.active) return
     thumbDrag.current.active = false
-    // Let go on the bar and the rail settles on a slide, the same as a
-    // drag on the slides themselves.
     glideTo(nearest())
   }
 
@@ -392,8 +354,6 @@ export function useRail<T extends HTMLElement = HTMLDivElement>({
           const at = (entry.target as HTMLElement).dataset.slide
           if (at !== undefined) seen.set(Number(at), entry.intersectionRatio)
         }
-        // A glide already knows where it is going, and would otherwise be
-        // contradicted by every slide it passes over.
         if (glide.current) return
         let best = 0
         let most = -1
@@ -450,11 +410,6 @@ export function useRail<T extends HTMLElement = HTMLDivElement>({
   }
 }
 
-/**
- * The rail's scrollbar, drawn in the content column rather than across the
- * window the rail bleeds over. The thumb can be dragged, and letting go of
- * it settles the rail on a slide like any other drag.
- */
 export function RailBar({
   rail,
   className,

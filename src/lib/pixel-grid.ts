@@ -32,8 +32,6 @@ export function snapToGrid(grid: PixelGrid) {
     const r = el.getBoundingClientRect()
     const dx =
       Math.round((r.left - grid.x) / grid.cw) * grid.cw + grid.x - r.left
-    // Mode "x" snaps horizontally only: navbar items keep their natural
-    // vertical centering so the bar's own axis can never break.
     const dy =
       el.dataset.pxSnap === 'x'
         ? 0

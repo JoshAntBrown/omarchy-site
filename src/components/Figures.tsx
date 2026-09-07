@@ -5,14 +5,6 @@ import type { ReactNode } from 'react'
 import { BankIcon, DownloadIcon, GithubIcon } from '@/components/icons'
 import momentum from '@/data/momentum.json'
 
-/**
- * The project in numbers, a row of three cards: the foundation's funding as
- * one bar per announcement, the ISO downloads, and the repository's stars
- * and a year of weekly commits. The github block is refreshed on the
- * catalogue's schedule; the rest quotes the posts it links to. The numbers
- * count up once, when the card comes into view.
- */
-
 const STEP_WIDTH = 22
 const CHART_ROWS = 8
 const EIGHTHS = ' ▁▂▃▄▅▆▇'
@@ -141,20 +133,10 @@ const number =
   'flex items-center gap-3 font-sans text-3xl font-semibold tracking-tight text-text tabular-nums md:mt-4'
 const label = 'mt-1 block text-sm text-text-secondary'
 const meta = 'mt-3 font-mono text-xs text-text-muted'
-// Underlined in nothing until hovered, the way the news titles and the
-// team names are: the hover is a colour arriving, not a line. Pushed to the
-// foot of the card, so the three links in a row share a baseline whatever
-// each card holds above them.
 const more =
   'mt-auto self-start pt-4 text-[13px] font-medium text-brand underline decoration-transparent underline-offset-[3px] transition-colors duration-150 ease-out hover:decoration-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring'
 
-/**
- * The week under the pointer, named once. Fifty-two tooltips that each
- * appeared and left again made the chart flicker as the pointer crossed it;
- * this is one label that slides to the column it describes and stays for as
- * long as the pointer is over the chart, so moving along the year reads as
- * one continuous thing rather than fifty-two.
- */
+/** One tooltip follows the active column without remounting between weeks. */
 function WeekHover({
   weeks,
   checked,
@@ -258,12 +240,6 @@ export function Figures() {
           <BankIcon className="size-5 shrink-0 text-brand md:hidden" />
         </span>
         <span className={label}>pledged to the Omacom Foundation</span>
-        {/* One bar per announcement, each a link to the post it quotes, the
-            latest at the top: a figure card is read from its number down, and
-            the number is where the last bar ends. The row is date, bars and
-            amount, 37 characters at most; like the commit chart it sizes to
-            the card, so a third of the page at the md breakpoint still holds
-            the widest row. */}
         <div className="figure-chart mt-4 font-mono text-[min(0.75rem,4.4cqw)] leading-relaxed whitespace-pre">
           {[...foundation.steps].reverse().map((step) => (
             <Link

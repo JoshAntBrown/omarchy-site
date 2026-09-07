@@ -35,7 +35,6 @@ const clear = (g, r0, r1, c0, c1) => {
   for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) g[r][c] = '0'
 }
 
-// O, lifted cell for cell out of the wordmark rather than redrawn.
 const wordmark = fs.readFileSync(
   path.join(root, 'src/data/wordmark-bitmap.ts'),
   'utf8',
@@ -43,15 +42,6 @@ const wordmark = fs.readFileSync(
 const source = [...wordmark.matchAll(/'([01]{81})'/g)].map((m) => m[1])
 const O = source.slice(0, ROWS).map((r) => r.slice(0, 9).split(''))
 
-// N - two stems tapering up as H's do, with a stair between them, nearly as
-// wide as M. A diagonal needs room: penned into a narrow counter it can only
-// lean, and a lean between two bars reads as a bolt rather than as an N. So
-// the stair runs the whole counter, leaving the left stem on the body's
-// first row and arriving at the right stem two rows above the foot - which
-// is where a diagonal meets its stem in most letters of this kind, and what
-// keeps the foot the same shape as the other one. Eight columns over twelve
-// rows is two rows to a tread, the same rhythm every chamfer here uses.
-// Both feet are then cut the way M cuts its outer stems.
 const N = box(14)
 fill(N, 3, 16, 0, 2)
 fill(N, 3, 16, 11, 13)
@@ -65,18 +55,12 @@ clear(N, 16, 16, 12, 13)
 clear(N, 15, 15, 0, 0)
 clear(N, 16, 16, 0, 1)
 
-// T - a three-row bar, cut at both ends. A and R cut only their top left
-// because their right side carries on down into a stem; T's bar ends in mid
-// air on both sides, so it is cut symmetrically, the way O's crown is. The
-// stem is left flush: the font only takes a bottom-right corner when a left
-// stem balances it, and T has none.
 const T = box(11)
 fill(T, 1, 1, 2, 8)
 fill(T, 2, 2, 1, 9)
 fill(T, 3, 3, 0, 10)
 fill(T, 4, 16, 4, 6)
 
-// F - R's cut top, C's beak closing the arm, H's sheared crossbar.
 const F = box(10)
 fill(F, 1, 1, 3, 9)
 fill(F, 2, 2, 2, 9)
@@ -87,7 +71,6 @@ fill(F, 6, 6, 7, 7)
 fill(F, 8, 8, 1, 9)
 fill(F, 9, 9, 1, 8)
 
-// U - H's tapering top over O's bowl.
 const U = box(9)
 fill(U, 3, 14, 0, 2)
 fill(U, 3, 14, 6, 8)
@@ -98,10 +81,6 @@ fill(U, 2, 2, 6, 7)
 fill(U, 15, 15, 1, 7)
 fill(U, 16, 16, 2, 6)
 
-// D - O's bowl hung on a square stem. The bowl's corners are cut exactly
-// where O cuts its own: the right edge reaches col 6 on the first row and
-// col 7 on the second, meeting the stem on the third. Anything shorter and
-// the bowl reads as a different curve from the O beside it.
 const D = box(9)
 fill(D, 3, 14, 0, 2)
 fill(D, 3, 14, 6, 8)
@@ -111,7 +90,6 @@ fill(D, 15, 15, 0, 7)
 fill(D, 16, 16, 0, 6)
 
 const GLYPHS = { N, O, T, F, U, D }
-// Spaced by eye, as OMARCHY is: its own gaps run 0, 1 and 2 cells.
 const WORD = 'NOT FOUND'
 const GAP = {}
 const DEFAULT_GAP = 2

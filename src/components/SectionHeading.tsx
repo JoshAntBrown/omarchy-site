@@ -21,16 +21,6 @@ export function SectionAnchor({
   )
 }
 
-/**
- * Section header: one title, with an optional action slot on the right.
- * A pixel-font eyebrow label used to sit above the heading, but it mostly
- * restated the heading and read as a second, competing title.
- *
- * `level` drops the element to an h3 for a movement inside a section that
- * already has its own title, keeping the document outline honest. It does not
- * change the type: these head whole movements of the page, and at a smaller
- * size they read as sub-labels next to the sections around them.
- */
 export function SectionHeading({
   title,
   description,
@@ -67,10 +57,6 @@ export function SectionHeading({
           </p>
         ) : null}
       </div>
-      {/* On a phone the action moves to the end of the section, where it
-          reads as what to do next rather than as a second thing to weigh
-          before the section has said anything. Call sites pass the same node
-          to SectionActions there. */}
       {action ? <div className="hidden shrink-0 sm:block">{action}</div> : null}
     </div>
   )

@@ -26,16 +26,7 @@ function usePixelField() {
   return Field
 }
 
-/**
- * The hero backdrop. Both the drifting pixel field and the wordmark are
- * painted by one canvas on a single shared grid, so they stay aligned at
- * every viewport size. No WebGPU, no second layer, no resampling: the
- * wordmark is drawn as the bitmap it already is.
- *
- * The canvas module is loaded on the client after first paint. It is large
- * and runs a rAF loop; shipping it with the shell made a reload wait on it
- * before CSS and type had settled.
- */
+/** The canvas and wordmark share a grid. The host must have a measurable size. */
 export function HeroShader({ onPainted, glyph, onGlyphPress }: Props) {
   const Field = usePixelField()
   return (

@@ -1,24 +1,4 @@
-/**
- * Builds public/brand/omarchy-og.png - the 1200x630 card social sites show
- * when a link to the site is pasted.
- *
- * The image is the hero, composed the way the hero composes itself: one
- * lattice of cells, the wordmark punched out of it so field and letters butt
- * edge to edge, and nothing lit outside a falloff around the words. The
- * geometry is read from the same 81x19 bitmap the hero uses, so if the
- * wordmark ever changes shape the card follows it.
- *
- * Chrome renders it at 2x and sips halves it back down, which is the only
- * antialiasing in the picture - the cells themselves are meant to be hard.
- *
- * No words are baked into it. One image serves every page, so any sentence
- * inside it can only be true of the home page - a manual chapter's card
- * would read "Hotkeys - Omarchy Manual" beside a picture insisting on
- * something else. The description line every client prints under the image
- * is the page's own, and it is the one that should do the talking.
- *
- * Run: node scripts/build-og-image.mjs
- */
+/** Build the 1200x630 social card at public/brand/omarchy-og.png. */
 import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -32,7 +12,6 @@ const CHROME =
 const W = 1200
 const H = 630
 
-// Tokyo Night, the theme the page opens on before it knows better.
 const BG = '#0e0e14'
 const RAMP = ['#39482e', '#4f6a3b', '#678549', '#9ece6a']
 
@@ -45,18 +24,13 @@ const bitmap = fs.readFileSync(
 const ROWS = [...bitmap.matchAll(/'([01]{81})'/g)].map((m) => m[1])
 if (ROWS.length !== 19) throw new Error(`expected 19 rows, read ${ROWS.length}`)
 
-// A whole number of pixels per cell, so every edge in the picture lands on
-// a pixel boundary and survives the halving crisp. It stretches the
-// wordmark's 51:50 cell by two percent, which nothing can see.
+// Use whole pixels per cell so downsampling preserves sharp edges.
 const CW = 11
 const CH = 11
 const COLS = Math.ceil(W / CW)
 const GRID_ROWS = Math.ceil(H / CH)
 
-// Place the words on the grid, a little above centre so the line beneath
-// them has room without the block drifting low.
 const WM_COL = Math.round((COLS - 81) / 2)
-// Centred, now that nothing sits beneath it.
 const WM_ROW = 19
 
 // Deterministic: the card should be the same picture every time it is built.
@@ -81,21 +55,14 @@ const within = (r, c, reach) => {
 const cells = []
 for (let row = 0; row < GRID_ROWS; row++) {
   for (let col = 0; col < COLS; col++) {
-    // Cells the wordmark occupies belong to the wordmark - the same rule the
-    // hero follows, so the field never shows through a letter.
     const wr = row - WM_ROW
     const wc = col - WM_COL
     if (lit(wr, wc)) continue
 
-    // And the cells around a letter are hushed, the way the hero quiets the
-    // field near anything readable: one cell of clearance so the counters of
-    // the R and the C stay holes rather than filling with texture.
     const near1 = within(wr, wc, 1)
     if (near1) continue
     const near2 = within(wr, wc, 2)
 
-    // Density falls off from the words: an ellipse centred on them, wide
-    // enough that the field thins toward the edges instead of stopping.
     const dx = (col - (WM_COL + 40)) / 62
     const dy = (row - (WM_ROW + 9)) / 26
     const d = Math.sqrt(dx * dx + dy * dy)
@@ -103,7 +70,6 @@ for (let row = 0; row < GRID_ROWS; row++) {
     const chance = (0.014 + 0.15 * near * near) * (near2 ? 0.35 : 1)
     if (rand() > chance) continue
 
-    // Brighter close in, and only ever fully lit near the words.
     const r = rand()
     const tier = near2
       ? 0

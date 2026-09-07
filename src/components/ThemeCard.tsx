@@ -13,12 +13,6 @@ function author(repo: string) {
   }
 }
 
-/**
- * A theme, in the same card the marketplace uses for a plugin: screenshot
- * above, name and author below. The themes used to run past in a wide strip
- * of bare screenshots, which read as a different kind of thing from the
- * plugins directly above them when they are the same kind of thing.
- */
 export function ThemeCard({ theme }: { theme: SiteThemeEntry }) {
   return (
     <article className="ring-elevation ring-elevation-hover group relative flex flex-col overflow-hidden rounded-xl bg-surface">

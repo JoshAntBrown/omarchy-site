@@ -73,10 +73,6 @@ export function SiteFooter() {
       <div className="footer-rise relative mx-auto max-w-6xl px-4 py-14 sm:px-6">
         <div className="flex flex-col gap-10 lg:flex-row lg:justify-between">
           <div className="flex w-full shrink-0 flex-col sm:w-max lg:w-96">
-            {/* The way back up: home, at the top, like the mark in the bar.
-                Hovering lifts it to the exact colour the hero's pixels rise
-                to, since that is the tint the field uses for a hovered
-                logo. */}
             <Link
               to="/"
               aria-label="Omarchy home"
@@ -104,16 +100,10 @@ export function SiteFooter() {
               </span>
             </p>
 
-            {/* Who is behind it and who carries it: attribution belongs with
-                the identity, not down in the fine print with the legal. */}
             <div className="mt-4 flex flex-col text-sm leading-relaxed text-text-muted [text-wrap:pretty] lg:mt-auto">
               <p data-quiet>
                 Incubated at{' '}
-                {/* The link stays plain inline text, so its words sit on the
-                    paragraph's own baseline; an inline-flex box aligned to
-                    the middle of the line dropped them below it. The mark is
-                    an inline glyph beside them, nudged to sit on that same
-                    baseline. */}
+                {/* Keep the link inline to preserve the paragraph baseline. */}
                 <a href="https://37signals.com" className={creditLink}>
                   <ThirtySevenSignalsMark className="mr-[3px] inline-block size-4 shrink-0 align-[-0.28em]" />
                   37signals
@@ -163,7 +153,6 @@ export function SiteFooter() {
           </div>
         </div>
 
-        {/* The fine print, and only the fine print. */}
         <div className="mt-12 flex flex-col gap-2 border-t border-border-subtle pt-6 text-[13px] text-text-muted sm:flex-row sm:items-center sm:justify-between">
           <p data-quiet>
             <Link to="/$/" params={{ _splat: 'brand' }} className={footerLink}>

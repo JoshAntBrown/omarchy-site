@@ -1,13 +1,3 @@
-/**
- * The news, read from omarchy.org's own files.
- *
- * The site's Ruby build renders each post from Markdown into
- * news/YYYY/MM/slug/index.html and writes the feed beside them, and both are
- * committed. The porter reads those rendered pages into news-posts.json at
- * build time, so this module only has to hand them out. Nothing is fetched:
- * the repository is the source, and the feed the site serves is the one the
- * Ruby build wrote, copied into the output untouched.
- */
 
 export type NewsPost = {
   slug: string

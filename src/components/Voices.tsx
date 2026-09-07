@@ -6,16 +6,6 @@ import { cn } from '@/lib/utils'
 import { CardRail } from '@/components/CardRail'
 import voices from '@/data/voices.json'
 
-/**
- * Posts from X, quoted as written and linked to the originals. Each card is
- * the post itself, so the text keeps its own line breaks and its links stay
- * live. The whole card opens the post, through the mark's link stretched
- * over it; the links inside the text sit above that and stay their own.
- *
- * On a wide screen the cards flow into columns rather than a grid: the posts
- * run from two lines to a dozen, and a grid would leave a hole under every
- * short one. On a phone they are the same rail as the plugins and themes.
- */
 /** The wall's height before the fold, on a wide screen. */
 const FOLD_REM = 42
 
@@ -102,8 +92,6 @@ export function Voices() {
           ))}
         </CardRail>
       </div>
-      {/* The fold is a wide-screen thing; on a phone the rail already shows
-          one card at a time. */}
       <div className="mt-6 hidden justify-center sm:flex">
         <Button variant="outline" aria-expanded={open} onClick={toggle}>
           {open ? 'Show less' : 'View more'}
@@ -118,10 +106,7 @@ function VoiceCard({ post }: { post: (typeof voices)[number] }) {
   const video = 'video' in post && post.video
   return (
     <article className="ring-elevation ring-elevation-hover group relative mb-4 flex w-full flex-col break-inside-avoid gap-4 rounded-xl bg-surface p-6">
-      {/* The author first, the way a post reads on the timeline. The mark's
-          link is stretched over the whole card, above the pictures, so
-          anywhere on it opens the post; the links inside the text sit above
-          it and stay their own. */}
+      {/* Keep inline links above the stretched card link. */}
       <header className="flex items-center gap-3">
         <img
           src={post.avatar}
@@ -150,22 +135,13 @@ function VoiceCard({ post }: { post: (typeof voices)[number] }) {
           <XIcon className="size-5" />
         </a>
       </header>
-      {/* Sans, not mono: six cards of monospaced prose were a wall. Six lines
-          keep the cards in step with each other, and the mark in the header
-          leads to the whole post. */}
       <p className="line-clamp-6 font-sans text-[15px] leading-snug whitespace-pre-line text-text-secondary [text-wrap:pretty]">
-        {/* A blank line in a post is a paragraph break, kept as a small gap
-            rather than a whole empty line. */}
         {post.text.split(/\n{2,}/).map((paragraph, i) => (
           <span key={i} className={i ? 'mt-2 block' : 'block'}>
             {linkify(paragraph)}
           </span>
         ))}
       </p>
-      {/* The post's pictures, laid out the way X lays them out: one on its
-          own, two side by side, three as one tall beside two, four as a
-          grid, all inside one 16:9. A video shows its poster with the play
-          mark; the card opens the post, where it plays. */}
       {images && images.length ? (
         <span className="relative block overflow-hidden rounded-lg">
           <Gallery images={images} />

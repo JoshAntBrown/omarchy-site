@@ -2,20 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import mapData from '@/data/meetup-map.json'
 import { cn } from '@/lib/utils'
 
-/**
- * The world's countries, with a dot lit for every meetup you can still go
- * to and a faint one for every meetup there has been. The shapes and each
- * pin's place on them are computed at build time (scripts/meetup-map.mjs)
- * from Natural Earth, so this is a hundred and seventy paths and a few
- * circles: no map library, the theme's inks throughout.
- *
- * The map moves with the page: pick a region and it glides in on that
- * region, its countries lit; pick a country here or in the list and it
- * comes closer still. Rest on a dot and a card names the meetup; rest on a
- * card below and its dot answers; a dot is the meetup's own link, since
- * whoever found it on the map has found it. Lit dots arrive one after
- * another when the page opens, then stand still.
- */
 export type MapPin = {
   id: string
   title: string
@@ -207,9 +193,6 @@ export function MeetupMap({
                 }
                 className={cn(
                   'transition-[fill] duration-300 ease-out',
-                  // The chosen country, then the region's countries with a
-                  // meetup, then the rest of the region only just, so a
-                  // wide country with none does not flood the view.
                   isChosen
                     ? 'fill-brand/40'
                     : lit.has(country.id) && canPick
@@ -264,8 +247,6 @@ export function MeetupMap({
                   stroke="var(--color-bg)"
                   strokeWidth={1.2 * k}
                 />
-                {/* Room to land on around the dot: a finger's worth on a
-                    touch screen, a city's worth under a pointer. */}
                 <circle
                   cx={pin.x}
                   cy={pin.y}
@@ -288,13 +269,7 @@ export function MeetupMap({
         </g>
       </svg>
 
-      {/* The card beside the dot the reader is on: the cover, the name,
-          when and where, and what a press does. Placed by the dot's share
-          of the map, so it follows the zoom, and flipped to the left when
-          it would run off the right edge and upward past the lower part.
-          On a map too narrow to hold a card beside a dot on either side, a
-          phone's, it lies along the bottom of the map instead: a card
-          hanging off the side made the whole page wider than the screen. */}
+      {/* Flip the card at map edges; use a bottom panel when neither side fits. */}
       {hovered ? (
         <div
           role="tooltip"
@@ -315,8 +290,6 @@ export function MeetupMap({
           }
         >
           <div className="flex gap-3 p-3">
-            {/* Tall enough that two lines of name with the day and the
-                place under them never outgrow it. */}
             <div
               className={cn(
                 'size-20 shrink-0 overflow-hidden bg-bg-deep',

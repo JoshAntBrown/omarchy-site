@@ -1,14 +1,3 @@
-/**
- * Filtering and sorting the plugin catalogue - in the browser.
- *
- * On a server this ran per request over the full 3.6MB catalogue, one page
- * of results at a time. A static site has no per-request anything, and the
- * search box's inputs are unbounded, so no build could cache every answer.
- * The listing fetches a trimmed catalogue once instead - the fields a card
- * shows and a filter reads, about 0.9MB, 200KB over the wire - and this
- * module does the rest where the reader is. Pure functions, no imports that
- * only exist on a server.
- */
 
 export type Engagement = { views: number; copies: number; hearts: number }
 

@@ -1,6 +1,3 @@
-// Astro-build stand-in for @/lib/plugins in browser bundles. Cards and the
-// palette only ever need pluginUrl; catalogue loaders run at build time
-// through src/astro/data.ts instead.
 import type { CatalogueEntry, Engagement } from '../lib/plugin-filter'
 
 export type {

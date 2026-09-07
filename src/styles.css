@@ -5,12 +5,7 @@
 /* Archived routes do not contribute utilities to the live site. */
 @source not './parked';
 
-/* Typefaces from Fontsource. Latin and latin-ext only: the site is English
-   with a few European names (Lütke, Øverli). The full packages also ship
-   Cyrillic, Greek and Vietnamese, which the homepage was downloading for
-   nothing. swap, not block: block hid every heading and every line of copy
-   until the face arrived, which made a reload feel like a hang. The latin
-   files are preloaded in layouts/Base.astro. */
+/* Load only the Latin and Latin Extended font subsets. */
 @font-face {
   font-family: 'Geist Variable';
   font-style: normal;
@@ -84,13 +79,6 @@
     U+2215, U+FEFF, U+FFFD;
 }
 
-/*
- * Omarchy design tokens. Terminal-native, sharp-cornered.
- * The palette is whichever Omarchy theme is active (Tokyo Night by default);
- * Super + Ctrl + Shift + Space opens the same theme picker Omarchy has. Every
- * --t-* token below resolves per theme.
- */
-
 @theme inline {
   --font-sans: 'Geist Variable', sans-serif;
   --font-mono: 'JetBrains Mono Variable', monospace;
@@ -110,10 +98,6 @@
   --color-brand-fill: var(--t-brand);
   --color-brand-ink: var(--t-brand-ink);
 
-  /* Footer credits. Official hues on dark themes; White deepens them so
-     13px type still reads on the light field. */
-
-  /* Tokyo Night companion hues, used sparingly for category accents */
   --color-tn-blue: oklch(0.719 0.132 264.2);
   --color-tn-purple: oklch(0.751 0.134 299.5);
   --color-tn-cyan: oklch(0.82 0.105 235.7);
@@ -139,18 +123,11 @@
   --color-destructive: oklch(0.723 0.159 10.3);
   --color-border: var(--t-border-subtle);
   --color-input: var(--t-border-strong);
-  /* The focus ring rides the accent, not the muted text color it used to.
-     A focus indicator has to clear 3:1 against what sits behind it, and the
-     muted grays missed that on four of the six themes: on Tokyo Night the
-     ring was dimmer than the body text it sat beside (2.8:1 against the
-     page, where the accent reaches 9.4:1). */
+  /* Use the accent to meet the 3:1 focus-indicator contrast requirement. */
   --color-ring: var(--t-brand);
 }
 
-/* Raw, aggressive, zero-radius. Every rounded-* utility resolves to square. */
 @theme {
-  /* The reading column: how wide the words run on a manual page, a news
-     post, a plugin's docs. Everything in a page's prose is held to it. */
   --measure: 48rem;
   --radius-xs: 0px;
   --radius-sm: 0px;
@@ -170,12 +147,7 @@
 
 /* ------------------------------------------------------------- theme values */
 
-/*
- * Site themes: the six built-in Omarchy themes, every base value verbatim
- * from omacom/omarchy themes/<id>/colors.toml. Only the in-between steps
- * (surfaces, the hero field's dim/mid, hover/crest) are mixes of those
- * values. Tokyo Night is the default; Super + Ctrl + Shift + Space picks.
- */
+/* Base palettes come from omacom/omarchy themes/<id>/colors.toml; intermediate shades are mixed. */
 
 :root,
 [data-theme='tokyo-night'] {
@@ -211,10 +183,6 @@
   --t-hdr-surface: #2d3044;
 }
 
-/* In the light themes the card is a shade lighter than the ground, so it
-   stands on its section the way a card does on a dark theme; the grounds
-   themselves stay as the themes set them. White's ground is already white,
-   so there the card matches it and the ring does the separating. */
 [data-theme='white'] {
   --t-bg-deep: #f5f5f5;
   --t-bg: #ffffff;
@@ -967,7 +935,6 @@
   box-sizing: border-box;
 }
 
-/* Native article anchors share the smooth scrolling of the navigation. */
 html {
   scroll-behavior: smooth;
 }
@@ -977,17 +944,7 @@ html {
   }
 }
 
-/* One focus ring for the whole site, in the theme's accent. Utilities still
-   win over this (they sit in a later layer), so a component can still say
-   something different; this is only what everything else gets instead of
-   the browser's own blue. It has to name --t-brand rather than the ring
-   token: --color-ring lives in @theme inline, which Tailwind resolves at
-   build time and never emits as a custom property.
-
-   Scroll containers land here too. A horizontally scrolling region is
-   focusable in its own right so it can be scrolled from the keyboard, and
-   without this the video rail, the theme rail and the install command each
-   drew a stock blue box around themselves. */
+/* Use --t-brand directly: @theme inline tokens are not runtime custom properties. */
 @layer base {
   :focus-visible {
     outline: 2px solid var(--t-brand);
@@ -995,9 +952,7 @@ html {
   }
 }
 
-/* Inside a horizontal rail, an outline drawn outward is cut off top and
-   bottom by the scroll container, so the ring around a focused slide came
-   out with only its sides showing. Drawing it inward keeps all four edges. */
+/* Inset focus outlines to avoid clipping inside scroll containers. */
 .rail-bare :focus-visible {
   outline-offset: -2px;
 }
@@ -1009,21 +964,14 @@ body,
   font-family: var(--font-mono);
 }
 
-/* The sticky bar's full height: its own row, plus whatever the device keeps
-   above it once the page covers the notch. The hero offsets itself by this to
-   sit under the bar, and the menu sheet hangs off the bottom of it. */
+/* Shared height for the sticky bar, hero offset, and mobile menu. */
 :root {
   --nav-h: calc(3.5rem + env(safe-area-inset-top, 0px));
 }
 
 body {
   margin: 0;
-  /* The page covers the whole screen, notch included (viewport-fit=cover in
-     the viewport meta), so that scrolling runs up behind the status bar
-     instead of stopping at a fixed band below it. The inset the browser used
-     to apply for us is applied here instead, once, for everything inside -
-     in portrait it is zero, and in landscape it is what keeps a line of text
-     out from under the notch. */
+  /* Include the safe area in the sticky bar; viewport-fit=cover fills the notch. */
   padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
   background: var(--color-bg);
   color: var(--color-text);
@@ -1034,12 +982,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* The bar has no surface of its own over the home hero, and it renders its
-   normal colours there: it looked identical whether or not it was blended,
-   because a sticky element forms its own stacking context and mix-blend-mode
-   inside one has no backdrop to blend against. The --t-hdr-* tokens below
-   were the pre-compensation that blend needed; they are kept for a future
-   attempt that puts the bar inside the hero's stacking context. */
+/* Sticky stacking contexts prevent blending with the hero; labels blend inside the hero instead. */
 /* The hero field's cell size, derived in pure CSS: the wordmark slot is
    88% of the padded container capped at 896px, split into 81 columns,
    which is exactly the lattice the canvas draws. Elements sized with
@@ -1080,16 +1023,12 @@ h6 {
   text-wrap: balance;
 }
 
-/* Sticky-bar offset for in-page anchors, kept on the bar's own height rather
-   than a number that once matched it. At 88px an anchor landed 32px below the
-   bar, so every jump arrived showing a strip of the section before it. */
+/* Keep anchor offsets synchronized with the sticky bar height. */
 [id] {
   scroll-margin-top: var(--nav-h);
 }
 
-/* A chapter's own headings land where its title does, the page's 3rem below
-   the bar, rather than pinned against it. The manual only: elsewhere a jump
-   still arrives at the bar. */
+/* Manual headings retain the same 3rem gap below the bar as chapter titles. */
 .manual-chapter [id] {
   scroll-margin-top: calc(var(--nav-h) + 3rem);
 }
@@ -1100,13 +1039,11 @@ h6 {
   transition: none !important;
 }
 
-/* Images carry a 1px inset outline: pure black/white at 10%, theme-flipped */
 .img-outlined {
   outline: 1px solid var(--t-img-outline);
   outline-offset: -1px;
 }
 
-/* Elevation: white ring in dark mode, layered shadow stack in light */
 .ring-elevation {
   box-shadow: var(--t-elevation);
 }
@@ -1119,9 +1056,6 @@ h6 {
   box-shadow: var(--t-elevation-hover);
 }
 
-/* Scrollbars inside a pane, dressed like the video rail's: a subtle track with
-   the theme's accent riding it. The page's own scrollbar is never touched -
-   only small scrollers like this one and the manual's chapter list. */
 .scroll-accent {
   scrollbar-width: thin;
   scrollbar-color: var(--t-brand)
@@ -1144,17 +1078,8 @@ h6 {
   background: var(--t-field-crest);
 }
 
-/* The typewriter's caret. A block, not a hairline: this is a site about a
-   terminal, and it is set in a heading big enough to carry one. It holds
-   steady while the keys are moving and blinks where the hands are still,
-   which is what a real caret does. */
 .typed-caret {
   display: inline-block;
-  /* A bar, the width a caret is at any size, rather than a half-character
-     block: at a heading's weight the block read as another letter. Tall
-     enough to clear the cap line and dip under the baseline, which is where a
-     text cursor actually sits - but still inside the font's own ascent and
-     descent, so it cannot open up the line it is on. */
   width: 0.1em;
   height: 1em;
   margin-left: 0.1em;
@@ -1181,14 +1106,7 @@ h6 {
   }
 }
 
-/* Insets a full-bleed rail so its slides land exactly on the content column
-   above them, and its neighbours peek out in the page margins. One place for
-   the geometry, so a rail and the heading over it cannot drift apart - they
-   used to, by 8px, on the narrow layout where the column's padding drops to
-   1rem and the rail's did not.
-
-   In the components layer so a rail that turns back into a grid on wide
-   screens can drop the padding with a plain sm:px-0. */
+/* Shared full-bleed rail geometry keeps slides aligned with section headings. */
 @layer components {
   .rail-column {
     padding-inline: max(1rem, calc((100% - min(100% - 2rem, 69rem)) / 2));
@@ -1209,10 +1127,7 @@ h6 {
   }
 }
 
-/* While the bar has no surface, its labels are painted by the blended ghost
-   inside the hero instead, and these stand aside. Never both at once: two
-   copies of a word, one blended and one not, read as hollow, embossed text
-   rather than as a label. */
+/* Hide real labels while the blended copy is visible to avoid double painting. */
 [data-nav-blend] nav[aria-label='Main'] a,
 [data-nav-blend] [data-nav-glyph],
 [data-nav-blend] [data-nav-toggle] {
@@ -1247,10 +1162,6 @@ h6 {
   line-height: 1.65;
   color: var(--color-text-secondary);
 }
-/* The reading measure is on the text, not on the block. A paragraph stops at
-   72 characters, which is as long as a monospace line stays comfortable; a
-   screenshot, a code block or a table is not read line by line and takes the
-   whole column, so the column does not sit a third empty beside the text. */
 .prose
   > :where(
     p,
@@ -1270,11 +1181,7 @@ h6 {
     video,
     iframe
   ) {
-  /* One measure for everything: the same width a news post reads at,
-     centred in the column. Paragraphs, headings, tables, code blocks and
-     screenshots all start and end on the same two lines. The elements are
-     named rather than taken as every child, so the ported pages that lay
-     their records out as grids keep the width they set for themselves. */
+  /* Constrain prose elements explicitly so structural layouts can use the full width. */
   max-width: var(--measure);
 }
 .prose h2,
@@ -1290,19 +1197,7 @@ h6 {
 .prose h3 {
   font-size: 1.05rem;
 }
-/* A heading is its own link: the whole title is the target, and the hash that
-   used to sit permanently after every one of them is a mark inside it, shown
-   only when the heading is pointed at or focused.
-
-   The underline is left entirely to `.prose a` above, which is already the
-   treatment the hero's byline uses - drawn from the start in border-strong
-   and easing to brand on hover. Overriding it here with none-then-underline
-   made the line appear on hover rather than change colour, and set a colour
-   the rule underneath disagreed with, so it flashed one and settled on the
-   other. Only the offset is set, for type this much larger.
-
-   inline-block keeps the hash out of the title's underline: a decoration does
-   not draw across an atomic inline box. */
+/* Reserve the underline at rest so hover changes only its color. */
 .prose :is(h2, h3) > .manual__heading-link {
   text-underline-offset: 4px;
 }
@@ -1337,8 +1232,6 @@ h6 {
   margin: 0 0 1em;
   padding-left: 1.4em;
 }
-/* The reset strips list markers and nothing restored them, so every list
-   rendered as bare indented lines. Square, because everything here is. */
 .prose ul {
   list-style: square;
 }
@@ -1414,10 +1307,6 @@ h6 {
 }
 .prose .button,
 .prose a.button {
-  /* The ported pages ship these as an icon and a label in one anchor. The
-     icon's viewBox is 32px and nothing constrained it, so the "button" was
-     a giant filled square with a caption. Sized like the site's own
-     buttons: rounded-lg, icon at text scale, label beside it. */
   display: inline-flex;
   align-items: center;
   gap: 0.55em;
@@ -1512,9 +1401,6 @@ h6 {
   margin: 0 0 0.75rem;
 }
 
-/* Pages built from repeating records (teams, patrons, sponsorships,
-   workstations, AIR) break out of the reading measure and lay out as grids
-   instead of one entry per line. */
 .ported:has(
   .team__members,
   .workstations__images,
@@ -1552,10 +1438,7 @@ h6 {
   gap: 2rem 1.25rem;
   margin-top: 1.75em;
 }
-/* The name is the link, but the whole record is the target: hovering a face
-   or a country and getting nothing back reads as a dead card. The anchor is
-   stretched over the article, which makes the card clickable and puts the
-   name's own hover state under every part of it. */
+/* Stretch the name link over the record without nesting other interactive elements. */
 .ported .member {
   position: relative;
   min-width: 0;
@@ -1580,7 +1463,6 @@ h6 {
   margin: 0;
   background: var(--color-surface);
 }
-/* Patrons use the same compact portraits and columns as the teams page. */
 .ported:has(#founding-patrons) > p:first-child,
 .ported .foundation__lede {
   margin: 0 0 2rem;
@@ -1614,9 +1496,6 @@ h6 {
     grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
   }
 }
-/* The meetups map: the lit dots arrive one after another when the page
-   opens, then stand still. They simply stand for anyone who asked for
-   less motion. */
 @keyframes meetup-pin-in {
   from {
     opacity: 0;
@@ -1628,7 +1507,6 @@ h6 {
 .meetup-pin-in {
   animation: meetup-pin-in 300ms ease-out both;
 }
-/* The card beside a dot comes in with a short fade, not a pop. */
 .meetup-card-in {
   animation: meetup-pin-in 120ms ease-out both;
 }
@@ -1639,8 +1517,6 @@ h6 {
   }
 }
 
-/* The patron badges: one class after another, each its art, name, tier,
-   a line about it and its four downloads, centred like a card would be. */
 .ported .badges {
   display: grid;
   gap: 3.5rem;
@@ -1747,8 +1623,6 @@ h6 {
 }
 .ported .member__name a {
   color: var(--color-text);
-  /* Drawn from the start in nothing, so arriving is a colour and not a line
-     appearing under the text. */
   text-decoration: underline;
   text-decoration-color: transparent;
   text-underline-offset: 3px;
@@ -1835,8 +1709,6 @@ h6 {
      logo reads as floating above a name that starts 9px lower. */
   margin: calc(0.447 * 1.25rem) 0 0;
 }
-/* The logo is a figure in prose, and prose gives its images a margin of their
-   own; here the row it sits in is the alignment. */
 .ported .sponsorship__logo img {
   margin: 0;
 }
@@ -1868,7 +1740,7 @@ h6 {
   object-fit: cover;
   margin: 0;
 }
-/* The original page's lightbox markup is JS-driven; hide the dead shell */
+/* Hide the lightbox shell: its JavaScript is not loaded. */
 .ported .workstations__modal,
 .ported .workstations__backdrop {
   display: none;
@@ -1920,8 +1792,6 @@ h6 {
   margin: 0;
   font-size: 14px;
 }
-/* The class is on the iframe itself, not on a wrapper - the old selector
-   matched nothing and the embed rendered at its hardcoded 600x450. */
 .ported iframe.meetups__embed {
   width: 100%;
   height: auto;
@@ -2129,9 +1999,6 @@ h6 {
   visibility: hidden;
 }
 
-/* The edge of the music card's cover until the sound has been turned on
-   once: a brand-ink border that breathes, so the button asks for the click
-   without moving. Held still for anyone who asked for less motion. */
 @keyframes music-ring {
   0%,
   100% {
@@ -2191,10 +2058,7 @@ h6 {
 .notice-in {
   animation: notice-in 300ms ease-out both;
 }
-/* The first-visit theme hint sits top right, which on a phone is exactly
-   where the open menu puts its links. The menu is the newer intent and it
-   carries a "Change the theme" row of its own, so the hint steps out of the
-   way and comes back when the sheet closes. */
+/* Hide the theme hint while the mobile menu occupies the same corner. */
 [data-nav-menu='open'] .notice-in {
   display: none;
 }
@@ -2221,11 +2085,6 @@ h6 {
   }
 }
 
-/* A phone's bar, once it is on a section, closes with the same hairline the
-   sections draw between themselves, so the bar reads as the top of the
-   section it is wearing rather than a wash lying over it. Not while the
-   sheet is down: the bar is the top of the sheet then, and a line between
-   the two would be a seam across one surface. */
 @media (max-width: 639.98px) {
   html:not([data-nav-menu='open']) [data-nav-past-hero] {
     box-shadow: inset 0 -1px 0 var(--color-border-subtle);
@@ -2234,8 +2093,6 @@ h6 {
 
 /* ---------------------------------------------------------------- nav mark */
 
-/* Hovering the mark redraws it: the frame first, then the stems and the
-   spiral out to its tail. At rest every stroke is fully drawn. */
 .mark-draw path {
   stroke-dasharray: 1;
 }
@@ -2285,8 +2142,6 @@ h6 {
 
 /* ----------------------------------------------------------------- figures */
 
-/* The charts beside the news draw left to right once their card is on
-   screen; the numbers count up in the component on the same cue. */
 .figure-chart {
   clip-path: inset(0 100% 0 0);
 }
@@ -2304,11 +2159,6 @@ h6 {
 
 /* ----------------------------------------------------------- team clusters */
 
-/* The faces sit at their open spacing and are drawn together by a transform.
-   Hovering one lifts it to the top and parts the stack around it: everything
-   after it slides right, everything before it slides left, and the rest of
-   the overlap stays as it was. The same happens to a face picked by tap. The
-   team's name fans the whole cluster out. */
 .team-cluster {
   --team-time: 320ms;
   --team-ease: cubic-bezier(0.33, 1, 0.68, 1);
@@ -2384,7 +2234,6 @@ h6 {
 .team-cluster[data-open] .team-face {
   transform: none;
 }
-/* The name under the cluster fades in, and again when it changes hands. */
 .team-named {
   animation: team-named 200ms ease-out both;
 }
@@ -2429,14 +2278,6 @@ h6 {
 
 /* ------------------------------------------------------------------ voices */
 
-/* The wall of posts, folded to a height on a wide screen, the foot fading
-   out. The fade is a mask on the wall itself, not something painted over
-   it: the wall's own pixels go to nothing over the last band, so the row
-   the clip cuts through cannot show, in any theme or at any zoom. The
-   band is a registered length so it can move: 260px folded, none open, on
-   the same 400ms ease-in-out clock as the wall's height, a thing already
-   on screen changing size. A phone gets the rail instead and none of
-   this. */
 @property --voices-band {
   syntax: '<length>';
   inherits: false;

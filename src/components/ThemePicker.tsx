@@ -19,28 +19,12 @@ import {
 import { useIsNarrow } from '@/lib/use-media-query'
 import { cn } from '@/lib/utils'
 
-/**
- * The Omarchy theme browser, for the website. Press T and the same UI
- * Omarchy shows appears: a row of theme previews with the current one front
- * and center, the theme's name under it, arrows to walk the list. Walking
- * the deck only moves the cards. The page theme changes when you take the
- * front one.
- */
-/** A theme's desktop screenshot, the card it shows as in the deck. WebP,
- *  since twenty-two of them as PNG came to eight megabytes. */
 const previewSrc = (id: string) => `/assets/images/theme-previews/${id}.webp`
 
 /** Omarchy's card slant: a 2.5% lean, top edge shifted right of the bottom. */
 const PARALLELOGRAM = 'polygon(2.5% 0%, 100% 0%, 97.5% 100%, 0% 100%)'
 
-/**
- * The same parallelogram inset by a border width, in the SAME coordinate
- * box. Insetting via padding computed the inner slant on a smaller box,
- * which left the two edges non-parallel and the border visibly pinched
- * along the verticals. At this slant (under 2 degrees) the horizontal
- * inset of a slanted edge differs from the border width by under 0.2px,
- * so plain calc offsets are exact to the eye.
- */
+/** Inset in the same coordinate box to keep the slanted border edges parallel. */
 const parallelogramInset = (b: string) =>
   `polygon(calc(2.5% + ${b}) ${b}, calc(100% - ${b}) ${b}, calc(97.5% - ${b}) calc(100% - ${b}), ${b} calc(100% - ${b}))`
 
@@ -57,13 +41,8 @@ const isTyping = (target: EventTarget | null) => {
 }
 
 export function ThemePicker() {
-  // A phone is portrait, so the deck is too: a landscape card in a portrait
-  // window is a strip across the middle of it.
   const portrait = useIsNarrow()
   const [open, setOpen] = useState(false)
-  // The picker arrives and leaves in one frame. A theme is something you
-  // flick through, and a fade on each end put a beat between the keystroke
-  // and the answer - long enough, pressed twice in a row, to feel like lag.
   const [index, setIndex] = useState(0)
   const [hint, setHint] = useState(false)
   const dialogRef = useRef<HTMLDivElement>(null)
@@ -96,14 +75,7 @@ export function ThemePicker() {
 
   const close = useCallback(() => {
     setOpen(false)
-    // Focus goes back to whatever opened the picker, but the ring only
-    // comes back if it was there to begin with. Choosing a theme with
-    // Enter is a keypress, so without this the browser decides the
-    // restored focus is keyboard-driven and paints a ring on a logo the
-    // mouse user who clicked it is not even looking at. And it goes back
-    // without scrolling: the last thing focused may be a theme button in
-    // the home page's theme section, clicked long before and scrolled
-    // away from, and the browser would otherwise jump the page to it.
+    // Restore focus and the trigger's original focus-visible state.
     restoreFocus.current?.focus({
       focusVisible: restoreRing.current,
       preventScroll: true,
@@ -161,8 +133,6 @@ export function ThemePicker() {
       else openPicker()
     }
     window.addEventListener('keydown', onKey)
-    // Anything on the page can summon the picker (the footer line, the
-    // welcome notice) without owning its state.
     const onOpenRequest = () => openPicker()
     window.addEventListener(OPEN_PICKER_EVENT, onOpenRequest)
     return () => {
@@ -179,22 +149,13 @@ export function ThemePicker() {
     return watchChrome()
   }, [])
 
-  // Broadcast open state so the hero field can disarm its logo hover
-  // while the picker is up and not re-light it until the mouse moves.
   useEffect(() => {
     window.dispatchEvent(
       new CustomEvent(PICKER_STATE_EVENT, { detail: { open } }),
     )
   }, [open])
 
-  // Warm the preview images the deck is about to show: they are only in
-  // the DOM while the picker is open, so without this the first open
-  // fetched and decoded them on the spot and visibly stuttered. Only the
-  // front card and the two either side are ever visible, so those five are
-  // warmed once the page is idle, and each turn of the deck warms the next
-  // pair before they slide in. Warming all twenty-two cost every visitor
-  // several megabytes for a picker most never open. Low priority keeps the
-  // warm-up from competing with real content.
+  // Decode only the visible previews and their neighbors before opening the picker.
   const warmed = useRef(new Set<string>())
   const warmAround = useCallback((at: number) => {
     for (let d = -2; d <= 2; d++) {
@@ -212,10 +173,7 @@ export function ThemePicker() {
   }, [])
   useEffect(() => {
     let cancelled = false
-    // Safari went years without requestIdleCallback and some WebViews still
-    // have none, so the fallback is load-bearing however certain lib.dom is
-    // that the callback is always there. Naming the optional type is a
-    // truer fix than muting the rule that reads lib.dom and believes it.
+    // Some WebViews lack requestIdleCallback; retain a timeout fallback.
     const idle =
       (window as { requestIdleCallback?: (cb: () => void) => void })
         .requestIdleCallback ??
@@ -233,9 +191,6 @@ export function ThemePicker() {
     if (open) warmAround(index)
   }, [open, index, warmAround])
 
-  // The welcome notice, the way Omarchy teaches its own hotkeys on first
-  // boot: one card, top right, first visit only. It is also the way in on
-  // touch screens, which have no right mouse button.
   useEffect(() => {
     let seen = false
     try {
@@ -311,14 +266,6 @@ export function ThemePicker() {
 
   return (
     <>
-      {/* Dimmer, not a curtain: the page behind stays on the theme you
-          arrived with until you take one. It wears the same blur and fade
-          the site's dialogs do, so opening the picker feels like opening
-          any other layer here. It sits outside the dialog on purpose: the
-          dialog is a named layer in the theme wipe, and a named element is
-          the backdrop root for everything inside it, so a backdrop blur in
-          there could only sample the dialog's own paint, which is nothing,
-          and only the tint showed. Out here it blurs the page. */}
       <div
         aria-hidden="true"
         className="fixed inset-0 z-(--z-modal) isolate bg-black/55 supports-backdrop-filter:backdrop-blur-xs"
@@ -354,9 +301,7 @@ export function ThemePicker() {
           event.preventDefault()
           event.stopPropagation()
         }}
-        // touch-none: a swipe across the deck is otherwise a pan gesture for
-        // the page underneath as well, which shifted it sideways on phones
-        // and could cancel the picker's own pointer events midway.
+        // Disable native panning so it cannot cancel the deck's pointer gesture.
         className="fixed inset-0 z-(--z-modal) flex touch-none flex-col items-center justify-center outline-none"
         // Its own layer in the theme wipe (see theme-transition.css): kept out
         // of the page's snapshot so the page can be frosted as it is on
@@ -367,8 +312,6 @@ export function ThemePicker() {
           drawn above, outside the dialog; this is only its click target. */}
         <div aria-hidden="true" onClick={close} className="absolute inset-0" />
 
-        {/* The deck arrives a beat after the dimmer and leaves with
-          everything else. */}
         <div
           className={cn(
             'pointer-events-none relative flex w-full items-center justify-center',
@@ -404,12 +347,6 @@ export function ThemePicker() {
                   zIndex: 10 - depth,
                 }}
               >
-                {/* The deck is a control, not a picture: a neighbour's visible
-                  sliver walks the deck to it, and the front card takes that
-                  theme and closes. The stack itself stays click-through so
-                  the space around the cards still reaches the dimmer. The
-                  arrows and Esc do all of this too, which is why these carry
-                  no tab stop of their own. */}
                 <button
                   type="button"
                   tabIndex={-1}
@@ -420,9 +357,6 @@ export function ThemePicker() {
                   onClick={() => (offset === 0 ? choose() : step(offset))}
                   className="pointer-events-auto block w-full cursor-pointer [--card-dim:0.55] hover:[--card-dim:0.78]"
                 >
-                  {/* The parallelogram is the card's shape, not a shear of the
-                  screenshot. Frame and image share the outer transform, so
-                  they travel as one piece when the deck steps. */}
                   <div
                     className={
                       'shadow-2xl ' + (depth === 0 ? 'bg-brand' : 'bg-zinc-500')
@@ -443,10 +377,7 @@ export function ThemePicker() {
                         width={1800}
                         height={1012}
                         draggable={false}
-                        // A dropped request on a flaky connection left the
-                        // frame broken until a reload; one retry with a
-                        // cache-buster heals it, and giving up after that
-                        // keeps a dead connection from looping.
+                        // Retry an image failure once with a cache-buster.
                         onError={(event) => {
                           const img = event.currentTarget
                           if (img.dataset.retried) return
@@ -458,10 +389,6 @@ export function ThemePicker() {
                         className="w-full select-none object-cover"
                         style={{
                           aspectRatio: portrait ? '4 / 5' : '1800 / 1012',
-                          // The dim lives on the screenshot alone so the frame
-                          // around a neighbour keeps its full strength, and it
-                          // reads from a variable the card raises on hover, so
-                          // pointing at a neighbour lights it toward the front.
                           filter:
                             depth === 0
                               ? undefined
@@ -481,16 +408,6 @@ export function ThemePicker() {
           />
         </div>
 
-        {/* The name is the plainest way to take the theme you are looking at:
-          the front card takes it and closes too, but the name is what you
-          are reading when you decide, and on a phone it is the one target
-          that is never half-covered by a neighbouring card. No plate: a
-          filled box sat on top of the preview. The name is set in the
-          theme's own two inks, and the dimmer decides which is which: the
-          lighter one fills the letters and the darker one edges them. On a
-          dark theme that is text on ground; on a light theme it is the
-          the page's cream or white, edged in the theme's text colour, since
-          dark letters would sink into the dimmer. */}
         <button
           type="button"
           tabIndex={-1}
@@ -500,11 +417,6 @@ export function ThemePicker() {
             'relative mt-1.5 cursor-pointer px-4 py-3.5 text-center transition-[filter] duration-150 ease-out hover:brightness-125',
           )}
         >
-          {/* The name wears the inks of the theme it names, not the page's:
-            the page keeps its theme while the deck is walked, so the
-            label carries its theme's tokens itself, the way the whole page
-            did when every step re-themed it. The raw theme tokens, since
-            the mapped colours are fixed at the root and would not follow. */}
           <span
             data-theme={SITE_THEMES[index].id}
             className="block font-sans text-2xl font-semibold tracking-tight"

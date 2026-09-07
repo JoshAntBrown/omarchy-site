@@ -1,18 +1,5 @@
 #!/usr/bin/env node
-/**
- * Finishes the static build by laying omarchy.org's own files over it.
- *
- * The app renders every page it owns into dist/client. Everything else the
- * site serves is a file that already lives in the omarchy-site checkout and
- * has to keep being served exactly as it is: the installer scripts people
- * curl, the assets third parties hot-link, the feed the Ruby build writes,
- * the images that sit beside news posts and manual chapters, the security
- * contact, the redirects and the pages the redesign has not absorbed yet.
- * Those are copied in here, after the render, so the output folder is the
- * whole site and GitHub Pages can upload it the way it uploads the repo now.
- *
- *   OMARCHY_SITE_DIR   the checkout to copy from; defaults to this repository
- */
+/** Copy passthrough files and generate redirects in dist/client after the Astro build. */
 import { cp, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -70,9 +57,6 @@ async function copyAssets(rel) {
 
 for (const rel of ASSETS_ONLY) await copyAssets(rel)
 
-// Redirect pages for the addresses the redesign folded into other pages,
-// and for the plugin directory, which lives on its own site:
-// the listing, its three sub pages, and a page per plugin, all forwarded.
 const { plugins } = JSON.parse(
   await readFile(new URL('../src/data/plugins.json', import.meta.url), 'utf8'),
 )
@@ -100,8 +84,7 @@ for (const [from, to] of Object.entries(redirects)) {
   copied.push(`${from} -> ${to} (redirect page)`)
 }
 
-// The build must end with the site's entry points in place, or the output is
-// not the site. The rest may legitimately be absent from a partial checkout.
+// Required entry points must exist; optional assets may be absent in partial checkouts.
 for (const must of ['index.html', 'install', 'news/rss.xml', 'CNAME']) {
   if (!existsSync(path.join(OUT, must))) {
     console.error(`assemble: ${must} is missing from ${OUT}`)

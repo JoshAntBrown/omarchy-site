@@ -110,11 +110,7 @@ console.log(
   `explorer.json: ${explorer.nodes?.length ?? 0} nodes, ${explorer.edges?.length ?? 0} edges, ${explorer.clusters?.length ?? 0} clusters`,
 )
 
-// ---------------------------------------------------------------- version
-// The current release, from the OS repository's latest GitHub release -
-// the tag is the version, and the ISO is published under that version at
-// iso.omarchy.org - so the download button and the ISO links follow what
-// is actually shipping, on the same schedule as the rest of this file.
+// Release version and ISO URL from the latest GitHub release.
 const release = JSON.parse(
   await fetchText(
     'https://api.github.com/repos/omacom/omarchy/releases/latest',
@@ -134,13 +130,7 @@ await writeFile(
 )
 console.log(`version.json: ${version}`)
 
-// ---------------------------------------------------------------- momentum
-// The repository's own numbers for the figures beside the news: stars,
-// pull requests, contributors and a year of weekly commits. The foundation and
-// download figures in the same file are quoted from the news posts they
-// link to and kept by hand, so only the github block is rewritten here.
-// GitHub computes the weekly stats on first request and answers 202 with
-// an empty body until they are ready, hence the retries.
+// Refresh GitHub figures; foundation and download announcements are maintained separately.
 const MOMENTUM = path.join(OUT, 'momentum.json')
 const momentum = JSON.parse(await readFile(MOMENTUM, 'utf8'))
 const gh = (p, init) =>
@@ -165,10 +155,7 @@ const pullsLastPage = /page=(\d+)>; rel="last"/.exec(
 const pullRequests = pullsLastPage
   ? Number(pullsLastPage[1])
   : (await pullsRes.json()).length
-// anon=1 counts the authors whose commits carry an email GitHub cannot
-// match to an account. They are contributors, and they are in the count the
-// repository's own page shows: without this the site said 444 where GitHub
-// said 510.
+// Include contributors whose commit emails are not associated with GitHub accounts.
 const contributorsRes = await gh('/contributors?per_page=1&anon=1')
 const lastPage = /page=(\d+)>; rel="last"/.exec(
   contributorsRes.headers.get('link') ?? '',
@@ -180,11 +167,7 @@ for (let attempt = 0; attempt < 5 && weeks.length === 0; attempt++) {
   else await new Promise((r) => setTimeout(r, 3000))
 }
 if (weeks.length === 52 && lastPage) {
-  // Stars, pull requests and contributors usually go up. A fall may mean the answer was
-  // odd rather than the project shrinking - a partial contributor list, a
-  // cached response - and the figures would go out on the site as fact. Say
-  // so loudly; the run still writes, because a real fall is possible and a
-  // refresh that refuses to write ages worse than one that warns.
+  // Warn on decreases that may indicate partial API results, but allow legitimate corrections.
   const before = momentum.github
   const now = {
     stars: repo.stargazers_count,
@@ -208,8 +191,6 @@ if (weeks.length === 52 && lastPage) {
     commitsYear: weeks.reduce((a, b) => a + b, 0),
     weeks,
   }
-  // Through prettier, so the committed file reads the way the repo's check
-  // wants it and a refresh never shows up as a formatting change.
   await writeFile(
     MOMENTUM,
     await prettier.format(JSON.stringify(momentum), { parser: 'json' }),
@@ -218,9 +199,7 @@ if (weeks.length === 52 && lastPage) {
     `momentum.json: ${momentum.github.stars} stars, ${momentum.github.commitsYear} commits`,
   )
 } else {
-  // GitHub computes the weekly stats on demand and answers 202 until they
-  // are ready. Warn rather than log: the figures on the site are then as
-  // old as the last good run, and nothing else in the output says so.
+  // GitHub returns 202 while computing weekly stats; retain the previous snapshot and warn.
   console.warn(
     'momentum.json: the commit stats never arrived, so the previous figures ' +
       `stand (checked ${momentum.checked})`,
@@ -349,14 +328,7 @@ if (CF_TOKEN && CF_ZONE) {
   )
 }
 
-// ---------------------------------------------------------------- meetups
-// The Omarchy calendar on Luma. With a key, Luma's API lists every event
-// with its cover picture; the key is read and write for the whole calendar
-// and Luma makes no read-only kind, so it lives only in the repository's
-// secrets, never in a file, and only the list is ever read here. Without
-// a key the calendar's public feed gives everything but the covers, so the
-// page can be built and checked with real events either way. The covers
-// are saved small, next to the plugin map, rather than hotlinked.
+// Use the Luma API when configured, otherwise the public feed without cover images.
 const LUMA_CALENDAR = 'cal-SDGGMsEps9ExsrT'
 const MEETUPS = path.join(OUT, 'meetups.json')
 const COVERS = path.join(ROOT, 'public/images/meetups')
@@ -520,7 +492,6 @@ async function placeByTitle(events) {
 /** Saves an event's cover as a small webp, once; the site links the file. */
 async function saveCover(event) {
   if (!event.cover) return null
-  // A new name also replaces the old, permanently cropped cover cache.
   const id = assetId(event.id)
   const file = path.join(COVERS, `${id}-full.webp`)
   const rel = `/images/meetups/${id}-full.webp`
@@ -574,6 +545,5 @@ try {
     }, ${placed} placed by title`,
   )
 } catch (error) {
-  // The page keeps the last good list; say so, since nothing else would.
   console.warn(`meetups.json: left as it was, ${error.message}`)
 }

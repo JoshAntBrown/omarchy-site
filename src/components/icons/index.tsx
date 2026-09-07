@@ -369,14 +369,6 @@ export function AppleIcon(props: IconProps) {
   )
 }
 
-/** IconLayoutWindow from the square filled set, four panes, for Windows.
- *  Redrawn on whole pixels for the 20px the buttons show it at: 2px in,
- *  7px panes, a 2px gap, so the four come out equal instead of rounding
- *  apart the way the set's 8.25-unit panes did. */
-/** IconLayoutWindow from the square filled set, four panes, for Windows.
- *  Redrawn on whole pixels for the 20px the buttons show it at: 2px in,
- *  7px panes, a 1px gap, so the four come out equal instead of rounding
- *  apart the way the set's 8.25-unit panes did. */
 export function WindowsIcon(props: IconProps) {
   return (
     <svg {...base(props)} shapeRendering="crispEdges">
@@ -787,14 +779,6 @@ export function MoonIcon(props: IconProps) {
   )
 }
 
-/**
- * The three bars from Interface General/IconBarsThree, hinged so they fold
- * into a cross rather than swapping for a different glyph. Each bar turns
- * about its own centre: the outer two slide to the middle line and rotate
- * into the diagonals, the middle one collapses along its own length. The
- * 0.88 scale is what makes the folded arms 16.3 units long, exactly the
- * diagonal of the CrossIcon this ends up looking like.
- */
 /** How long the bars take to fold into a cross, or back. The header waits
  *  this long after the sheet closes before handing the icon back to the
  *  blended ghost, so the fold is seen through. */

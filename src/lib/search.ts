@@ -77,7 +77,6 @@ export function searchAll(
     // A section headed by the thing you searched for beats a chapter that
     // merely mentions it, but a chapter's opening still outranks its footnotes.
     if (entry.kind === 'manual' && !entry.heading) score += 1
-    // With everything else equal the manual is the thing people came to read.
     if (entry.kind === 'manual') score += 1
 
     hits.push({ ...entry, score, snippet })

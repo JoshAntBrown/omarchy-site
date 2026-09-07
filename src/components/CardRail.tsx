@@ -3,17 +3,6 @@ import type { ReactNode } from 'react'
 
 import { cn } from '@/lib/utils'
 
-/**
- * A grid on a wide screen, a swipeable rail on a phone - the same rail the
- * videos run in, with the same bar under it. Six cards stacked down a phone
- * is six screens of scrolling to learn that there are six; side by side they
- * are one gesture to flick through.
- *
- * The switch is pure CSS, so the server renders the layout the device will
- * actually use. Each child is wrapped for the rail and the wrapper turns into
- * `display: contents` at the breakpoint, which takes it back out of the
- * layout and leaves the card itself as the grid item.
- */
 export function CardRail({
   children,
   className,
