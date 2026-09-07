@@ -24,6 +24,16 @@ export default defineConfig({
           find: '@/lib/plugins',
           replacement: path.resolve('./src/astro/plugins-client.ts'),
         },
+        // Resolve-only shims for the deleted server packages, imported by
+        // unbuilt modules under src/parked.
+        {
+          find: '@tanstack/react-start',
+          replacement: path.resolve('./src/astro/server-shim.ts'),
+        },
+        {
+          find: '@tanstack/start-static-server-functions',
+          replacement: path.resolve('./src/astro/server-shim.ts'),
+        },
         // Components keep importing the router; in the Astro build those
         // imports resolve to the static shim in src/astro instead.
         {
