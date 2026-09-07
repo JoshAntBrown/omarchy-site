@@ -216,5 +216,12 @@
     "ogLocale": "ga_IE",
     "manual": false,
     "flag": "IE"
+  },
+  "nl": {
+    "name": "Nederlands",
+    "domain": "https://nl.omarchy.org",
+    "formatLocale": "nl-NL",
+    "ogLocale": "nl_NL",
+    "manual": false
   }
 }
