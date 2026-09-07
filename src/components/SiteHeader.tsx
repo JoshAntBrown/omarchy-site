@@ -439,7 +439,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
       onClick={homeLink}
       className="mark-draw-trigger relative flex items-center"
     >
-      <OmarchyMarkDrawn className="size-[22px] shrink-0 text-brand transition-opacity duration-150 ease-out max-sm:group-data-[nav-past-hero]/bar:opacity-0 lg:size-[calc(var(--pxc)*2)]" />
+      <OmarchyMarkDrawn className="size-[22px] shrink-0 transition-opacity duration-150 ease-out max-sm:group-data-[nav-past-hero]/bar:opacity-0 lg:size-[calc(var(--pxc)*2)]" />
       <OmarchyWordmark className="absolute top-1/2 left-0 w-28 -translate-y-1/2 text-brand opacity-0 transition-opacity duration-150 ease-out group-data-[nav-past-hero]/bar:opacity-100 sm:hidden" />
     </Link>
   )

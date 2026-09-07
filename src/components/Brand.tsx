@@ -24,16 +24,60 @@ export function OmarchyMark({ className }: { className?: string }) {
   )
 }
 
+/** Brand gradient bands as wordmark pixel rows, shared by wordmark and mark. */
+const BRAND_BANDS: [color: string, rows: number][] = [
+  ['var(--t-field-crest)', 5],
+  ['var(--t-field-hover)', 2],
+  ['var(--t-field-lit)', 4],
+  ['var(--t-field-mid)', 3],
+  ['var(--t-field-dim)', 5],
+]
+const BAND_ROWS = BRAND_BANDS.reduce((sum, [, rows]) => sum + rows, 0)
+
+/** Band edges in percent of the height. */
+const BAND_STOPS = BRAND_BANDS.reduce<{
+  stops: [string, number, number][]
+  rows: number
+}>(
+  ({ stops, rows }, [color, band]) => {
+    const pct = (n: number) => Math.round((n / BAND_ROWS) * 100000) / 1000
+    return {
+      stops: [...stops, [color, pct(rows), pct(rows + band)]],
+      rows: rows + band,
+    }
+  },
+  { stops: [], rows: 0 },
+).stops
+
 export function OmarchyMarkDrawn({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 1200 1200"
       fill="none"
-      stroke="currentColor"
+      stroke="url(#mark-bands)"
       strokeWidth="80"
       aria-hidden="true"
       className={cn('mark-draw', className)}
     >
+      <defs>
+        <linearGradient
+          id="mark-bands"
+          gradientUnits="userSpaceOnUse"
+          x1="0"
+          y1="0"
+          x2="0"
+          y2="1200"
+        >
+          {BAND_STOPS.flatMap(([color, from, to]) => [
+            <stop
+              key={`${color}-from`}
+              offset={`${from}%`}
+              stopColor={color}
+            />,
+            <stop key={`${color}-to`} offset={`${to}%`} stopColor={color} />,
+          ])}
+        </linearGradient>
+      </defs>
       <path pathLength={1} d="M640 1160H40V40H1160V1160H720" />
       <path pathLength={1} d="M600 40V200" />
       <path pathLength={1} d="M640 200H200V1000H1000V200H880" />
@@ -43,8 +87,9 @@ export function OmarchyMarkDrawn({ className }: { className?: string }) {
   )
 }
 
-export const WORDMARK_BANDS =
-  'linear-gradient(to bottom, var(--t-field-crest) 0 26.316%, var(--t-field-hover) 26.316% 36.842%, var(--t-field-lit) 36.842% 57.895%, var(--t-field-mid) 57.895% 73.684%, var(--t-field-dim) 73.684% 100%)'
+export const WORDMARK_BANDS = `linear-gradient(to bottom, ${BAND_STOPS.map(
+  ([color, from, to]) => `${color} ${from}% ${to}%`,
+).join(', ')})`
 
 type WordmarkProps = {
   className?: string
