@@ -7,14 +7,22 @@ export function PageWordmark({
 }) {
   if (brand === 'oma') {
     return (
-      <svg
+      <div
         role="img"
         aria-label="OMA"
-        viewBox="38 250 722 300"
-        className="mx-auto mb-3 w-[32.93%] max-w-[14.818rem]"
-      >
-        <image href="/brand/oma-logo.svg" width="800" height="800" />
-      </svg>
+        className="mx-auto mb-3 w-[32.93%] max-w-[14.818rem] text-[color:var(--t-field-lit)]"
+        style={{
+          aspectRatio: '722 / 300',
+          backgroundColor: 'currentColor',
+          backgroundImage: WORDMARK_BANDS,
+          maskImage: 'url(/brand/oma-logo-mask.svg)',
+          maskRepeat: 'no-repeat',
+          maskSize: '100% 100%',
+          WebkitMaskImage: 'url(/brand/oma-logo-mask.svg)',
+          WebkitMaskRepeat: 'no-repeat',
+          WebkitMaskSize: '100% 100%',
+        }}
+      />
     )
   }
 

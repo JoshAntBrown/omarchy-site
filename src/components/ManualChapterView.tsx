@@ -14,7 +14,7 @@ export function ManualChapterView({ data }: { data: ChapterData }) {
   return (
     <div className="manual-chapter">
       <article>
-        <PageHeading title="Manual" as="p" className="mb-8" />
+        <PageHeading title="Manual" as="p" />
         <h1 className="mx-auto w-full max-w-(--measure) text-3xl font-semibold tracking-tight text-text">
           {chapter.title}
         </h1>

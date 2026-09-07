@@ -208,16 +208,17 @@ export function MeetupsPage({ rules }: { rules: string }) {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <PageHeading title="Meetups" />
-      <div className="mx-auto mt-8 max-w-2xl text-center">
-        <p className="text-[15px] leading-relaxed text-text-secondary [text-wrap:pretty]">
-          Omarchy meetups are popping up around the world. Find one near you, or
-          start one. They all live on the Omarchy calendar on Luma.
-        </p>
-        <div className="mt-3 hidden sm:block">{calendar}</div>
-      </div>
+      <PageHeading title="Meetups">
+        <div className="mx-auto mt-3 max-w-2xl text-center">
+          <p className="text-[15px] leading-relaxed text-text-secondary [text-wrap:pretty]">
+            Omarchy meetups are popping up around the world. Find one near you,
+            or start one. They all live on the Omarchy calendar on Luma.
+          </p>
+          <div className="mt-3 hidden sm:block">{calendar}</div>
+        </div>
+      </PageHeading>
 
-      <nav aria-label="Filter the meetups by region" className="mt-10">
+      <nav aria-label="Filter the meetups by region">
         <ul className="flex flex-wrap gap-2">
           {[null, ...regions].map((r) => {
             const on = region === r

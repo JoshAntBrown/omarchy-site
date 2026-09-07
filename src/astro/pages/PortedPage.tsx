@@ -42,12 +42,16 @@ export function PortedPage({
         narrow ? 'max-w-3xl' : 'max-w-6xl',
       )}
     >
-      <PageHeading
-        title={path === 'patrons' ? 'Patrons' : page.title}
-        brand={path === 'foundation' ? 'oma' : 'omarchy'}
-      />
+      {path === 'brand' ? (
+        <h1 className="sr-only">{page.title}</h1>
+      ) : (
+        <PageHeading
+          title={path === 'patrons' ? 'Patrons' : page.title}
+          brand={path === 'foundation' ? 'oma' : 'omarchy'}
+        />
+      )}
       <div
-        className="prose ported mt-8"
+        className="prose ported"
         dangerouslySetInnerHTML={{ __html: page.html }}
       />
     </main>

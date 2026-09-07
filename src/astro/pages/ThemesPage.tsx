@@ -4,20 +4,35 @@ import themes from '@/data/themes.json'
 export function ThemesPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <PageHeading title="Community themes" />
-      <div className="mx-auto max-w-2xl text-center">
-        <p className="mt-3 text-[15px] italic leading-relaxed text-text-secondary [text-wrap:pretty]">
-          A theme restyles the whole system at once. Install these community
-          themes via{' '}
-          <span className="font-medium text-text">
-            Install &gt; Style &gt; Themes
-          </span>{' '}
-          in Omarchy. Want yours listed? Open a pull request on the site
-          repository.
-        </p>
-      </div>
+      <PageHeading title="Community themes">
+        <div className="mx-auto mt-6 max-w-xl text-center">
+          <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs text-text-secondary sm:text-sm">
+            <span>Make it yours:</span>
+            <span className="inline-flex items-center gap-2 font-mono text-text">
+              <span>Install</span>
+              <span aria-hidden="true" className="text-text-muted">
+                →
+              </span>
+              <span className="sr-only">then</span>
+              <span>Style</span>
+              <span aria-hidden="true" className="text-text-muted">
+                →
+              </span>
+              <span className="sr-only">then</span>
+              <span>Themes</span>
+            </span>
+          </p>
+          <a
+            href="https://github.com/omacom/omarchy-site/compare"
+            className="mt-3 inline-flex min-h-10 items-center gap-1.5 text-xs text-text-secondary underline decoration-border-strong underline-offset-4 transition-colors hover:text-brand hover:decoration-brand sm:text-sm"
+          >
+            Share your theme
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </PageHeading>
 
-      <ul className="mt-10 grid gap-x-4 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid gap-x-4 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
         {themes.map((theme) => (
           <li key={theme.name}>
             <a

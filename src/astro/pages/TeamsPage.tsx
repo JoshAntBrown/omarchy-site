@@ -49,7 +49,7 @@ export function TeamsPage() {
           key={team.id}
           id={team.id}
           aria-labelledby={`team-${team.id}-name`}
-          className="relative mt-12 scroll-mt-[calc(var(--nav-h)+2rem)] border-t border-border-subtle pt-8 first-of-type:mt-10"
+          className="relative mt-12 scroll-mt-[calc(var(--nav-h)+2rem)] border-t border-border-subtle pt-8 first-of-type:mt-0 first-of-type:border-0 first-of-type:pt-0"
         >
           {/* Keep existing team anchor URLs working. */}
           <span
