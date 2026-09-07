@@ -22,7 +22,8 @@
     "dev:da": "PUBLIC_SITE_LOCALE=da ASTRO_DEV_BACKGROUND=1 astro dev --ignore-lock --port 3114",
     "build:locale": "node scripts/build-locale.mjs",
     "check:translations": "node scripts/check-translations.mjs",
-    "build:translations": "npm run port && npm run check:translations && node scripts/build-translations.mjs"
+    "build:translations": "npm run port && npm run check:translations && node scripts/build-translations.mjs",
+    "deploy:locale": "node scripts/deploy-locale.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",

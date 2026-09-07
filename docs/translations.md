@@ -32,3 +32,19 @@ Imported main-page prose uses exact HTML keys. When editing its English source, 
 Third-party post quotes, video titles, event names, theme names, and product names retain their original wording. Danish uses Danish dates and number formatting, while funding amounts remain in USD.
 
 The translation CI job builds every registered non-English language and uploads the output as an artifact. It does not deploy to regional domains. Adding another language does not require another fork, layout, or CI job.
+
+## Publish to Cloudflare
+
+`npm run deploy:locale -- da` uploads the already-built Danish output to an `omarchy-da` Worker and prints its workers.dev URL. Set `CLOUDFLARE_ACCOUNT_ID` and authenticate Wrangler first. With the local `cf` wrapper's keyring connection:
+
+```sh
+npm run build:locale -- da
+export CLOUDFLARE_ACCOUNT_ID=<your-account-id>
+CLOUDFLARE_API_TOKEN="$(secret-tool lookup service cloudflare account api-token)" npm run deploy:locale -- da
+```
+
+The token stays in the child process environment and is never written to the repository. Use `--dry-run` to validate deployment configuration without uploading.
+
+To connect the registered domain, create its Cloudflare zone, preserve any existing DNS records, and set the assigned nameservers through the registrar. Once the zone is active, run the same deployment command with `--domain`. It attaches the domain from the locale registry and Cloudflare provisions HTTPS. This is a separate step from deploying the workers.dev preview.
+
+Regional deployments are currently explicit commands. CI builds translation artifacts but does not publish them. To automate publishing after merge, add a deployment job using a Cloudflare API token and account ID stored in GitHub Actions secrets.
