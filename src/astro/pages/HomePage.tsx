@@ -178,7 +178,7 @@ const communityCards = [
     icon: GithubIcon,
     title: t('Contribute'),
     body: t('File issues, fix bugs, and submit features.'),
-    href: 'https://github.com/omacom-io/omarchy',
+    href: 'https://github.com/omacom/omarchy',
     cta: t('Contribute on GitHub'),
   },
   {
