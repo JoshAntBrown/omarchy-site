@@ -50,7 +50,7 @@ export function LanguageSwitcher({ path }: { path: string }) {
             </Popover.Title>
             <nav aria-label={t('Language')}>
               {Object.entries(locales).map(([code, entry]) => {
-                const destination = entry.navigationDomain ?? entry.domain
+                const destination = entry.domain
                 return (
                   <a
                     key={code}

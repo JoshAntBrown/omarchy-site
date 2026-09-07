@@ -1,6 +1,6 @@
 # Translations
 
-One site, shared components, separate static builds. English remains the source of truth. Country editions cover our registered domains, and community editions have permanent language addresses under omarchy.org. Their manual links currently lead to the canonical English manual.
+One site, shared components, separate static builds. English remains the source of truth. Each of the 29 languages has one primary address, either a registered domain or a language subdomain under omarchy.org. English uses omarchy.org. Manual links currently lead to the canonical English manual.
 
 ## Build and preview
 
@@ -45,75 +45,70 @@ CLOUDFLARE_API_TOKEN="$(secret-tool lookup service cloudflare account api-token)
 
 The token stays in the child process environment and is never written to the repository. Use `--dry-run` to validate deployment configuration without uploading.
 
-To connect the registered domain, create its Cloudflare zone, preserve any existing DNS records, and set the assigned nameservers through the registrar. Once the zone is active, run the same deployment command with `--domain`. It attaches the domain and any `aliases` from the locale registry, and Cloudflare provisions HTTPS. This is a separate step from deploying the workers.dev preview.
+To connect the registered domain, create its Cloudflare zone, preserve any existing DNS records, and set the assigned nameservers through the registrar. Once the zone is active, run the same deployment command with `--domain`. It attaches the language’s primary domain from the locale registry, and Cloudflare provisions HTTPS. This is a separate step from deploying the workers.dev preview.
 
-Regional publishing is automatic through `translate-news.yml`. Manual deployment remains available for recovery.
+Language publishing is automatic through `translate-news.yml`. Manual deployment remains available for recovery.
 
-## Country domains and fallback addresses
+## One primary address per language
 
-Every country edition has two permanent addresses: its national domain (for example `omarchy.dk`) and a fallback under the global domain (`dk.omarchy.org`). The fallback is an additional Worker custom domain, not a redirect to the national domain. Both host the same files independently; canonical and Open Graph URLs retain the national domain. Register both the fallback and `www` hostname in the locale's `aliases` list so subsequent deployments retain them.
+The locale registry defines one public address for each language. The language menu, canonical URLs, Open Graph metadata, alternate-language links and deployment all use that same address. Do not register additional addresses or regional English editions. English has a single global edition at omarchy.org.
 
-Use country codes for fallback hostnames: `dk`, `jp`, `gr`, and so on. These need not match language codes (`da`, `ja`, `el`). Cloudflare custom domains handle routing and TLS directly; no manual apex CNAME is needed. The national domains use their assigned Cloudflare nameservers.
+The language menu shows colored country flags and preserves the current pathname, query and fragment when the destination has a translation. Otherwise it opens that language’s home page. Labels use native names, and English uses a globe. The `flag` field supplies the two-letter country code when needed. Arabic declares `direction: "rtl"`.
 
-The language menu links to each edition’s canonical domain by default, including working national domains such as `omarchy.dk`. If a national domain is not ready, set `navigationDomain` to its verified HTTPS fallback address; remove the override after the national domain serves the correct language over valid HTTPS. This choice is shared by the globe selector and footer, regardless of which hostname the visitor uses. A `flag` field supplies the two-letter country code for editions whose primary hostname is under omarchy.org.
+Cloudflare custom domains handle routing and TLS directly. Registered national domains use their assigned Cloudflare nameservers; language subdomains use the omarchy.org zone. Verify HTTPS and the page language before publishing a new primary address.
 
-The language menu shows colored country flags and preserves the current pathname, query and fragment when the destination has a translation. Otherwise it opens that edition's home page. Language labels use their native spelling. The global English edition uses a globe.
+| Language         | Primary address                          |
+| ---------------- | ---------------------------------------- |
+| English          | [omarchy.org](https://omarchy.org)       |
+| Dansk            | [omarchy.dk](https://omarchy.dk)         |
+| العربية          | [omarchy.ae](https://omarchy.ae)         |
+| Suomi            | [omarchy.fi](https://omarchy.fi)         |
+| Français         | [omarchy.fr](https://omarchy.fr)         |
+| Ελληνικά         | [omarchy.gr](https://omarchy.gr)         |
+| Magyar           | [omarchy.hu](https://omarchy.hu)         |
+| हिन्दी           | [omarchy.in](https://omarchy.in)         |
+| Íslenska         | [omarchy.is](https://omarchy.is)         |
+| 日本語           | [omarchy.jp](https://omarchy.jp)         |
+| 한국어           | [omarchy.kr](https://omarchy.kr)         |
+| Español (México) | [omarchy.mx](https://omarchy.mx)         |
+| Filipino         | [omarchy.ph](https://omarchy.ph)         |
+| Português        | [omarchy.pt](https://omarchy.pt)         |
+| Svenska          | [omarchy.se](https://omarchy.se)         |
+| Türkçe           | [omarchy.tr](https://omarchy.tr)         |
+| Tiếng Việt       | [vi.omarchy.org](https://vi.omarchy.org) |
+| اردو             | [ur.omarchy.org](https://ur.omarchy.org) |
+| বাংলা            | [bn.omarchy.org](https://bn.omarchy.org) |
+| Català           | [ca.omarchy.org](https://ca.omarchy.org) |
+| සිංහල            | [si.omarchy.org](https://si.omarchy.org) |
+| தமிழ்            | [ta.omarchy.org](https://ta.omarchy.org) |
+| ไทย              | [th.omarchy.org](https://th.omarchy.org) |
+| Oʻzbekcha        | [uz.omarchy.org](https://uz.omarchy.org) |
+| Italiano         | [it.omarchy.org](https://it.omarchy.org) |
+| 简体中文         | [zh.omarchy.org](https://zh.omarchy.org) |
+| Polski           | [pl.omarchy.org](https://pl.omarchy.org) |
+| Lietuvių         | [lt.omarchy.org](https://lt.omarchy.org) |
+| Gaeilge          | [ga.omarchy.org](https://ga.omarchy.org) |
 
-The Singapore, New Zealand and US editions use `contentLocale: "en"` to reuse the English source, while retaining their own domains and regional formatting. Arabic declares `direction: "rtl"`.
+## Pointing a new domain to a language site
 
-### Country editions
+A domain owner can provide the new primary address for a language while keeping ownership and registration with their current registrar. The Omarchy maintainer hosts the site in the project’s Cloudflare account. No registrar transfer is required.
 
-| Language         | National domain                  | Fallback                                 |
-| ---------------- | -------------------------------- | ---------------------------------------- |
-| Dansk            | [omarchy.dk](https://omarchy.dk) | [dk.omarchy.org](https://dk.omarchy.org) |
-| العربية          | [omarchy.ae](https://omarchy.ae) | [ae.omarchy.org](https://ae.omarchy.org) |
-| Suomi            | [omarchy.fi](https://omarchy.fi) | [fi.omarchy.org](https://fi.omarchy.org) |
-| Français         | [omarchy.fr](https://omarchy.fr) | [fr.omarchy.org](https://fr.omarchy.org) |
-| Ελληνικά         | [omarchy.gr](https://omarchy.gr) | [gr.omarchy.org](https://gr.omarchy.org) |
-| Magyar           | [omarchy.hu](https://omarchy.hu) | [hu.omarchy.org](https://hu.omarchy.org) |
-| हिन्दी           | [omarchy.in](https://omarchy.in) | [in.omarchy.org](https://in.omarchy.org) |
-| Íslenska         | [omarchy.is](https://omarchy.is) | [is.omarchy.org](https://is.omarchy.org) |
-| 日本語           | [omarchy.jp](https://omarchy.jp) | [jp.omarchy.org](https://jp.omarchy.org) |
-| 한국어           | [omarchy.kr](https://omarchy.kr) | [kr.omarchy.org](https://kr.omarchy.org) |
-| Español (México) | [omarchy.mx](https://omarchy.mx) | [mx.omarchy.org](https://mx.omarchy.org) |
-| English (NZ)     | [omarchy.nz](https://omarchy.nz) | [nz.omarchy.org](https://nz.omarchy.org) |
-| Filipino         | [omarchy.ph](https://omarchy.ph) | [ph.omarchy.org](https://ph.omarchy.org) |
-| Português        | [omarchy.pt](https://omarchy.pt) | [pt.omarchy.org](https://pt.omarchy.org) |
-| Svenska          | [omarchy.se](https://omarchy.se) | [se.omarchy.org](https://se.omarchy.org) |
-| English (SG)     | [omarchy.sg](https://omarchy.sg) | [sg.omarchy.org](https://sg.omarchy.org) |
-| Türkçe           | [omarchy.tr](https://omarchy.tr) | [tr.omarchy.org](https://tr.omarchy.org) |
-| English (US)     | [omarchy.us](https://omarchy.us) | [us.omarchy.org](https://us.omarchy.org) |
+### Domain owner
 
-## Community-owned domains
+1. Tell the maintainer the exact domain and intended language. Disclose any existing website, email service or other use of the domain so its DNS records can be preserved.
+2. Keep the domain registered and renewed in your own account. Give the maintainer the existing DNS records, including MX and TXT records used for email and verification. Do not send registrar passwords.
+3. Wait for the maintainer to confirm that the Cloudflare zone contains the required records and to supply the nameservers assigned to that specific zone. Enter those exact nameservers at your registrar. Do not copy nameservers from another domain or guess their values.
+4. Confirm with the maintainer that the website and any existing email service work after the change.
 
-Language editions also run directly on these hosts. National domains held by volunteers can forward visitors without transferring registration or nameservers.
+### Omarchy maintainer
 
-| Language            | Primary address   | Additional address                |
-| ------------------- | ----------------- | --------------------------------- |
-| Vietnamese          | vi.omarchy.org    | vn.omarchy.org                    |
-| Urdu                | ur.omarchy.org    | pk.omarchy.org                    |
-| Bengali             | bn.omarchy.org    | bd.omarchy.org                    |
-| Catalan             | ca.omarchy.org    | ad.omarchy.org                    |
-| Sinhala             | si.omarchy.org    | lk.omarchy.org                    |
-| Tamil               | ta.omarchy.org    | —                                 |
-| Thai                | th.omarchy.org    | —                                 |
-| Uzbek               | uz.omarchy.org    | —                                 |
-| Italian             | it.omarchy.org    | —                                 |
-| Simplified Chinese  | zh.omarchy.org    | cn.omarchy.org, zh-cn.omarchy.org |
-| Polish              | pl.omarchy.org    | —                                 |
-| Lithuanian          | lt.omarchy.org    | —                                 |
-| Irish               | ga.omarchy.org    | ie.omarchy.org                    |
-| English (Australia) | en-au.omarchy.org | au.omarchy.org                    |
-| English (Nigeria)   | en-ng.omarchy.org | ng.omarchy.org                    |
-| English (Zimbabwe)  | en-zw.omarchy.org | zw.omarchy.org                    |
+1. Add the domain as a zone in the project’s Cloudflare account. Review the imported DNS records with the owner and preserve all required records, particularly MX and TXT records. Resolve any conflicting website records deliberately; do not discard unrelated records. Coordinate any existing DNSSEC configuration before changing nameservers.
+2. Send the owner the nameservers Cloudflare assigned to this zone. After the owner applies them, wait for Cloudflare to mark the zone active.
+3. Prepare the replacement `domain` value for the existing language in `src/i18n/locales.json`. Keep one primary address; do not add an alias or another edition. Build with `npm run build:locale -- <code>`, then deploy with `npm run deploy:locale -- <code> --domain`. This attaches the Worker custom domain and lets Cloudflare provision HTTPS. Do not publish the registry change to master until the new address is verified.
+4. Verify DNS resolution, a valid HTTPS certificate, the intended language on the home page and a news article deep link. Check that the article path survives navigation and that canonical URLs identify the new primary address. Check existing email DNS with the owner as well.
+5. Publish the registry change and rebuild/deploy the sites so the language selector and alternate-language links use the verified new address. Once the switch is confirmed, remove the previous Worker custom-domain attachment and retire the previous address rather than retaining it as an alias.
 
-Arabic also has `ar.omarchy.org`; Turkish already has `tr.omarchy.org`. The regional English editions reuse English content.
-
-After verifying an edition is live, ask its domain owner to configure an HTTP 301 redirect from their apex and www hosts to the language address, preserving the path and query string. Both HTTP and HTTPS should work on the source domain. An existing Cloudflare redirect rule or registrar web-forwarding service may suffice. A DNS CNAME alone does not configure HTTP routing or issue a certificate for the source domain; do not present it as a substitute for a redirect or an explicitly provisioned custom domain.
-
-Once a community-owned domain redirects correctly over HTTPS to its language edition, it can be set as `navigationDomain` while the language URL remains canonical. Verify the final page language and that paths survive the redirect before changing that preference. This field does not attach a Worker custom domain or change DNS.
-
-Before promoting a community-owned national domain to canonical hosting, arrange its custom-domain routing and TLS, verify it serves the correct edition without a redirect loop, then update the registry and rebuild. Keep the language address working independently.
+A DNS CNAME pointing an arbitrary domain at an omarchy.org hostname is not sufficient: it does not configure Worker routing or provide a certificate for that domain. Use the zone and Worker custom-domain handoff above. Nameserver changes affect the whole domain, so preserving existing DNS records is part of the handoff, not an optional cleanup step.
 
 ## Translating the manual next
 
