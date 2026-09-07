@@ -8,6 +8,17 @@ const json = (file) => JSON.parse(readFileSync(file, 'utf8'))
 const posts = json('src/data/news-posts.json')
 const messages = new Set()
 const problems = []
+const selected = process.argv.slice(2)
+for (const code of selected) {
+  if (!Object.hasOwn(locales, code)) problems.push(`Unknown locale: ${code}`)
+}
+const referenceMessages = json('src/i18n/messages/da.json')
+const referenceBlocks = json('src/i18n/da/blocks.json')
+const references = (html, attribute) =>
+  [...html.matchAll(new RegExp(`${attribute}="([^"]*)"`, 'g'))]
+    .map((match) => match[1])
+    .sort()
+const same = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 function collect(directory) {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     if (entry.name === 'parked' || entry.name === 'i18n') continue
@@ -51,14 +62,54 @@ for (const [code, locale] of Object.entries(locales)) {
   )
     problems.push(`Invalid or duplicate domain: ${locale.domain}`)
   domains.add(url.hostname)
+  for (const alias of locale.aliases ?? []) {
+    if (!/^[a-z0-9.-]+$/.test(alias) || domains.has(alias))
+      problems.push(`Invalid or duplicate alias: ${alias}`)
+    domains.add(alias)
+  }
+  if (locale.direction && !['ltr', 'rtl'].includes(locale.direction))
+    problems.push(`Invalid text direction: ${code}`)
   new Intl.DateTimeFormat(locale.formatLocale)
-  if (code === 'en') continue
-  const catalogue = json(`src/i18n/messages/${code}.json`)
-  for (const message of messages) {
+  const contentLocale = locale.contentLocale ?? code
+  if (contentLocale === 'en' || (selected.length && !selected.includes(code)))
+    continue
+  const files = [
+    `src/i18n/messages/${contentLocale}.json`,
+    `src/i18n/${contentLocale}/blocks.json`,
+    `src/i18n/${contentLocale}/news.json`,
+  ]
+  const missing = files.filter((file) => !existsSync(file))
+  if (missing.length) {
+    problems.push(...missing.map((file) => `${code}: missing ${file}`))
+    continue
+  }
+  const catalogue = json(`src/i18n/messages/${contentLocale}.json`)
+  for (const message of new Set([
+    ...messages,
+    ...Object.keys(referenceMessages),
+  ])) {
     if (!catalogue[message])
       problems.push(`${code}: missing message: ${message}`)
   }
-  const news = json(`src/i18n/${code}/news.json`)
+  const blocks = json(`src/i18n/${contentLocale}/blocks.json`)
+  for (const source of Object.keys(referenceBlocks)) {
+    if (!blocks[source]?.trim()) {
+      problems.push(`${code}: missing prose: ${source}`)
+      continue
+    }
+    for (const attribute of ['href', 'src']) {
+      if (
+        !same(
+          references(source, attribute),
+          references(blocks[source], attribute),
+        )
+      )
+        problems.push(
+          `${code}: prose ${attribute} references differ: ${source}`,
+        )
+    }
+  }
+  const news = json(`src/i18n/${contentLocale}/news.json`)
   for (const post of posts) {
     const translated = news[post.slug]
     const hash = createHash('sha256')
@@ -66,7 +117,7 @@ for (const [code, locale] of Object.entries(locales)) {
       .digest('hex')
     if (
       !translated?.title ||
-      !existsSync(`src/i18n/${code}/news/${post.slug}.html`)
+      !existsSync(`src/i18n/${contentLocale}/news/${post.slug}.html`)
     )
       problems.push(`${code}: missing article: ${post.slug}`)
     else if (translated.sourceHash !== hash)
@@ -75,7 +126,7 @@ for (const [code, locale] of Object.entries(locales)) {
       )
     else {
       const html = readFileSync(
-        `src/i18n/${code}/news/${post.slug}.html`,
+        `src/i18n/${contentLocale}/news/${post.slug}.html`,
         'utf8',
       )
       for (const attribute of ['href', 'src']) {
@@ -94,7 +145,7 @@ for (const [code, locale] of Object.entries(locales)) {
       }
     }
   }
-  if (!existsSync(`src/i18n/${code}/blocks.json`))
+  if (!existsSync(`src/i18n/${contentLocale}/blocks.json`))
     problems.push(`${code}: missing main-page prose catalogue`)
 }
 if (problems.length) {
@@ -102,5 +153,5 @@ if (problems.length) {
   process.exit(1)
 }
 console.log(
-  `Translations checked: ${Object.keys(locales).join(', ')}; ${messages.size} UI messages, ${posts.length} news articles per language.`,
+  `Translations checked: ${(selected.length ? selected : Object.keys(locales)).join(', ')}; ${messages.size} UI messages, ${posts.length} news articles per language.`,
 )

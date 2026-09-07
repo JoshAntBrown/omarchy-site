@@ -12,6 +12,146 @@
     "formatLocale": "da-DK",
     "ogLocale": "da_DK",
     "manual": false,
-    "aliases": ["www.omarchy.dk"]
+    "aliases": ["www.omarchy.dk", "dk.omarchy.org"]
+  },
+  "ar": {
+    "name": "العربية",
+    "domain": "https://omarchy.ae",
+    "formatLocale": "ar-AE",
+    "ogLocale": "ar_AE",
+    "manual": false,
+    "direction": "rtl",
+    "aliases": ["www.omarchy.ae", "ae.omarchy.org"]
+  },
+  "fi": {
+    "name": "Suomi",
+    "domain": "https://omarchy.fi",
+    "formatLocale": "fi-FI",
+    "ogLocale": "fi_FI",
+    "manual": false,
+    "aliases": ["www.omarchy.fi", "fi.omarchy.org"]
+  },
+  "fr": {
+    "name": "Français",
+    "domain": "https://omarchy.fr",
+    "formatLocale": "fr-FR",
+    "ogLocale": "fr_FR",
+    "manual": false,
+    "aliases": ["www.omarchy.fr", "fr.omarchy.org"]
+  },
+  "el": {
+    "name": "Ελληνικά",
+    "domain": "https://omarchy.gr",
+    "formatLocale": "el-GR",
+    "ogLocale": "el_GR",
+    "manual": false,
+    "aliases": ["www.omarchy.gr", "gr.omarchy.org"]
+  },
+  "hu": {
+    "name": "Magyar",
+    "domain": "https://omarchy.hu",
+    "formatLocale": "hu-HU",
+    "ogLocale": "hu_HU",
+    "manual": false,
+    "aliases": ["www.omarchy.hu", "hu.omarchy.org"]
+  },
+  "hi": {
+    "name": "हिन्दी",
+    "domain": "https://omarchy.in",
+    "formatLocale": "hi-IN",
+    "ogLocale": "hi_IN",
+    "manual": false,
+    "aliases": ["www.omarchy.in", "in.omarchy.org"]
+  },
+  "is": {
+    "name": "Íslenska",
+    "domain": "https://omarchy.is",
+    "formatLocale": "is-IS",
+    "ogLocale": "is_IS",
+    "manual": false,
+    "aliases": ["www.omarchy.is", "is.omarchy.org"]
+  },
+  "ja": {
+    "name": "日本語",
+    "domain": "https://omarchy.jp",
+    "formatLocale": "ja-JP",
+    "ogLocale": "ja_JP",
+    "manual": false,
+    "aliases": ["www.omarchy.jp", "jp.omarchy.org"]
+  },
+  "ko": {
+    "name": "한국어",
+    "domain": "https://omarchy.kr",
+    "formatLocale": "ko-KR",
+    "ogLocale": "ko_KR",
+    "manual": false,
+    "aliases": ["www.omarchy.kr", "kr.omarchy.org"]
+  },
+  "es-MX": {
+    "name": "Español (México)",
+    "domain": "https://omarchy.mx",
+    "formatLocale": "es-MX",
+    "ogLocale": "es_MX",
+    "manual": false,
+    "aliases": ["www.omarchy.mx", "mx.omarchy.org"]
+  },
+  "en-NZ": {
+    "name": "English (NZ)",
+    "domain": "https://omarchy.nz",
+    "formatLocale": "en-NZ",
+    "ogLocale": "en_NZ",
+    "manual": false,
+    "contentLocale": "en",
+    "aliases": ["www.omarchy.nz", "nz.omarchy.org"]
+  },
+  "fil": {
+    "name": "Filipino",
+    "domain": "https://omarchy.ph",
+    "formatLocale": "fil-PH",
+    "ogLocale": "fil_PH",
+    "manual": false,
+    "aliases": ["www.omarchy.ph", "ph.omarchy.org"]
+  },
+  "pt": {
+    "name": "Português",
+    "domain": "https://omarchy.pt",
+    "formatLocale": "pt-PT",
+    "ogLocale": "pt_PT",
+    "manual": false,
+    "aliases": ["www.omarchy.pt", "pt.omarchy.org"]
+  },
+  "sv": {
+    "name": "Svenska",
+    "domain": "https://omarchy.se",
+    "formatLocale": "sv-SE",
+    "ogLocale": "sv_SE",
+    "manual": false,
+    "aliases": ["www.omarchy.se", "se.omarchy.org"]
+  },
+  "en-SG": {
+    "name": "English (SG)",
+    "domain": "https://omarchy.sg",
+    "formatLocale": "en-SG",
+    "ogLocale": "en_SG",
+    "manual": false,
+    "contentLocale": "en",
+    "aliases": ["www.omarchy.sg", "sg.omarchy.org"]
+  },
+  "tr": {
+    "name": "Türkçe",
+    "domain": "https://omarchy.tr",
+    "formatLocale": "tr-TR",
+    "ogLocale": "tr_TR",
+    "manual": false,
+    "aliases": ["www.omarchy.tr", "tr.omarchy.org"]
+  },
+  "en-US": {
+    "name": "English (US)",
+    "domain": "https://omarchy.us",
+    "formatLocale": "en-US",
+    "ogLocale": "en_US",
+    "manual": false,
+    "contentLocale": "en",
+    "aliases": ["www.omarchy.us", "us.omarchy.org"]
   }
 }
