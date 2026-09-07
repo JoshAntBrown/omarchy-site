@@ -177,7 +177,7 @@ const communityCards = [
     icon: CalendarFilledIcon,
     title: 'Meetups',
     body: 'Omarchy meetups are popping up around the world. Find one near you, or start one.',
-    splat: 'meetups',
+    to: '/meetups/',
     cta: 'Find a meetup',
   },
   {
@@ -320,6 +320,12 @@ export function HomePage({ data }: { data: HomeData }) {
   const allPatrons = (
     <Link to="/$/" params={{ _splat: 'patrons' }} className={sectionLink}>
       All patrons
+      <ArrowRightIcon />
+    </Link>
+  )
+  const allMeetups = (
+    <Link to="/meetups/" className={sectionLink}>
+      All meetups
       <ArrowRightIcon />
     </Link>
   )
@@ -876,13 +882,12 @@ export function HomePage({ data }: { data: HomeData }) {
         </div>
       </section>
 
+      {/* meetups: a rail across the whole window, like the videos. */}
       <section
         id="meetups"
-        className="border-t border-border-subtle bg-bg-deep"
+        className="border-t border-border-subtle bg-bg-deep py-12 lg:py-24"
       >
-        <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
-          <MeetupShowcase />
-        </div>
+        <MeetupShowcase action={allMeetups} />
       </section>
 
       {/* community */}
@@ -917,12 +922,7 @@ export function HomePage({ data }: { data: HomeData }) {
                   {inner}
                 </a>
               ) : (
-                <Link
-                  key={card.title}
-                  to="/$/"
-                  params={{ _splat: card.splat }}
-                  className={className}
-                >
+                <Link key={card.title} to={card.to} className={className}>
                   {inner}
                 </Link>
               )

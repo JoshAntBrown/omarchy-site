@@ -1,10 +1,20 @@
 import { useEffect, useState } from 'react'
-import { SectionHeading } from '@/components/SectionHeading'
+import type { ReactNode } from 'react'
+import { SectionActions, SectionHeading } from '@/components/SectionHeading'
 import { MeetupCover } from '@/components/MeetupCover'
-import { ArrowRightIcon } from '@/components/icons'
+import { RailBar, useRail } from '@/components/Rail'
+import { Button } from '@/components/ui/button'
+import { ChevronLeftIcon, ChevronRightIcon } from '@/components/icons'
 import meetups from '@/data/meetups.json'
+import { cn } from '@/lib/utils'
 
-export function MeetupShowcase() {
+/**
+ * The next meetups, on the same full-bleed rail the videos run in: swipe
+ * on a phone, drag or use the arrows with a mouse, with the bar under it
+ * standing in for the scrollbar. Several small cards show at a time, so
+ * the arrows turn a whole view of them rather than one card.
+ */
+export function MeetupShowcase({ action }: { action?: ReactNode }) {
   // Keep the first render identical to the built page, then drop past events
   // using the visitor's current time when the page opens.
   const [now, setNow] = useState(() =>
@@ -16,25 +26,91 @@ export function MeetupShowcase() {
     .sort((a, b) => Date.parse(a.start) - Date.parse(b.start))
     .slice(0, 15)
 
+  const rail = useRail<HTMLUListElement>({
+    count: upcoming.length,
+    align: 'start',
+  })
+  const turn = (dir: 1 | -1) => {
+    const to = rail.nearest() + dir * rail.perView()
+    rail.glideTo(Math.max(0, Math.min(upcoming.length - 1, to)))
+  }
+
+  const arrows = (
+    <div className="flex items-center gap-2">
+      <Button
+        variant="outline"
+        size="icon"
+        aria-label="Previous meetups"
+        disabled={rail.atStart}
+        onClick={() => turn(-1)}
+      >
+        <ChevronLeftIcon className="size-5" />
+      </Button>
+      <Button
+        variant="outline"
+        size="icon"
+        aria-label="Next meetups"
+        disabled={rail.atEnd}
+        onClick={() => turn(1)}
+      >
+        <ChevronRightIcon className="size-5" />
+      </Button>
+    </div>
+  )
+
   return (
     <>
-      <SectionHeading
-        wide
-        anchor="meetups"
-        title="Share the love of beautiful, fun & agentic Linux"
-        description="Get together with others who love computers as much as you do. Share plugins, present work, and help newcomers into the community."
-      />
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <SectionHeading
+          roomy
+          anchor="meetups"
+          title="Share the love of beautiful, fun & agentic Linux"
+          description={
+            <>
+              Get together with others who love computers as much as you do.{' '}
+              {/* From a tablet up the second sentence starts its own line, so
+                  the two lines read as two thoughts rather than breaking
+                  mid-sentence. Narrower screens wrap as they need to. */}
+              <span className="md:block">
+                Share plugins, present work, and help newcomers into the
+                community.
+              </span>
+            </>
+          }
+          action={
+            <div className="flex flex-col items-end gap-3">
+              {action}
+              {arrows}
+            </div>
+          }
+        />
+      </div>
+
       <ul
+        ref={rail.scroller}
+        {...rail.scrollerProps}
         aria-label="Upcoming Omarchy meetups"
-        className="scroll-accent mt-6 flex snap-x snap-proximity gap-6 overflow-x-auto pb-5 lg:mt-10"
+        className="rail-bare rail-column mt-6 lg:mt-10 flex cursor-grab snap-x snap-mandatory gap-6 overflow-x-auto select-none active:cursor-grabbing motion-reduce:scroll-auto"
       >
-        {upcoming.map((event) => (
+        {upcoming.map((event, i) => (
           <li
             key={event.id}
-            className="w-[42.5%] max-w-[15rem] shrink-0 snap-start"
+            data-slide={i}
+            // Sized so a whole number of cards fills the content column,
+            // three on a tablet and four on a desktop, with the next one
+            // peeking in from the bleed the way the videos do. The rail's
+            // padding is the column's margins, so 100% here is the column
+            // itself; the gaps come out before dividing.
+            className={cn(
+              'w-[42.5%] shrink-0 snap-start transition-[opacity,filter] duration-300 ease-out sm:w-[calc((100%_-_3rem)/3)] lg:w-[calc((100%_-_4.5rem)/4)]',
+              // Cards peeking in from the bleed sit back, the way the
+              // videos' neighbours do, so the column reads as the page.
+              !rail.inColumn(i) && 'opacity-40 brightness-75',
+            )}
           >
             <a
               href={event.url}
+              draggable={false}
               className="group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
             >
               {event.cover ? (
@@ -45,6 +121,7 @@ export function MeetupShowcase() {
                   height={event.coverHeight}
                   loading="lazy"
                   decoding="async"
+                  draggable={false}
                   className="aspect-square w-full object-cover"
                 />
               ) : (
@@ -69,26 +146,22 @@ export function MeetupShowcase() {
             </a>
           </li>
         ))}
-        <li className="w-40 shrink-0 snap-start sm:w-56">
-          <a
-            href="https://luma.com/omarchy"
-            className="flex aspect-video h-auto min-h-40 items-center justify-center gap-3 font-mono text-lg text-text underline-offset-4 hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
-          >
-            <span className="underline">MORE</span>
-            <ArrowRightIcon className="size-6" aria-hidden="true" />
-          </a>
-        </li>
       </ul>
-      <p className="mt-6 text-[15px] leading-relaxed text-text-secondary">
-        Don't see a meetup in your city?{' '}
-        <a
-          href="/meetups/"
-          className="whitespace-nowrap underline decoration-border-strong underline-offset-4 hover:text-brand hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
-        >
-          Start your own
-        </a>
-        .
-      </p>
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <RailBar rail={rail} />
+        <p className="mt-6 text-[15px] leading-relaxed text-text-secondary">
+          Don't see a meetup in your city?{' '}
+          <a
+            href="/meetups/"
+            className="whitespace-nowrap underline decoration-border-strong underline-offset-4 hover:text-brand hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+          >
+            Start your own
+          </a>
+          .
+        </p>
+        <SectionActions>{action}</SectionActions>
+      </div>
     </>
   )
 }

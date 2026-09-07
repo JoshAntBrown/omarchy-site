@@ -29,6 +29,7 @@ export function newsPostSeo(post: NewsPost) {
     description: post.excerpt || SITE_DESCRIPTION,
     path: post.path,
     type: 'article',
+    published: post.date,
   })
 }
 
@@ -79,6 +80,16 @@ export function notFoundSeo() {
     title: 'Not found - Omarchy',
     description: 'There is nothing at this address.',
     path: '/404/',
+    robots: 'noindex',
+  })
+}
+
+export function meetupsSeo() {
+  return seo({
+    title: 'Meetups - Omarchy',
+    description:
+      'Omarchy meetups around the world, and how to run your own: about Omarchy, Linux and adjacent hacker culture, open to everyone, and run by the community.',
+    path: '/meetups',
   })
 }
 
@@ -98,11 +109,6 @@ const PORTED: Partial<Record<string, { title: string; description: string }>> =
       title: 'Omacom Foundation - Omarchy',
       description:
         'The nonprofit behind Omarchy. It holds the trademarks, funds the infrastructure, promotes the work, and supports the open-source projects and developers it is built on.',
-    },
-    meetups: {
-      title: 'Meetups - Omarchy',
-      description:
-        'Omarchy meetups around the world, and how to run your own: about Omarchy, Linux and adjacent hacker culture, open to everyone, and run by the community.',
     },
     omakub: {
       title: 'Omakub - Omarchy',

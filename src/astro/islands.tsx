@@ -10,6 +10,7 @@ import { TeamsPage } from './pages/TeamsPage'
 import { ThemesPage } from './pages/ThemesPage'
 import { PortedPage } from './pages/PortedPage'
 import type { PortedPageData } from './pages/PortedPage'
+import { MeetupsPage } from './pages/MeetupsPage'
 import { NotFoundHero } from '../components/NotFoundHero'
 
 // Each island renders its page component with build-time data. Only the
@@ -69,4 +70,8 @@ export function PortedIsland({
 
 export function NotFoundIsland() {
   return <NotFoundHero />
+}
+
+export function MeetupsIsland({ rules }: { rules: string }) {
+  return <MeetupsPage rules={rules} />
 }

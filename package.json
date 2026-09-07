@@ -15,7 +15,7 @@
     "refresh-data": "node scripts/refresh-data.mjs",
     "deploy": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
-    "port": "python3 scripts/port_content.py",
+    "port": "python3 scripts/port_content.py && node scripts/meetup-map.mjs",
     "assemble": "node scripts/assemble-static.mjs",
     "parity": "python3 scripts/parity.py"
   },
@@ -44,12 +44,16 @@
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^6.0.1",
     "astro": "^7.3.1",
+    "d3-geo": "^3.1.1",
     "eslint": "^9.20.0",
     "prettier": "^3.8.1",
     "sharp": "^0.35.2",
+    "topojson-client": "^3.1.0",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.69.0",
     "vite": "^8.0.0",
+    "world-atlas": "^2.0.2",
+    "world-countries": "^5.1.0",
     "wrangler": "^4.127.1"
   },
   "pnpm": {

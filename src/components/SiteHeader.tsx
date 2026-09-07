@@ -4,12 +4,13 @@ import type { ReactElement, RefObject } from 'react'
 import {
   DownloadIcon,
   GithubIcon,
+  MENU_BARS_FOLD_MS,
   MenuBarsIcon,
   PaletteIcon,
   RssIcon,
   SearchIcon,
 } from '@/components/icons'
-import { OmarchyMarkDrawn } from '@/components/Brand'
+import { OmarchyMarkDrawn, OmarchyWordmark } from '@/components/Brand'
 import { MusicMenuControl } from '@/components/MusicControl'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,7 +22,6 @@ import {
 import { useHashLink, useTopLink } from '@/lib/hash-scroll'
 import { OPEN_PICKER_EVENT, THEME_EVENT, groundOf } from '@/lib/theme'
 import { OPEN_SEARCH_EVENT } from '@/lib/search'
-import { useIsNarrow } from '@/lib/use-media-query'
 import { cn } from '@/lib/utils'
 
 function NavTooltip({
@@ -221,13 +221,24 @@ function useNavSurface(
   /** The blended ghost is up behind the bar, so the real labels stand aside. */
   blended: boolean,
   bar: RefObject<HTMLElement | null>,
-  flat: boolean,
   /** Re-surveyed on arrival at a new page, whose sections are its own. */
   pathname: string,
 ) {
+  // Whether the sheet was up the last time this ran, so its closing can be
+  // told apart from any other reason to run.
+  const wasOpen = useRef(sheetOpen)
   useEffect(() => {
     const el = bar.current
     if (!el) return
+    const justClosed = wasOpen.current && !sheetOpen
+    wasOpen.current = sheetOpen
+    // Closing the sheet over the hero hands the labels back to the ghost.
+    // The toggle's bars are still folding back out of their cross at that
+    // moment, and blending the real one away at once cut the fold short:
+    // the ghost's still bars took over mid-turn. So the real one stays
+    // painted until the fold is done, and the two swap showing the same
+    // picture.
+    let holding = blended && justClosed
 
     // Exactly one of the two label layers is ever painted. They are never
     // cross-faded: two copies of the same word at partial opacity, one blended
@@ -238,20 +249,11 @@ function useNavSurface(
       // first paint is already the state this would have settled into: it
       // used to take until the effect ran, and for those frames both layers
       // of every label were painted at once.
+      if (!on && holding) return
       if (on) el.removeAttribute('data-nav-blend')
       else el.setAttribute('data-nav-blend', '')
       const ghost = document.querySelector<HTMLElement>('[data-nav-ghost]')
       if (ghost) ghost.style.opacity = on ? '0' : '1'
-    }
-
-    // A phone has no bar: no fill, nothing to fade in, the way it looks at the
-    // top of the page all the way down it. The controls carry their own ground
-    // instead, so there is something behind them and not behind the whole
-    // width of the screen.
-    if (flat) {
-      el.style.setProperty('--nav-surface', '0')
-      solid(!blended)
-      return
     }
 
     /**
@@ -262,6 +264,11 @@ function useNavSurface(
     type Ground = { top: number; bottom: number; colour: string }
     let grounds: Ground[] = []
     let height = 0
+    /** Where the hero ends, in page coordinates. On a phone the bar swaps
+     *  the mark for the wordmark once its top edge is past this: the moment
+     *  it first touches a section and takes a surface. It stays swapped
+     *  through the bare moments at section edges further down. */
+    let heroBottom = 0
     /** The <main> the last survey read. The route changes before the DOM
      *  does, so the one mounted when this effect runs may be the outgoing
      *  page's; comparing identities is how the swap is noticed. */
@@ -278,7 +285,12 @@ function useNavSurface(
     // its blended state under a pointer that was already there, and the ghost
     // would go on painting labels through a hover chip it was never
     // compensated against, which is to say invisibly.
-    let hovering = el.matches(':hover')
+    // Only a mouse rests on the bar. A finger's tap leaves the element
+    // marked as hovered too, and there is no leaving event for that to
+    // ever clear it, so a phone would hand the labels over and never take
+    // them back.
+    let hovering =
+      window.matchMedia('(hover: hover)').matches && el.matches(':hover')
 
     const survey = () => {
       // Keep the size watcher pointed at whichever <main> is actually
@@ -289,7 +301,11 @@ function useNavSurface(
         sizes.disconnect()
         if (main) sizes.observe(main)
       }
-      heroUp = document.querySelector('[data-hero-sentinel]') !== null
+      const hero = document.querySelector('[data-hero-sentinel]')
+      heroUp = hero !== null
+      heroBottom = hero
+        ? hero.getBoundingClientRect().bottom + window.scrollY
+        : 0
       height = el.getBoundingClientRect().height
       // Sections, plus any band inside one that paints its own ground and
       // marks itself as such - "See it in action" is a full-bleed strip of
@@ -340,27 +356,84 @@ function useNavSurface(
       return found
     }
 
+    // On a phone the bar is never bare past the hero. Going bare lets
+    // whatever is scrolling under the bar show straight through it for the
+    // moment a section edge is crossing, which behind the wordmark read as
+    // a leak. The edge still passes through pixel by pixel: while it is
+    // inside the bar, the bar paints the upper section's colour down to the
+    // edge and the lower section's below it, both at the usual 90% over the
+    // blur, and the split moves with the scroll.
+    const phone = window.matchMedia('(max-width: 639.98px)')
+    const wash = (colour: string) =>
+      `color-mix(in srgb, ${colour} 90%, transparent)`
+
     const paint = () => {
       const y = window.scrollY
       // Whole rule, in one line: the bar is coloured when its top edge and
       // its bottom edge are in the same ground, and bare when they are not.
       const top = groundAt(y)
-      const here = top && top === groundAt(y + height) ? top : null
+      const bottom = groundAt(y + height)
+      const whole = top && top === bottom ? top : null
+      // A phone's bar is on a ground as soon as any of it is: the fill
+      // arrives from the bottom the moment the first section touches it,
+      // and leaves the same way going back up.
+      const here = phone.matches ? (top ?? bottom) : whole
+      // While an edge is inside a phone's bar, the bar paints what is above
+      // the edge down to it and what is below from there: the upper
+      // ground's colour, or nothing where the hero still is. The edge is
+      // whichever comes first below the bar's top: the lower ground's top,
+      // or the upper one's bottom when the upper is a band nested in the
+      // lower and the bar is leaving it. The gradient carries the fill
+      // then, and the flat colour stands down so it cannot paint over the
+      // part that is still bare.
+      let image = ''
+      let fill = '1'
+      if (phone.matches && !sheetOpen && top !== bottom) {
+        const edge =
+          top && bottom
+            ? Math.min(top.bottom, bottom.top > y ? bottom.top : Infinity)
+            : top
+              ? top.bottom
+              : bottom!.top
+        const split = Math.round(edge - y)
+        const above = top ? wash(top.colour) : 'transparent'
+        const below = bottom ? wash(bottom.colour) : 'transparent'
+        image = `linear-gradient(to bottom, ${above} ${split}px, ${below} ${split}px)`
+        fill = '0'
+      }
+      el.style.backgroundImage = image
+      el.style.setProperty('--nav-fill', fill)
       // Nothing to say while the sheet is down: the bar paints as the top of
       // the sheet then, from a class, not from the page behind it.
       if (here) el.style.setProperty('--nav-ground', here.colour)
       else if (!heroUp) el.style.setProperty('--nav-ground', 'var(--color-bg)')
       el.style.setProperty('--nav-surface', here || !heroUp ? '1' : '0')
+      // On a phone the wordmark comes with the fill, as the section touches
+      // the bar; the mark can only give way once there is a surface to set
+      // the wordmark on.
+      el.toggleAttribute(
+        'data-nav-past-hero',
+        !heroUp || (phone.matches ? y + height : y) >= heroBottom,
+      )
       // The ghost holds the labels for as long as it is up, and hovering hands
       // them over early: it sits under the bar and cannot answer a pointer.
       solid(sheetOpen || !blended || hovering)
     }
 
-    const onEnter = () => {
+    const hold = holding
+      ? window.setTimeout(() => {
+          holding = false
+          paint()
+        }, MENU_BARS_FOLD_MS)
+      : 0
+
+    const onEnter = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse') return
       hovering = true
       paint()
     }
-    const onLeave = () => {
+    const onLeave = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse') return
       hovering = false
       paint()
     }
@@ -403,6 +476,7 @@ function useNavSurface(
 
     el.addEventListener('pointerenter', onEnter)
     el.addEventListener('pointerleave', onLeave)
+    phone.addEventListener('change', paint)
     window.addEventListener('scroll', paint, { passive: true })
     window.addEventListener('resize', relayout)
     // Each ground's colour is read once and held, so a theme has to say when
@@ -411,15 +485,19 @@ function useNavSurface(
     return () => {
       cancelAnimationFrame(probe)
       window.clearTimeout(settle)
+      window.clearTimeout(hold)
       arrivals.disconnect()
       sizes.disconnect()
       el.removeEventListener('pointerenter', onEnter)
       el.removeEventListener('pointerleave', onLeave)
+      phone.removeEventListener('change', paint)
+      el.style.backgroundImage = ''
+      el.style.removeProperty('--nav-fill')
       window.removeEventListener('scroll', paint)
       window.removeEventListener('resize', relayout)
       window.removeEventListener(THEME_EVENT, relayout)
     }
-  }, [sheetOpen, blended, bar, flat, pathname])
+  }, [sheetOpen, blended, bar, pathname])
 }
 
 export function SiteHeader() {
@@ -430,12 +508,7 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false)
   const installLink = useHashLink('install')
   const homeLink = useTopLink()
-  const narrow = useIsNarrow()
   const transparent = heroInView
-  // Past the hero there is no blended ghost to carry the controls and no bar
-  // behind them, so on a phone they take the same ground a press gives them.
-  // With the sheet open the bar has a surface again and they do not need one.
-  const chip = narrow && !menuOpen && !transparent
 
   // Following a link or hitting Escape closes it; leaving it open across a
   // navigation would cover the page you just asked for.
@@ -464,17 +537,24 @@ export function SiteHeader() {
   // background until the observer noticed the hero and rebuilt the ramp, a
   // few frames later. An open sheet still gets its bar back - a menu hanging
   // off nothing, with the page running up between it and the logo, reads as a
-  // mistake.
-  useNavSurface(menuOpen, transparent, bar, narrow && !menuOpen, pathname)
+  // mistake. A phone gets the same bar as everything else: it used to go
+  // without one past the hero, with only the menu button carrying a ground,
+  // and the mark sat straight on whatever heading scrolled under it.
+  useNavSurface(menuOpen, transparent, bar, pathname)
 
   const glyph = (
     <Link
       to="/"
       aria-label="Omarchy home"
       onClick={homeLink}
-      className="mark-draw-trigger flex items-center"
+      className="mark-draw-trigger relative flex items-center"
     >
-      <OmarchyMarkDrawn className="size-[22px] shrink-0 text-brand lg:size-[calc(var(--pxc)*2)]" />
+      {/* On a phone the mark gives way to the wordmark, flat in the brand
+          colour the way the footer wears it, once the bar is past the hero and has a
+          surface to set it on. Both sit in the mark's slot, so nothing else
+          in the bar moves; the wordmark simply runs further to the right. */}
+      <OmarchyMarkDrawn className="size-[22px] shrink-0 text-brand transition-opacity duration-150 ease-out max-sm:group-data-[nav-past-hero]/bar:opacity-0 lg:size-[calc(var(--pxc)*2)]" />
+      <OmarchyWordmark className="absolute top-1/2 left-0 w-28 -translate-y-1/2 text-brand opacity-0 transition-opacity duration-150 ease-out group-data-[nav-past-hero]/bar:opacity-100 sm:hidden" />
     </Link>
   )
 
@@ -530,7 +610,7 @@ export function SiteHeader() {
         // With the sheet down, the bar is the top of the sheet and wears its
         // ground rather than the section's: taking a colour from the page
         // behind it would put a seam across the one surface being looked at.
-        className={cn(menuOpen && 'bg-bg/95 backdrop-blur-lg')}
+        className={cn('group/bar', menuOpen && 'bg-bg/95 backdrop-blur-lg')}
         style={{
           // On the bar rather than the header, so both the surface it paints
           // and the height the hooks measure include the strip above it.
@@ -546,7 +626,7 @@ export function SiteHeader() {
           // whose ground took that path.
           backgroundColor: menuOpen
             ? undefined
-            : 'color-mix(in srgb, var(--nav-ground, var(--color-bg)) calc(var(--nav-surface, 0) * 90%), transparent)',
+            : 'color-mix(in srgb, var(--nav-ground, var(--color-bg)) calc(var(--nav-surface, 0) * var(--nav-fill, 1) * 90%), transparent)',
           // The blur arrives with the fill and leaves with it. Over the hero
           // the bar has no surface at all, and a blur there smeared the
           // pixels behind letters that are meant to sit on them cleanly.
@@ -623,10 +703,7 @@ export function SiteHeader() {
               variant="ghost"
               size="icon"
               data-nav-toggle
-              className={cn(
-                'relative size-8 text-text-secondary transition-[background-color,transform] hover:text-text before:absolute before:-inset-1 sm:hidden',
-                chip && 'bg-surface-2',
-              )}
+              className="relative size-8 text-text-secondary transition-[background-color,transform] hover:text-text before:absolute before:-inset-1 sm:hidden"
               aria-expanded={menuOpen}
               aria-controls="site-menu"
               aria-label={menuOpen ? 'Close menu' : 'Menu'}
@@ -640,13 +717,16 @@ export function SiteHeader() {
       {/* Tapping the page behind the sheet closes it. The header is an
           inline-size container, so it is the containing block for fixed
           children as well - bottom-0 would resolve to the bar's own 56px, and
-          the scrim is sized explicitly instead. */}
+          the scrim is sized explicitly instead. Dimmed and blurred the way
+          the search and the theme picker dim the page, so the three open
+          alike; a wash of the page's own colour barely showed on a dark
+          theme. */}
       {menuOpen ? (
         <div
           data-menu-scrim
           aria-hidden="true"
           onClick={() => setMenuOpen(false)}
-          className="absolute inset-x-0 top-(--nav-h) h-svh bg-bg/40 sm:hidden"
+          className="absolute inset-x-0 top-(--nav-h) h-svh bg-black/55 supports-backdrop-filter:backdrop-blur-xs sm:hidden"
         />
       ) : null}
 
@@ -774,11 +854,16 @@ export function HeroNavGhost() {
       aria-hidden="true"
       data-nav-ghost
       className="pointer-events-none fixed inset-x-0 top-0 z-(--z-nav) mix-blend-difference"
-      // opacity is declared, not left to the stylesheet, because the header
-      // hydrates before the hero does and its effect writes this very
-      // property onto this node in between; without it here React finds an
-      // inline opacity it never rendered and reports a hydration mismatch.
+      // The header hydrates before the hero does, and its effect writes this
+      // node's opacity in between - 1 with the hero up, 0 with the page
+      // reloaded further down, or the pointer already resting on the bar, or
+      // on a phone. React then hydrates this node against whichever value it
+      // found. Declaring the property keeps React from reporting an inline
+      // style it never rendered; suppressing the warning covers the loads
+      // where the effect's answer was 0. React does not patch attributes on
+      // a mismatch, so the effect's value, the right one, is what stays.
       style={{ paddingTop: 'env(safe-area-inset-top)', opacity: 1 }}
+      suppressHydrationWarning
     >
       <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:px-6">
         {/* Holds the mark's slot without painting it */}

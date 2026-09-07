@@ -1189,11 +1189,19 @@ h6 {
 @layer components {
   .rail-column {
     padding-inline: max(1rem, calc((100% - min(100% - 2rem, 69rem)) / 2));
+    scroll-padding-inline: max(
+      1rem,
+      calc((100% - min(100% - 2rem, 69rem)) / 2)
+    );
   }
 
   @media (width >= 40rem) {
     .rail-column {
       padding-inline: max(1.5rem, calc((100% - min(100% - 3rem, 69rem)) / 2));
+      scroll-padding-inline: max(
+        1.5rem,
+        calc((100% - min(100% - 3rem, 69rem)) / 2)
+      );
     }
   }
 }
@@ -1603,6 +1611,31 @@ h6 {
     grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
   }
 }
+/* The meetups map: the lit dots arrive one after another when the page
+   opens, then stand still. They simply stand for anyone who asked for
+   less motion. */
+@keyframes meetup-pin-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.meetup-pin-in {
+  animation: meetup-pin-in 300ms ease-out both;
+}
+/* The card beside a dot comes in with a short fade, not a pop. */
+.meetup-card-in {
+  animation: meetup-pin-in 120ms ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .meetup-pin-in,
+  .meetup-card-in {
+    animation: none;
+  }
+}
+
 /* The patron badges: one class after another, each its art, name, tier,
    a line about it and its four downloads, centred like a card would be. */
 .ported .badges {
@@ -2182,6 +2215,17 @@ h6 {
 @media (prefers-reduced-motion: reduce) {
   .hero-canvas-in {
     animation: none;
+  }
+}
+
+/* A phone's bar, once it is on a section, closes with the same hairline the
+   sections draw between themselves, so the bar reads as the top of the
+   section it is wearing rather than a wash lying over it. Not while the
+   sheet is down: the bar is the top of the sheet then, and a line between
+   the two would be a seam across one surface. */
+@media (max-width: 639.98px) {
+  html:not([data-nav-menu='open']) [data-nav-past-hero] {
+    box-shadow: inset 0 -1px 0 var(--color-border-subtle);
   }
 }
 

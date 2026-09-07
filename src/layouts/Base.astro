@@ -8,7 +8,7 @@ import { PixelSnap } from '@/components/PixelSnap'
 import { MusicControl } from '@/components/MusicControl'
 import { themeInitScript } from '@/lib/theme'
 import { etchInitScript } from '@/lib/etch'
-import { OG_IMAGE, SITE_DESCRIPTION } from '@/lib/seo'
+import { OG_IMAGE, SITE_DESCRIPTION, SITE_URL } from '@/lib/seo'
 import geistWoff2 from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url'
 import monoWoff2 from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url'
 
@@ -17,6 +17,8 @@ export interface Props {
   description?: string
   path?: string
   type?: 'website' | 'article'
+  robots?: string
+  published?: string
 }
 
 const {
@@ -24,8 +26,10 @@ const {
   description = SITE_DESCRIPTION,
   path = '/',
   type = 'website',
+  robots,
+  published,
 } = Astro.props
-const url = `https://omarchy.org${path}`
+const url = `${SITE_URL}${path}`
 ---
 
 <!doctype html>
@@ -41,6 +45,8 @@ const url = `https://omarchy.org${path}`
     <meta property="og:description" content={description} />
     <meta property="og:type" content={type} />
     <meta property="og:url" content={url} />
+    {type === 'article' && published ? <meta property="article:published_time" content={published} /> : null}
+    {robots ? <meta name="robots" content={robots} /> : null}
     <meta property="og:image" content={OG_IMAGE.url} />
     <meta property="og:image:width" content={OG_IMAGE.width} />
     <meta property="og:image:height" content={OG_IMAGE.height} />
@@ -59,9 +65,15 @@ const url = `https://omarchy.org${path}`
     <script is:inline set:html={etchInitScript} />
   </head>
   <body>
+    <a
+      href="#main"
+      class="bg-bg text-text focus-visible:outline-ring absolute left-4 z-(--z-modal) -translate-y-[120%] px-3 py-2 text-sm font-medium underline outline-offset-2 focus:translate-y-4 focus-visible:outline-2"
+    >
+      Skip to content
+    </a>
     <div class="flex min-h-dvh flex-col">
       <SiteHeader client:load />
-      <div class="relative z-10 min-h-dvh flex-1 bg-bg"><slot /></div>
+      <div id="main" class="relative z-10 min-h-dvh flex-1 bg-bg"><slot /></div>
       <SiteFooter client:load />
     </div>
     <ThemePicker client:load />

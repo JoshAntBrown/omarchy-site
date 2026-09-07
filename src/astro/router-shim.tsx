@@ -42,11 +42,14 @@ type HrefOpts = {
   search?: string | Record<string, string>
 }
 
-// Fills $placeholders the way the file routes do. `/$/` with a _splat is the
-// ported-page catch-all; every other `to` in the tree already ends in '/'.
+// Fills $placeholders the way the file routes do. A bare `$` is the
+// catch-all's splat (named `_splat`); every other `to` in the tree already
+// ends in '/'.
 export function resolveHref({ to, params, hash, search }: HrefOpts): string {
   let href = to ?? '/'
   if (params) {
+    const splat = String(params._splat ?? '').replace(/^\/+|\/+$/g, '')
+    href = href.replace(/(^|\/)\$(?=\/|$)/g, `$1${splat}`)
     href = href.replace(
       /\$_splat|\$([A-Za-z_]\w*)/g,
       (m, name: string | undefined) =>

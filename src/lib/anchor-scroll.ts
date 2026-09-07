@@ -1,10 +1,4 @@
-export interface HashRouter {
-  subscribe: (
-    event: string,
-    handler: (update: { fromLocation?: unknown }) => void,
-  ) => () => void
-}
-type AnyRouter = HashRouter
+import type { AnyRouter } from '@tanstack/react-router'
 
 /**
  * Hash scrolling. Only arrivals are placed here - never back or forward,
@@ -92,7 +86,12 @@ export function watchHashScrolls(router: AnyRouter) {
       claimed = false
       return
     }
-    const id = decodeURIComponent(window.location.hash.slice(1))
+    let id = ''
+    try {
+      id = decodeURIComponent(window.location.hash.slice(1))
+    } catch {
+      return
+    }
     if (!id) return
     stop()
     // The page a hash points into can mount a moment after the navigation
