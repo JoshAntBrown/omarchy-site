@@ -17,7 +17,12 @@ const manifest = JSON.parse(
 const exclusions = JSON.parse(
   await readFile('scripts/data/workstations-excluded.json', 'utf8'),
 )
-const excluded = new Set(exclusions.map((item) => item.attachment))
+const excluded = new Set(
+  exclusions.map((item) => item.attachment).filter(Boolean),
+)
+const excludedFiles = new Set(
+  exclusions.map((item) => item.file).filter(Boolean),
+)
 const assetDirectory = 'assets/workstations'
 await mkdir(`${assetDirectory}/previews`, { recursive: true })
 const escape = (value) =>
@@ -46,7 +51,7 @@ const previous = JSON.parse(
 // Retain the published gallery even if a Discord post is later deleted.
 // Existing optimized assets never need to be downloaded or encoded again.
 for (const entry of previous) {
-  if (excluded.has(entry.attachment)) continue
+  if (excluded.has(entry.attachment) || excludedFiles.has(entry.file)) continue
   await access(entry.file)
   await access(entry.preview)
   entries.push(entry)
@@ -56,6 +61,7 @@ for (const entry of previous) {
 if (!previous.length) {
   for (const match of existing) {
     const file = match[1].slice(1)
+    if (excludedFiles.has(file)) continue
     const data = await readFile(file)
     seen.add(createHash('sha256').update(data).digest('hex'))
     const preview = `${assetDirectory}/previews/${path.parse(file).name}.webp`

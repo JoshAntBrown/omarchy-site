@@ -93,6 +93,46 @@ test('workstation imports escape titles, deduplicate media, and repeat without o
       await readFile(path.join(directory, 'workstations/index.html'), 'utf8'),
       html,
     )
+    // A later review can remove both imported media and legacy gallery files.
+    const legacy = {
+      file: 'assets/workstations/legacy.png',
+      preview: 'assets/workstations/legacy.png',
+      width: 80,
+      height: 60,
+    }
+    await writeFile(path.join(directory, legacy.file), original)
+    const imported = JSON.parse(metadata)[0]
+    await writeFile(
+      path.join(directory, 'scripts/data/workstations-media.json'),
+      JSON.stringify([imported, legacy]),
+    )
+    await writeFile(
+      path.join(directory, 'scripts/data/workstations-excluded.json'),
+      JSON.stringify([
+        ...exclusions,
+        { attachment: imported.attachment, reason: 'Screenshot' },
+        { file: legacy.file, reason: 'Isolated hardware' },
+      ]),
+    )
+    await writeFile(
+      path.join(directory, 'downloads/manifest.json'),
+      JSON.stringify(items),
+    )
+    run()
+    run()
+    assert.deepEqual(
+      JSON.parse(
+        await readFile(
+          path.join(directory, 'scripts/data/workstations-media.json'),
+          'utf8',
+        ),
+      ),
+      [],
+    )
+    assert.doesNotMatch(
+      await readFile(path.join(directory, 'workstations/index.html'), 'utf8'),
+      /<img/,
+    )
   } finally {
     await rm(directory, { recursive: true, force: true })
   }

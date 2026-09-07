@@ -31,7 +31,9 @@ commit. Runs without changes do not commit or deploy.
 
 `scripts/data/workstations-excluded.json` contains manually excluded discussion
 attachments and automatically detected duplicates. Add an attachment ID here
-to exclude it from future syncs. New media is imported automatically; the sync
+to exclude it from future syncs, or a `file` path for a legacy gallery image.
+The gallery is for photos of physical computers and workstation setups;
+screenshots, screen recordings, and isolated peripherals or cases are excluded. New media is imported automatically; the sync
 does not visually classify workstation photos versus unrelated discussion images.
 
 ## Local sync
