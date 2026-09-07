@@ -52,7 +52,7 @@ test('authored blocks preserve exact HTML and exclude people and product heading
   put('src/data/pages.json', {
     patrons: {
       title: 'Our patrons',
-      html: `<h2>Support us</h2><p>${block}</p><h3 class="member__name">Donor Name</h3><p class="member__meta">Product Name</p><ul class="patrons__supporters"><li>Another Donor</li></ul><h3 class="resident__name">Artist Name</h3><h2 class="sponsorship__name">Product</h2>`,
+      html: `<h2>Support us</h2><p>${block}</p><p><img src="/picture.webp"></p><p><strong> </strong></p><h3 class="member__name">Donor Name</h3><p class="member__meta">Product Name</p><ul class="patrons__supporters"><li>Another Donor</li></ul><h3 class="resident__name">Artist Name</h3><h2 class="sponsorship__name">Product</h2>`,
     },
     meetups: { title: 'Unused imported title', html: '<p>Event Name</p>' },
   })

@@ -160,7 +160,7 @@ export function collectSources(root = process.cwd()) {
       )
         continue
       if (/\bdownload(?:\s|>|=)/.test(inner)) continue
-      if (!inner.replace(/<[^>]*>/g, '').trim()) continue
+      if (!inner.replace(/<[^>]*>/g, ' ').trim()) continue
       blocks.add(inner)
     }
   }
