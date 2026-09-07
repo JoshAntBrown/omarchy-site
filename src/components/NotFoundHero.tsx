@@ -41,8 +41,7 @@ export function NotFoundHero() {
         <HeroNavGhost />
 
         <div className="pointer-events-none relative flex flex-1 flex-col items-center px-6">
-          <div className="flex-[2.1]" />
-          {/* Match the homepage wordmark cell size and vertical alignment. */}
+          <div className="flex-[0.5]" />
           <div
             className="flex w-full items-center justify-center"
             style={{ height: `calc(var(--pxr) * ${WORDMARK_HEIGHT})` }}
@@ -62,13 +61,15 @@ export function NotFoundHero() {
               />
             </div>
           </div>
-          <div className="flex-1" />
 
           <div
             data-hero-quiet
-            className="pointer-events-auto flex w-full max-w-2xl flex-col items-center pb-24 text-center"
+            className="pointer-events-auto mt-12 flex w-full max-w-2xl flex-col items-center text-center lg:mt-[calc(var(--pxr)*5)]"
           >
-            <h1 className="text-2xl font-medium tracking-tight text-text [text-wrap:balance] sm:text-3xl">
+            <h1
+              style={{ fontFamily: 'var(--font-mono)' }}
+              className="text-2xl font-medium tracking-tight text-text [text-wrap:balance] sm:text-3xl"
+            >
               <span className="sr-only">404: </span>
               There is nothing at this address.
             </h1>
@@ -86,7 +87,7 @@ export function NotFoundHero() {
               <Button
                 size="lg"
                 variant="outline"
-                className="lg:h-[calc(var(--pxr)*4)]"
+                className="h-10 pr-4 has-data-[icon=inline-start]:pl-3"
                 nativeButton={false}
                 onClick={home}
                 render={<Link to="/" />}
@@ -96,6 +97,7 @@ export function NotFoundHero() {
               </Button>
             </div>
           </div>
+          <div className="flex-1" />
         </div>
       </section>
     </main>
