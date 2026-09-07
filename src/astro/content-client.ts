@@ -10,24 +10,3 @@ export async function getSearchIndex(): Promise<Array<SearchEntry>> {
   if (!res.ok) throw new Error('search index unavailable')
   return (await res.json()) as Array<SearchEntry>
 }
-
-function unavailable(name: string): Promise<never> {
-  throw new Error(`${name} is never called in the Astro build`)
-}
-
-// Kept so unbuilt modules keep resolving; called only by TanStack loaders.
-export function getManualToc(): Promise<never> {
-  return unavailable('getManualToc')
-}
-export function getManualChapter(): Promise<never> {
-  return unavailable('getManualChapter')
-}
-export function getNewsIndex(): Promise<never> {
-  return unavailable('getNewsIndex')
-}
-export function getNewsPost(): Promise<never> {
-  return unavailable('getNewsPost')
-}
-export function getPortedPage(): Promise<never> {
-  return unavailable('getPortedPage')
-}

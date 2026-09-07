@@ -4,3 +4,7 @@ export const WHOLE: ReadonlyArray<string>
 export const ASSETS_ONLY: ReadonlyArray<string>
 export const REDIRECTS: Readonly<Record<string, string>>
 export function isPassthrough(pathname: string): boolean
+export const PLUGINS_SITE: string
+export function createRedirects(
+  plugins: ReadonlyArray<{ id: string }>,
+): Record<string, string>

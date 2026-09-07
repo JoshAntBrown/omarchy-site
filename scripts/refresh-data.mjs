@@ -16,6 +16,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import prettier from 'prettier'
+import { assetId } from './lib/asset-id.mjs'
+import { decodeCalendarText } from './lib/ical.mjs'
 import { geocodeTitle } from './lib/geocode.mjs'
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -40,7 +42,7 @@ const catalog = JSON.parse(await fetchText(`${MP_RAW}/catalog.json`))
 const plugins = catalog.plugins
   .filter((p) => p.id && p.name)
   .map((p) => ({
-    id: p.id,
+    id: assetId(p.id),
     name: noEmDash(p.name),
     description: noEmDash((p.description ?? '').slice(0, 300)),
     author: p.author ?? null,
@@ -388,11 +390,7 @@ async function meetupsFromFeed() {
       const at = line.indexOf(':')
       if (at < 0) continue
       const [name] = line.slice(0, at).split(';')
-      cur[name] = line
-        .slice(at + 1)
-        .replaceAll('\\n', '\n')
-        .replaceAll('\\,', ',')
-        .replaceAll('\;', ';')
+      cur[name] = decodeCalendarText(line.slice(at + 1))
     }
   }
   return events.map((e) => {
@@ -523,8 +521,9 @@ async function placeByTitle(events) {
 async function saveCover(event) {
   if (!event.cover) return null
   // A new name also replaces the old, permanently cropped cover cache.
-  const file = path.join(COVERS, `${event.id}-full.webp`)
-  const rel = `/images/meetups/${event.id}-full.webp`
+  const id = assetId(event.id)
+  const file = path.join(COVERS, `${id}-full.webp`)
+  const rel = `/images/meetups/${id}-full.webp`
   const sharp = (await import('sharp')).default
   if (existsSync(file)) {
     const metadata = await sharp(file).metadata()

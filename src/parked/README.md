@@ -1,15 +1,14 @@
 # Parked
 
-Code the site does not build right now, kept whole for when it does.
+The former TanStack plugin directory, preserved as reference code. It is
+excluded from the Astro build, dependency scan, type checks, and lint.
 
-- `plugins/`: the built-in plugin directory (the listing, the explorer,
-  the develop and publish pages, and a page per plugin). For launch the
-  directory lives at plugins.omarchy.org, so these routes are out and
-  every `/plugins/...` address forwards there (see
-  `scripts/assemble-static.mjs`). To bring them back, move the route
-  files into `src/routes/` and the components into `src/components/`,
-  put `/plugins` back in the prerender filter and page list in
-  `vite.config.ts`, and point the plugin card and search results at
-  the routes again.
+The live directory is at https://plugins.omarchy.org. The build creates
+redirects for every old `/plugins/...` address in
+`scripts/assemble-static.mjs`.
 
-Nothing in here is type checked or linted, and nothing imports it.
+Restoring an integrated directory requires Astro pages under `src/pages/plugins/`,
+loaders using `src/astro/data.ts`, and React components using the current
+navigation helpers. The old TanStack route files cannot be moved into Astro
+unchanged. Remove the matching redirects and update plugin card/search links
+only once replacement pages are built and checked.

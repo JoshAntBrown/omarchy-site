@@ -17,12 +17,7 @@ import { cp, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import {
-  ASSETS_ONLY,
-  PLUGINS_SITE,
-  REDIRECTS,
-  WHOLE,
-} from './site-passthrough.mjs'
+import { ASSETS_ONLY, createRedirects, WHOLE } from './site-passthrough.mjs'
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const SITE = path.resolve(process.env.OMARCHY_SITE_DIR ?? ROOT)
@@ -76,24 +71,12 @@ async function copyAssets(rel) {
 for (const rel of ASSETS_ONLY) await copyAssets(rel)
 
 // Redirect pages for the addresses the redesign folded into other pages,
-// and for the plugin directory, which lives on its own site for launch:
+// and for the plugin directory, which lives on its own site:
 // the listing, its three sub pages, and a page per plugin, all forwarded.
 const { plugins } = JSON.parse(
   await readFile(new URL('../src/data/plugins.json', import.meta.url), 'utf8'),
 )
-const redirects = {
-  ...REDIRECTS,
-  '/plugins/': `${PLUGINS_SITE}/`,
-  '/plugins/explore/': `${PLUGINS_SITE}/explore.html`,
-  '/plugins/develop/': `${PLUGINS_SITE}/develop.html`,
-  '/plugins/publish/': `${PLUGINS_SITE}/publish.html`,
-  ...Object.fromEntries(
-    plugins.map((p) => [
-      `/plugins/${p.id}/`,
-      `${PLUGINS_SITE}/plugin.html?id=${encodeURIComponent(p.id)}`,
-    ]),
-  ),
-}
+const redirects = createRedirects(plugins)
 for (const [from, to] of Object.entries(redirects)) {
   const canonical = to.startsWith('http') ? to : `https://omarchy.org${to}`
   const file = path.join(OUT, from, 'index.html')

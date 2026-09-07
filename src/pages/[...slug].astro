@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
-import { PortedIsland } from '../astro/islands'
+import { PortedPage } from '@/astro/pages/PortedPage'
 import { getPortedPage, getPortedSlugs } from '../astro/data'
 import { headProps } from '../astro/head'
 import { portedSeo } from '../astro/page-seo'
@@ -18,5 +18,5 @@ if (!page) throw new Error(`Ported page not found: ${slug}`)
 const head = headProps(portedSeo(page, slug ?? ''), `/${slug}/`)
 ---
 <Base {...head}>
-  <PortedIsland client:load data={page} slug={slug ?? ''} />
+  <PortedPage client:load page={page} slug={slug ?? ''} />
 </Base>

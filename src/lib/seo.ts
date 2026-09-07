@@ -2,9 +2,8 @@
  * The tags social sites read when a link is pasted: Open Graph for Slack,
  * Discord, iMessage, LinkedIn and Facebook, and Twitter Cards for X.
  *
- * Router dedupes meta by `name` or `property`, keeping the deepest route's
- * copy, so a page only has to name what is its own - the card, the image and
- * the site name are declared once in the root and inherited everywhere.
+ * Base.astro renders the common tags and each page supplies its own
+ * title, description, canonical URL, and optional publication date.
  *
  * `og:title` is the document title verbatim rather than a bare heading.
  * Slack shows the site name beside it and X shows nothing beside it, so
@@ -129,7 +128,7 @@ export function excerptFromHtml(html: string, limit = 155): string {
   // describes the page worse than the body does, so fall through to the body.
   const para = [...head.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)]
     .map((m) => m[1])
-    .find((p) => p.replace(/<[^>]*>/g, '').trim().length >= 60)
+    .find((p) => p.replace(/<[^>]*>/g, ' ').trim().length >= 60)
   // A page with no prose at all - a page of lists, like the teams page -
   // gets nothing rather than a run-on of its own list items. The caller
   // falls back to the site's own summary.

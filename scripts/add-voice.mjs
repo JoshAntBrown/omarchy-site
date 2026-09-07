@@ -22,6 +22,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import sharp from 'sharp'
+import { voiceHandle, tweetId } from './lib/voice-input.mjs'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const SITE = path.resolve(process.env.OMARCHY_SITE_DIR ?? ROOT)
@@ -30,12 +31,15 @@ const AVATARS = path.join(SITE, 'assets/images/voices')
 
 const [, , url, flag] = process.argv
 const dry = flag === '--dry'
-const match = url?.match(/(?:x|twitter)\.com\/(\w+)\/status\/(\d+)/)
-if (!match) {
-  console.error('usage: add-voice.mjs https://x.com/<handle>/status/<id> [--dry]')
+let id
+try {
+  id = tweetId(url)
+} catch {
+  console.error(
+    'usage: add-voice.mjs https://x.com/<handle>/status/<id> [--dry]',
+  )
   process.exit(1)
 }
-const [, , id] = match
 
 // The same token X's embed asks with: the id scaled and written in base 36.
 const token = ((Number(id) / 1e15) * Math.PI)
@@ -80,7 +84,7 @@ if (post.note_tweet) {
   }
 }
 
-const handle = post.user.screen_name
+const handle = voiceHandle(post.user.screen_name)
 const media = (post.mediaDetails ?? []).slice(0, 4)
 const stem = `${handle.toLowerCase()}-${id}`
 const entry = {
@@ -92,7 +96,9 @@ const entry = {
   text,
   ...(media.length
     ? {
-        images: media.map((_, i) => `/assets/images/voices/${stem}-${i + 1}.webp`),
+        images: media.map(
+          (_, i) => `/assets/images/voices/${stem}-${i + 1}.webp`,
+        ),
         ...(media.some((m) => m.type === 'video' || m.type === 'animated_gif')
           ? { video: true }
           : {}),

@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
-import { HomeIsland } from '../astro/islands'
+import { HomePage } from '@/astro/pages/HomePage'
 import { getNewsIndex, getPluginHighlights } from '../astro/data'
 import { headProps } from '../astro/head'
 import { homeSeo } from '../astro/page-seo'
@@ -10,5 +10,5 @@ const data = { ...highlights, news }
 const head = headProps(homeSeo(), '/')
 ---
 <Base {...head}>
-  <HomeIsland client:load data={data} />
+  <HomePage client:load data={data} />
 </Base>

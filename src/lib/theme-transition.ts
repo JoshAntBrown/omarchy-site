@@ -2,7 +2,7 @@
  * Frosted split-wipe used when the site changes theme.
  *
  * A 10-degree parallelogram slit opens over 200ms through the View
- * Transitions API, the same transition omarchy-www uses. The old page is
+ * Transitions API, shared by the site theme controls. The old page is
  * frosted as a whole in the snapshot the browser keeps of it (see
  * theme-transition.css), so the slit is what clears the frost, edge by
  * edge. Nothing is blurred on the live page first: the picker's own

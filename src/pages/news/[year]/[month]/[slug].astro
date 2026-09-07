@@ -1,7 +1,6 @@
 ---
 import Base from '../../../../layouts/Base.astro'
-import { NewsPostIsland } from '../../../../astro/islands'
-import { getNewsPost } from '../../../../astro/data'
+import { NewsPostPage } from '@/astro/pages/NewsPages'
 import { loadNews } from '../../../../lib/news'
 import { headProps } from '../../../../astro/head'
 import { newsPostSeo } from '../../../../astro/page-seo'
@@ -21,5 +20,5 @@ if (!post || post.year !== Astro.params.year || post.month !== Astro.params.mont
 const head = headProps(newsPostSeo(post), post.path)
 ---
 <Base {...head}>
-  <NewsPostIsland client:load data={post} />
+  <NewsPostPage client:load post={post} />
 </Base>

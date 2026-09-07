@@ -1,3 +1,4 @@
+import { inlineJson } from './inline-json'
 /**
  * Site themes: the stock Omarchy themes, applied the way Omarchy applies
  * them. There is no light/dark switch; there are themes, opened with T
@@ -66,13 +67,13 @@ export const HINT_KEY = 'omarchy-theme-hint-seen'
  * that same tagged link; it must not touch a <link> React owns, or React
  * later tries to removeChild a node whose parent is already gone.
  */
-export const themeInitScript = `(function(){try{var t=localStorage.getItem('${THEME_KEY}');var ok=${JSON.stringify(
+export const themeInitScript = `(function(){try{var t=localStorage.getItem(${inlineJson(THEME_KEY)});var ok=${inlineJson(
   SITE_THEMES.map((t) => t.id),
-)};var light=${JSON.stringify(
+)};var light=${inlineJson(
   SITE_THEMES.filter((t) => t.light).map((t) => t.id),
-)};var dark=${JSON.stringify(
+)};var dark=${inlineJson(
   SITE_THEMES.filter((t) => !t.light).map((t) => t.id),
-)};if(ok.indexOf(t)<0){var pool=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?light:dark;t=pool[Math.floor(Math.random()*pool.length)];localStorage.setItem('${THEME_KEY}',t)}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='${DEFAULT_THEME}'}if(!document.querySelector('link[rel="icon"][data-theme-icon]')){var l=document.createElement('link');l.rel='icon';l.type='image/svg+xml';l.href='/brand/omarchy-logo.svg';l.setAttribute('data-theme-icon','');document.head.appendChild(l)}})()`
+)};if(ok.indexOf(t)<0){var pool=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?light:dark;t=pool[Math.floor(Math.random()*pool.length)];localStorage.setItem(${inlineJson(THEME_KEY)},t)}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme=${inlineJson(DEFAULT_THEME)}}if(!document.querySelector('link[rel="icon"][data-theme-icon]')){var l=document.createElement('link');l.rel='icon';l.type='image/svg+xml';l.href='/brand/omarchy-logo.svg';l.setAttribute('data-theme-icon','');document.head.appendChild(l)}})()`
 
 export function readTheme(): string {
   try {
@@ -288,7 +289,7 @@ export function applyTheme(id: string) {
 }
 
 /**
- * Apply a theme through the split-wipe view transition used on omarchy-www.
+ * Apply a theme through the split-wipe view transition used across the site.
  * Reduced motion and browsers without View Transitions skip the animation.
  */
 export function switchTheme(

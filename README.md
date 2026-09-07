@@ -6,9 +6,16 @@ See https://github.com/omacom/omarchy for more.
 
 ## Working on the site
 
-Run `npm ci`, then `npm run dev` (or `bin/serve`) to preview the Astro site.
+Use Node 24 or newer and Python 3.13. Run `npm ci`, then `npm run dev` (or `bin/serve`) to preview the Astro site.
 `npm run build` produces the static site in `dist/client`; `npm run parity`
 checks its page URLs and verifies that passthrough files are unchanged.
+Run `npm run lint`, `npm run typecheck`, and `npm test` before pushing.
+Pull requests run those checks, a build, and parity in GitHub Actions;
+merging to `master` deploys the checked output to GitHub Pages.
+
+Development serves the same installers, downloads, legacy pages, and redirects
+as the assembled site. Page components have separate browser entries so a
+manual or news visit does not load the homepage's interactive showcases.
 
 The HTML under the standalone page directories, `themes/`, `manual/`, and
 dated `news/` directories is **content input**, not a second site design.
@@ -46,8 +53,16 @@ order among the others:
 
 ```html
 <figure class="themes__theme">
-  <a href="https://github.com/you/your-theme"><img src="/assets/themes/your-theme.webp" alt="Your Theme theme" loading="lazy" decoding="async"></a>
-  <figcaption><a href="https://github.com/you/your-theme">Your Theme</a></figcaption>
+  <a href="https://github.com/you/your-theme"
+    ><img
+      src="/assets/themes/your-theme.webp"
+      alt="Your Theme theme"
+      loading="lazy"
+      decoding="async"
+  /></a>
+  <figcaption>
+    <a href="https://github.com/you/your-theme">Your Theme</a>
+  </figcaption>
 </figure>
 ```
 

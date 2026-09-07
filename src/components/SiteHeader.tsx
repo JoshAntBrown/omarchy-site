@@ -51,8 +51,7 @@ function NavTooltip({
 const navLinks = [
   { to: '/news/', label: 'News' },
   { to: '/manual/', label: 'Manual' },
-  // Plugins points at the standalone directory for launch; the built-in
-  // pages stay routable but unlinked.
+  // Old /plugins/ addresses redirect to the standalone directory.
   { href: 'https://plugins.omarchy.org', label: 'Plugins' },
   { to: '/themes/', label: 'Themes' },
 ] as const
