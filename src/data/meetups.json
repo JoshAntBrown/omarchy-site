@@ -1,7 +1,7 @@
 {
   "source": "luma-api",
   "calendar": "https://luma.com/omarchy",
-  "refreshed": "2026-09-06",
+  "refreshed": "2026-09-07",
   "events": [
     {
       "id": "evt-YDyCEwwpiMzSFDB",
@@ -784,6 +784,23 @@
       "coverHeight": 800
     },
     {
+      "id": "evt-2h0vxlgK0HC9Weh",
+      "title": "Omarchy DFW 001: Install Fest, Show & Tell, and Open Hacking",
+      "url": "https://luma.com/pj5yrzgv",
+      "start": "2026-09-30T23:00:00.000Z",
+      "end": "2026-10-01T00:00:00.000Z",
+      "timezone": "America/Chicago",
+      "address": "Dallas/Fort Worth, TX",
+      "city": null,
+      "country": null,
+      "online": false,
+      "geo": null,
+      "hosts": [],
+      "cover": "/images/meetups/evt-2h0vxlgK0HC9Weh-full.webp",
+      "coverWidth": 800,
+      "coverHeight": 800
+    },
+    {
       "id": "evt-mhGcu1eA72jAUc6",
       "title": "Omarchy SF",
       "url": "https://luma.com/xsdfbbvq",
@@ -967,6 +984,23 @@
       "geo": { "lat": 22.5428599, "lon": 114.05955999999999 },
       "hosts": [],
       "cover": "/images/meetups/evt-zrKN452ONQBHEun-full.webp",
+      "coverWidth": 800,
+      "coverHeight": 800
+    },
+    {
+      "id": "evt-q5DFUXoGZH97A6g",
+      "title": "Omarchy Taipei #1",
+      "url": "https://luma.com/znfmz464",
+      "start": "2026-10-20T11:00:00.000Z",
+      "end": "2026-10-20T12:30:00.000Z",
+      "timezone": "Asia/Taipei",
+      "address": "Taipei City, Taiwan",
+      "city": "Taipei City, Taiwan",
+      "country": "TW",
+      "online": false,
+      "geo": { "lat": 25.0329636, "lon": 121.56542680000001 },
+      "hosts": [],
+      "cover": "/images/meetups/evt-q5DFUXoGZH97A6g-full.webp",
       "coverWidth": 800,
       "coverHeight": 800
     },
