@@ -155,10 +155,22 @@
     "avatar": "/assets/images/patrons/fireworks.webp"
    },
    {
+    "name": "Four Technologies",
+    "meta": "",
+    "href": "https://www.paywithfour.com/",
+    "avatar": "/assets/images/patrons/four-technologies.svg"
+   },
+   {
     "name": "OpenAI",
     "meta": "",
     "href": "https://openai.com",
     "avatar": "/assets/images/patrons/openai.webp"
+   },
+   {
+    "name": "OpenRouter",
+    "meta": "",
+    "href": "https://openrouter.ai/",
+    "avatar": "/assets/images/patrons/openrouter.svg"
    }
   ],
   "note": null

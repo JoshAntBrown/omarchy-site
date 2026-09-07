@@ -5,8 +5,37 @@
     <link>https://omarchy.org/news</link>
     <description>Notes on the people, ideas, and releases shaping Omarchy.</description>
     <language>en</language>
-    <lastBuildDate>Mon, 07 Sep 2026 18:15:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 07 Sep 2026 20:08:00 GMT</lastBuildDate>
     <atom:link href="https://omarchy.org/news/rss.xml" rel="self" type="application/rss+xml"/>
+<item>
+  <title>Omacom Foundation raises another half a million dollars!</title>
+  <link>https://omarchy.org/news/2026/09/omacom-foundation-raises-another-half-a-million-dollars</link>
+  <guid isPermaLink="true">https://omarchy.org/news/2026/09/omacom-foundation-raises-another-half-a-million-dollars</guid>
+  <pubDate>Mon, 07 Sep 2026 20:08:00 GMT</pubDate>
+  <dc:creator>DHH</dc:creator>
+  <description><![CDATA[OpenRouter pledges $150,000 in tokens, Four Technologies commits $300,000 over three years, and nearly 500 donors add roughly $60,000, bringing the total to approximately $15.5 million.]]></description>
+  <content:encoded><![CDATA[<p>The <a href="https://omarchy.org/foundation/">Omacom Foundation</a> has raised another half a million dollars! Between a fresh supply of tokens, a three-year corporate pledge, and thousands of dollars from open patronage, that’s roughly $510,000 more committed to beautiful, fun &amp; agentic Linux. That brings our total in pledges and donations to approximately $15.5 million!</p>
+
+<p>First, we’re welcoming <a href="https://openrouter.ai/">OpenRouter</a> as a <a href="https://omarchy.org/patrons/#distinguished-corporate-patrons">Distinguished Corporate Patron</a> with $150,000 in tokens. Once that allotment is spent, we can renew the arrangement by mutual agreement. These tokens will power the agents that build, test, and maintain Omarchy. The more we can put agents to work fixing bugs, reviewing contributions, and improving the distro, the faster we can make everyone’s computer better. More fuel for the mission!</p>
+
+<p>We’re also going to flow the millions of dollars in tokens that have been donated through the excellent OpenRouter platform. So we can apportion the right tokens to the right teams from the right models.</p>
+
+<p>Then there’s <a href="https://www.paywithfour.com/">Four Technologies</a>, joining as a <a href="https://omarchy.org/patrons/#distinguished-corporate-patrons">Distinguished Corporate Patron</a> with a pledge of $100,000 a year for three years. That’s $300,000 to support the community projects Omarchy depends on, the infrastructure that keeps it running, and the work of bringing beautiful Linux to more people. Having companies commit for years gives us the confidence to do the same.</p>
+
+<p>Here’s how the Four Technologies team puts it:</p>
+
+<blockquote>
+  <p>We’re an AI-forward fintech company, and companies like Four Technologies only get to build the way we do because of open-source infrastructure other people built first. Supporting the Omacom Foundation is how we put money behind that. We think the next stage for AI isn’t another app layered on top of the operating system, it’s AI built directly into the operating system, and that’s the bet Omarchy is making. We wanted to be part of the community making that bet, not just benefiting from it later.</p>
+</blockquote>
+
+<p>And since <a href="https://omarchy.org/news/2026/09/omacom-patronage-is-open-to-everyone">opening patronage to everyone</a>, we’ve received roughly $60,000 from nearly 500 donors through <a href="https://www.zeffy.com/en-US/donation-form/omarchy-patronage">open patronage</a>. That’s an incredible response from people who want to help make this happen. Every contribution adds to what we can do together.</p>
+
+<p>Tokens to build with. Money to back the projects we depend on. People and companies willing to put something behind their belief in Linux on the desktop. This is how we keep going!</p>
+
+<p>Thank you to OpenRouter, Four Technologies, and everyone who’s become a patron. If you’d like to join them, write <a href="mailto:david@omarchy.com">david@omarchy.com</a> for founding and distinguished patronage, and <a href="https://www.zeffy.com/en-US/donation-form/omarchy-patronage">donate directly to the open patronage</a>.</p>
+]]></content:encoded>
+</item>
+
 <item>
   <title>Omarchy.org redesign launches with 29 languages</title>
   <link>https://omarchy.org/news/2026/09/omarchy-org-redesign-launches-with-29-languages</link>
@@ -408,7 +437,7 @@
 </item>
 
 <item>
-  <title>Omacom Foundation launches with $14.95 million</title>
+  <title>Omacom Foundation launches with $15.5 million</title>
   <link>https://omarchy.org/news/2026/08/omacom-foundation-launches-with-8-million</link>
   <guid isPermaLink="true">https://omarchy.org/news/2026/08/omacom-foundation-launches-with-8-million</guid>
   <pubDate>Fri, 21 Aug 2026 15:57:00 GMT</pubDate>
@@ -451,6 +480,7 @@
 <ul>
   <li><a href="https://1password.com">1Password</a></li>
   <li><a href="https://37signals.com">37signals</a></li>
+  <li><a href="https://www.paywithfour.com/">Four Technologies</a></li>
 </ul>
 
 <p>This Founding Token Patron is contributing $1.5 million in tokens to the mission:</p>
@@ -459,13 +489,16 @@
   <li><a href="https://www.meta.com/superintelligence/">Meta Superintelligence Labs</a></li>
 </ul>
 
-<p>And these Distinguished Token Patrons are each contributing $150,000 in tokens:</p>
+<p>And these Distinguished Corporate Patrons are each contributing $150,000 in tokens, with renewal by mutual agreement:</p>
 
 <ul>
   <li><a href="https://www.anthropic.com">Anthropic</a></li>
   <li><a href="https://fireworks.ai">Fireworks</a></li>
   <li><a href="https://openai.com">OpenAI</a></li>
+  <li><a href="https://openrouter.ai/">OpenRouter</a></li>
 </ul>
+
+<p>Nearly 500 donors have also contributed roughly $60,000 through <a href="https://www.zeffy.com/en-US/donation-form/omarchy-patronage">open patronage</a>, bringing the total in pledges and donations to approximately $15.5 million.</p>
 
 <p>This is a ridiculous sum of money, so I intend to make sure it lasts a long time, and that we make the most of it. But just as important as the incredible cushion is the vote of confidence delivered by these pledges.</p>
 
@@ -480,6 +513,8 @@
 <p><em>UPDATE: Ryan, Ed, Adrien, and Max <a href="https://omarchy.org/news/2026/09/omacom-foundation-reaches-13-million">joined as Distinguished Patrons on September 2</a>.</em></p>
 
 <p><em>UPDATE: Meta Superintelligence Labs, Anthropic, OpenAI, and Fireworks <a href="https://omarchy.org/news/2026/09/omacom-foundation-secures-tokens-from-leading-labs">joined as Token Patrons on September 3</a>.</em></p>
+
+<p><em>UPDATE: OpenRouter, Four Technologies, and nearly 500 donors <a href="https://omarchy.org/news/2026/09/omacom-foundation-raises-another-half-a-million-dollars">added another half a million dollars on September 7</a>.</em></p>
 ]]></content:encoded>
 </item>
 
