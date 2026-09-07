@@ -13,6 +13,15 @@ Run `npm run lint`, `npm run typecheck`, and `npm test` before pushing.
 Pull requests run those checks, a build, and parity in GitHub Actions;
 merging to `master` deploys the checked output to GitHub Pages.
 
+Cloudflare Workers previews use the same static output. `wrangler.jsonc`
+runs `npm run build` before uploading `dist/client`, including the installers
+and legacy assets. In Workers Builds, use the repository root, leave the
+separate build command empty, and keep `npx wrangler versions upload` as the
+non-production deploy command. The configured Worker name is `omarchy`.
+Wrangler is pinned in the lockfile; it does not need an Astro server adapter.
+Run `npx wrangler deploy --dry-run` to check the build and configuration
+without uploading or deploying.
+
 Development serves the same installers, downloads, legacy pages, and redirects
 as the assembled site. Page components have separate browser entries so a
 manual or news visit does not load the homepage's interactive showcases.
