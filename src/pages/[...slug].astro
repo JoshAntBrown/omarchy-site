@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import WorkstationLightbox from '../components/WorkstationLightbox.astro'
 import { PortedPage } from '@/astro/pages/PortedPage'
 import { getPortedPage, getPortedSlugs } from '../astro/data'
 import { headProps } from '../astro/head'
@@ -19,4 +20,5 @@ const head = headProps(portedSeo(page, slug ?? ''), `/${slug}/`)
 ---
 <Base {...head}>
   <PortedPage page={page} slug={slug ?? ''} />
+  {slug === 'workstations' && <WorkstationLightbox />}
 </Base>
