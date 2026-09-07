@@ -42,7 +42,11 @@ try {
       compatibility_date: '2026-09-07',
       workers_dev: true,
       ...(flags.includes('--domain')
-        ? { routes: [{ pattern: domain, custom_domain: true }] }
+        ? {
+            routes: [domain, ...(locales[code].aliases ?? [])].map(
+              (hostname) => ({ pattern: hostname, custom_domain: true }),
+            ),
+          }
         : {}),
       assets: {
         directory: assets,

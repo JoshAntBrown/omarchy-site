@@ -4,6 +4,7 @@ import registry from './locales.json' with { type: 'json' }
 export type Locale = {
   name: string
   domain: string
+  aliases?: string[]
   formatLocale: string
   ogLocale: string
   manual: boolean

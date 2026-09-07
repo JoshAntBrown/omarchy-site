@@ -11,6 +11,7 @@
     "domain": "https://omarchy.dk",
     "formatLocale": "da-DK",
     "ogLocale": "da_DK",
-    "manual": false
+    "manual": false,
+    "aliases": ["www.omarchy.dk"]
   }
 }

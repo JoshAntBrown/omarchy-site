@@ -45,6 +45,6 @@ CLOUDFLARE_API_TOKEN="$(secret-tool lookup service cloudflare account api-token)
 
 The token stays in the child process environment and is never written to the repository. Use `--dry-run` to validate deployment configuration without uploading.
 
-To connect the registered domain, create its Cloudflare zone, preserve any existing DNS records, and set the assigned nameservers through the registrar. Once the zone is active, run the same deployment command with `--domain`. It attaches the domain from the locale registry and Cloudflare provisions HTTPS. This is a separate step from deploying the workers.dev preview.
+To connect the registered domain, create its Cloudflare zone, preserve any existing DNS records, and set the assigned nameservers through the registrar. Once the zone is active, run the same deployment command with `--domain`. It attaches the domain and any `aliases` from the locale registry, and Cloudflare provisions HTTPS. This is a separate step from deploying the workers.dev preview.
 
 Regional deployments are currently explicit commands. CI builds translation artifacts but does not publish them. To automate publishing after merge, add a deployment job using a Cloudflare API token and account ID stored in GitHub Actions secrets.
