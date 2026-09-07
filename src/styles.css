@@ -1743,17 +1743,22 @@ h6 {
 .ported .workstations__images figure {
   margin: 0;
 }
-.ported .workstations__images img {
+.ported .workstations__images img,
+.ported .workstations__images video {
+  display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   margin: 0;
 }
-/* Hide the lightbox shell: its JavaScript is not loaded. */
-.ported .workstations__modal,
-.ported .workstations__backdrop {
-  display: none;
+.ported .workstations__images video {
+  object-fit: contain;
+  background: #000;
+}
+.ported .workstations__images a {
+  display: block;
+  cursor: zoom-in;
 }
 
 /* Meetup rules: two-column list */
