@@ -71,9 +71,9 @@ def clean(html: str, *, manual_slug: str | None = None) -> str:
     # Absolute omarchy.org links become root-relative (they are all ported)
     html = re.sub(r'href="https://omarchy\.org/?"', 'href="/"', html)
     html = html.replace('href="https://omarchy.org/', 'href="/')
-    # The plugins marketplace now lives at /plugins
-    html = re.sub(r'href="https://(?:omarchyplugins\.com|plugins\.omarchy\.org)/?[^"]*"',
-                  'href="/plugins"', html)
+    # Keep marketplace links on the live host, preserving deep links.
+    html = html.replace('href="https://omarchyplugins.com',
+                        'href="https://plugins.omarchy.org')
 
     # Assets are root-relative: the files are in this repository, and the
     # build lays them over the output at these very addresses.
