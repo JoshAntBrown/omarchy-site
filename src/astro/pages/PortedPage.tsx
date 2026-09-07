@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { cn } from '@/lib/utils'
 import { PageHeading } from '@/components/PageHeading'
 
@@ -46,7 +47,7 @@ export function PortedPage({
         <h1 className="sr-only">{page.title}</h1>
       ) : (
         <PageHeading
-          title={path === 'patrons' ? 'Patrons' : page.title}
+          title={path === 'patrons' ? t('Patrons') : page.title}
           brand={path === 'foundation' ? 'oma' : 'omarchy'}
         />
       )}

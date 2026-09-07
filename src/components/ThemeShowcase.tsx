@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { useEffect, useState } from 'react'
 import { SITE_THEMES, THEME_EVENT, switchTheme, readTheme } from '@/lib/theme'
 import { cn } from '@/lib/utils'
@@ -68,7 +69,7 @@ export function ThemeShowcase() {
       </figure>
       <ul
         className="mt-4 flex flex-wrap items-baseline gap-x-2 gap-y-1 font-mono text-sm leading-relaxed lg:mt-6"
-        aria-label="Choose a theme"
+        aria-label={t('Choose a theme')}
       >
         {SITE_THEMES.map((theme, index) => {
           const selected = theme.id === worn

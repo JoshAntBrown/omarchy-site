@@ -95,3 +95,8 @@ Plugins aren't in this repository. They're listed on
 [plugins.omarchy.org](https://plugins.omarchy.org/) from the
 [marketplace repo](https://github.com/omacom/omarchy-plugin-marketplace),
 which has its own submission guide.
+
+## Translations
+
+The site uses shared components with separate language catalogues and domain builds.
+See [the translation guide](docs/translations.md) to preview Danish or add another language.

@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { HeartIcon, StarIcon, VerifiedIcon } from '@/components/icons'
 import { pluginUrl } from '@/lib/plugins'
 import type { CatalogueEntry } from '@/lib/plugins'
@@ -56,7 +57,7 @@ export function PluginCard({ plugin }: { plugin: CatalogueEntry }) {
             <VerifiedIcon
               className="size-4 shrink-0 text-brand"
               aria-hidden={false}
-              aria-label="Verified plugin"
+              aria-label={t('Verified plugin')}
               role="img"
             />
           ) : null}
@@ -65,20 +66,20 @@ export function PluginCard({ plugin }: { plugin: CatalogueEntry }) {
               <span className="flex items-center gap-1">
                 <HeartIcon className="size-3" />
                 {plugin.stats.hearts.toLocaleString('en-US')}
-                <span className="sr-only">hearts</span>
+                <span className="sr-only">{t('hearts')}</span>
               </span>
             ) : null}
             {plugin.stars > 0 ? (
               <span className="flex items-center gap-1">
                 <StarIcon className="size-3" />
                 {plugin.stars.toLocaleString('en-US')}
-                <span className="sr-only">stars</span>
+                <span className="sr-only">{t('stars')}</span>
               </span>
             ) : null}
           </span>
         </div>
         <p className="line-clamp-2 text-[13px] leading-relaxed text-text-secondary [text-wrap:pretty]">
-          {plugin.description}
+          {t(plugin.description)}
         </p>
         <p className="mt-auto pt-1.5 font-mono text-xs text-text-muted">
           {plugin.builtIn ? 'Omarchy' : (plugin.author ?? 'unknown')} -{' '}

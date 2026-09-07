@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { HeroShader } from '@/components/HeroShader'
@@ -53,7 +54,7 @@ export function NotFoundHero() {
             >
               <NotFoundWordmark
                 data-hero-wordmark
-                label="Not found"
+                label={t('Not found')}
                 className={
                   'w-full text-[color:var(--t-field-lit)]' +
                   (painted ? ' invisible' : '')
@@ -71,14 +72,14 @@ export function NotFoundHero() {
               className="text-2xl font-medium tracking-tight text-text [text-wrap:balance] sm:text-3xl"
             >
               <span className="sr-only">404: </span>
-              There is nothing at this address.
+              {t('There is nothing at this address.')}
             </h1>
             <p className="mt-4 text-[15px] leading-relaxed text-text-secondary">
               <span className="block [text-wrap:balance]">
-                The link may be old,
+                {t('The link may be old,')}
               </span>
               <span className="block [text-wrap:balance]">
-                or the page may have moved.
+                {t('or the page may have moved.')}
               </span>
             </p>
             {/* A real control, because the word above is a canvas: keyboards
@@ -93,7 +94,7 @@ export function NotFoundHero() {
                 render={<Link to="/" />}
               >
                 <ArrowLeftIcon data-icon="inline-start" />
-                Back to Omarchy
+                {t('Back to Omarchy')}
               </Button>
             </div>
           </div>

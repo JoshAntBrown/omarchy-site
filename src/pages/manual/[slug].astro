@@ -1,4 +1,5 @@
 ---
+import { locale, locales } from '@/i18n/site'
 import Base from '../../layouts/Base.astro'
 import { ManualIsland } from '@/astro/ManualIsland'
 import { ManualChapterView } from '@/components/ManualChapterView'
@@ -16,6 +17,8 @@ const { slug } = Astro.params
 const data = getManualChapter(slug ?? '')
 if (!data.chapter) throw new Error(`Manual chapter not found: ${slug}`)
 const head = headProps(chapterSeo(data, slug ?? ''), `/manual/${slug}/`)
+if (!locale.manual) return Astro.redirect(locales.en.domain + Astro.url.pathname, 302)
+
 ---
 <Base {...head}>
   <ManualIsland

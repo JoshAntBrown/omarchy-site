@@ -1,3 +1,4 @@
+import { translateNews } from '../i18n/content'
 
 export type NewsPost = {
   slug: string
@@ -22,7 +23,7 @@ let posts: Array<NewsPost> | null = null
 export async function loadNews(): Promise<Array<NewsPost>> {
   if (posts) return posts
   const mod = await import('../data/news-posts.json')
-  posts = mod.default
+  posts = mod.default.map(translateNews)
   return posts
 }
 

@@ -1,3 +1,4 @@
+import { t, locale } from '@/i18n/site'
 import { PageHeading } from '@/components/PageHeading'
 import { useEffect, useState } from 'react'
 import { MeetupCover } from '@/components/MeetupCover'
@@ -29,7 +30,9 @@ const events: Meetup[] = meetups.events
 
 const CALENDAR_URL = 'https://luma.com/omarchy'
 
-const regionNames = new Intl.DisplayNames(['en'], { type: 'region' })
+const regionNames = new Intl.DisplayNames([locale.formatLocale], {
+  type: 'region',
+})
 
 /** The country's name from its code, or the code when it is not one. */
 function countryOf(code: string) {
@@ -53,7 +56,7 @@ function whereOf(meetup: Meetup) {
 }
 
 const inZone = (meetup: Meetup, options: Intl.DateTimeFormatOptions) =>
-  new Intl.DateTimeFormat('en-US', {
+  new Intl.DateTimeFormat(locale.formatLocale, {
     ...options,
     timeZone: meetup.timezone || 'UTC',
   }).format(new Date(meetup.start))
@@ -201,24 +204,25 @@ export function MeetupsPage({ rules }: { rules: string }) {
       href={CALENDAR_URL}
       className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 py-2 text-sm font-medium whitespace-nowrap text-text underline decoration-current underline-offset-4 transition-colors duration-150 hover:text-brand hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring [&_svg]:size-5 [&_svg]:shrink-0"
     >
-      The calendar on Luma
+      {t('The calendar on Luma')}
       <ArrowRightIcon aria-hidden="true" />
     </a>
   )
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <PageHeading title="Meetups">
+      <PageHeading title={t('Meetups')}>
         <div className="mx-auto mt-3 max-w-2xl text-center">
           <p className="text-[15px] leading-relaxed text-text-secondary [text-wrap:pretty]">
-            Omarchy meetups are popping up around the world. Find one near you,
-            or start one. They all live on the Omarchy calendar on Luma.
+            {t(
+              'Omarchy meetups are popping up around the world. Find one near you, or start one. They all live on the Omarchy calendar on Luma.',
+            )}
           </p>
           <div className="mt-3 hidden sm:block">{calendar}</div>
         </div>
       </PageHeading>
 
-      <nav aria-label="Filter the meetups by region">
+      <nav aria-label={t('Filter the meetups by region')}>
         <ul className="flex flex-wrap gap-2">
           {[null, ...regions].map((r) => {
             const on = region === r
@@ -238,7 +242,7 @@ export function MeetupsPage({ rules }: { rules: string }) {
                       : 'border-border-strong bg-surface text-text hover:bg-surface-2',
                   )}
                 >
-                  {r ?? 'Everywhere'}
+                  {t(r ?? 'Everywhere')}
                   <span
                     className={cn(
                       'font-mono text-xs',
@@ -314,8 +318,10 @@ export function MeetupsPage({ rules }: { rules: string }) {
       {months.length === 0 ? (
         <p className="mt-10 text-[15px] text-text-secondary">
           {region || country
-            ? 'Nothing coming up there yet. The next one may be yours.'
-            : 'Nothing on the calendar right now. The next one may be yours.'}
+            ? t('Nothing coming up there yet. The next one may be yours.')
+            : t(
+                'Nothing on the calendar right now. The next one may be yours.',
+              )}
         </p>
       ) : (
         months.map((month) => (
@@ -361,7 +367,7 @@ export function MeetupsPage({ rules }: { rules: string }) {
               id="past-meetups"
               className="font-sans text-lg font-medium text-text"
             >
-              Already happened
+              {t('Already happened')}
             </h2>
             <span className="font-mono text-xs text-text-muted">
               {past.length}

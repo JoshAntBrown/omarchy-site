@@ -1,3 +1,4 @@
+import { t, language } from '@/i18n/site'
 import { Link } from '@tanstack/react-router'
 import { useEffect, useLayoutEffect, useState } from 'react'
 import {
@@ -55,12 +56,12 @@ import release from '@/data/version.json'
 
 const TRY = {
   mac: {
-    label: 'Try on Mac',
+    label: t('Try on Mac'),
     href: 'https://github.com/omacom/try-omarchy',
     icon: AppleIcon,
   },
   windows: {
-    label: 'Try on Windows',
+    label: t('Try on Windows'),
     href: 'https://github.com/omacom/try-omarchy-windows',
     icon: WindowsIcon,
   },
@@ -80,10 +81,10 @@ function useTryDevice() {
 }
 
 const FIXES = [
-  'thing.',
-  ' missing app.',
-  ' incompatibility.',
-  ' paper cut.',
+  t('thing.'),
+  t(' missing app.'),
+  t(' incompatibility.'),
+  t(' paper cut.'),
 ] as const
 const ISO_URL = release.isoUrl
 
@@ -158,30 +159,36 @@ const communityCards = [
   {
     icon: DiscordIcon,
     title: 'Discord',
-    body: 'Daily chatter, support, and show-and-tell with thousands of Omarchs.',
+    body: t(
+      'Daily chatter, support, and show-and-tell with thousands of Omarchs.',
+    ),
     href: 'https://discord.gg/tXFUdasqhY',
-    cta: 'Join the server',
+    cta: t('Join the server'),
   },
   {
     icon: CalendarFilledIcon,
-    title: 'Meetups',
-    body: 'Omarchy meetups are popping up around the world. Find one near you, or start one.',
+    title: t('Meetups'),
+    body: t(
+      'Omarchy meetups are popping up around the world. Find one near you, or start one.',
+    ),
     to: '/meetups/',
-    cta: 'Find a meetup',
+    cta: t('Find a meetup'),
   },
   {
     icon: GithubIcon,
-    title: 'Contribute',
-    body: 'File issues, fix bugs, and submit features.',
+    title: t('Contribute'),
+    body: t('File issues, fix bugs, and submit features.'),
     href: 'https://github.com/omacom-io/omarchy',
-    cta: 'Contribute on GitHub',
+    cta: t('Contribute on GitHub'),
   },
   {
     icon: BankIcon,
-    title: 'Donate',
-    body: 'Help fund the people and projects making Omarchy better for everyone.',
+    title: t('Donate'),
+    body: t(
+      'Help fund the people and projects making Omarchy better for everyone.',
+    ),
     href: 'https://donate.omarchy.org',
-    cta: 'Become a patron',
+    cta: t('Become a patron'),
   },
 ]
 
@@ -198,7 +205,7 @@ function HeroCallout({ href, html }: { href: string; html: string }) {
     <>
       <span
         className="min-w-0 [&_s]:text-current/60"
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={{ __html: t(html) }}
       />
       <ArrowRightIcon className="size-4 shrink-0 transition-transform duration-150 ease-out group-hover:translate-x-0.5" />
     </>
@@ -257,19 +264,19 @@ export function HomePage({ data }: { data: HomeData }) {
 
   const allPlugins = (
     <a href="https://plugins.omarchy.org" className={sectionLink}>
-      All plugins
+      {t('All plugins')}
       <ArrowRightIcon />
     </a>
   )
   const extraThemes = (
     <Link to="/themes/" className={sectionLink}>
-      More community themes
+      {t('More community themes')}
       <ArrowRightIcon />
     </Link>
   )
   const allNews = (
     <Link to="/news/" className={sectionLink}>
-      All news
+      {t('All news')}
       <ArrowRightIcon />
     </Link>
   )
@@ -279,7 +286,7 @@ export function HomePage({ data }: { data: HomeData }) {
       params={{ slug: 'getting-started' }}
       className={sectionLink}
     >
-      Full installation guide
+      {t('Full installation guide')}
       <ArrowRightIcon />
     </Link>
   )
@@ -290,25 +297,25 @@ export function HomePage({ data }: { data: HomeData }) {
       rel="noopener noreferrer"
       className={sectionLink}
     >
-      More on <XIcon aria-label="X" />
+      {t('More on')} <XIcon aria-label="X" />
       <ArrowUpRightIcon />
     </a>
   )
   const allTeams = (
     <Link to="/teams/" className={sectionLink}>
-      All teams
+      {t('All teams')}
       <ArrowRightIcon />
     </Link>
   )
   const allPatrons = (
     <Link to="/$/" params={{ _splat: 'patrons' }} className={sectionLink}>
-      All patrons
+      {t('All patrons')}
       <ArrowRightIcon />
     </Link>
   )
   const allMeetups = (
     <Link to="/meetups/" className={sectionLink}>
-      All meetups
+      {t('All meetups')}
       <ArrowRightIcon />
     </Link>
   )
@@ -359,14 +366,19 @@ export function HomePage({ data }: { data: HomeData }) {
           >
             <h1
               data-hero-stagger
-              style={{ '--stagger': 0, fontFamily: 'var(--font-mono)' } as React.CSSProperties}
+              style={
+                {
+                  '--stagger': 0,
+                  fontFamily: 'var(--font-mono)',
+                } as React.CSSProperties
+              }
               className="text-2xl font-medium tracking-tight text-text [text-wrap:balance] sm:text-3xl"
             >
               <SectionAnchor anchor="home">
                 <span className="sr-only">Omarchy: </span>
-                Beautiful, fun &amp; agentic Linux
+                {t('Beautiful, fun & agentic Linux')}
               </SectionAnchor>{' '}
-              by{' '}
+              {t('by')}{' '}
               <a
                 href="https://dhh.dk"
                 className="underline decoration-transparent underline-offset-[6px] transition-colors duration-150 ease-out hover:decoration-brand"
@@ -380,10 +392,12 @@ export function HomePage({ data }: { data: HomeData }) {
               className="mt-4 text-[15px] leading-relaxed text-text-secondary"
             >
               <span className="block [text-wrap:balance]">
-                The malleable OS for the age of agents.
+                {t('The malleable OS for the age of agents.')}
               </span>
               <span className="block [text-wrap:balance]">
-                Vibe your way through every alteration, tweak, or trouble.
+                {t(
+                  'Vibe your way through every alteration, tweak, or trouble.',
+                )}
               </span>
             </p>
 
@@ -412,7 +426,7 @@ export function HomePage({ data }: { data: HomeData }) {
                 render={<Link to="/" hash="install" />}
               >
                 <DownloadIcon data-icon="inline-start" />
-                Get Omarchy
+                {t('Get Omarchy')}
               </Button>
               <Button
                 size="lg"
@@ -423,7 +437,7 @@ export function HomePage({ data }: { data: HomeData }) {
                 render={<Link to="/" hash="watch" />}
               >
                 <PlayIcon data-icon="inline-start" className="mr-0.5" />
-                See it in action
+                {t('See it in action')}
               </Button>
             </div>
           </div>
@@ -440,35 +454,32 @@ export function HomePage({ data }: { data: HomeData }) {
                 className="text-2xl font-semibold tracking-tight text-text [contain:layout] [text-wrap:balance] sm:text-[1.75rem]"
               >
                 <SectionAnchor anchor="about">
-                  <span className="sr-only">We can fix everything.</span>
+                  <span className="sr-only">{t('We can fix everything.')}</span>
                   <span aria-hidden="true">
-                    We can fix every
+                    {t('We can fix every')}
                     <TypewriterTail phrases={FIXES} />
                   </span>
                 </SectionAnchor>
               </h2>
               <p className="mt-6 max-w-[35.5rem] text-[15px] leading-relaxed text-text-secondary [text-wrap:pretty]">
-                Linux used to be a chore to setup, difficult to debug, and full
-                of confusing upfront choices. Omarchy solves all of it with a
-                lightning fast installation, agents that debug all issues, and
-                fantastic defaults that give you a fully functioning system that
-                looks amazing out of the box.
+                {t(
+                  'Linux used to be a chore to setup, difficult to debug, and full of confusing upfront choices. Omarchy solves all of it with a lightning fast installation, agents that debug all issues, and fantastic defaults that give you a fully functioning system that looks amazing out of the box.',
+                )}
               </p>
               <p className="mt-5 max-w-[35.5rem] text-[15px] leading-relaxed text-text-secondary [text-wrap:pretty]">
-                Oma is for omakase, chef's choice: the chef picks the courses,
-                but you are always free to send anything back. Omarchy lets you
-                take an exquisite baseline and then make it your own.
+                {t(
+                  "Oma is for omakase, chef's choice: the chef picks the courses, but you are always free to send anything back. Omarchy lets you take an exquisite baseline and then make it your own.",
+                )}
               </p>
               <p className="mt-5 max-w-[35.5rem] text-[15px] leading-relaxed text-text-secondary [text-wrap:pretty]">
-                It's not perfect... yet. But{' '}
+                {t("It's not perfect... yet. But")}{' '}
                 <a
                   href="https://wecanfixeverything.com/"
                   className="underline decoration-border-strong underline-offset-4 hover:decoration-current"
                 >
-                  we can fix everything now.
+                  {t('we can fix everything now.')}
                 </a>
               </p>
-
             </div>
 
             <div className="lg:justify-self-end lg:self-center lg:[&>figure]:-mt-[3px]">
@@ -485,8 +496,8 @@ export function HomePage({ data }: { data: HomeData }) {
           <VideoCarousel
             anchor="watch"
             level={3}
-            title="See it in action"
-            description="Experience a transfer of enthusiasm."
+            title={t('See it in action')}
+            description={t('Experience a transfer of enthusiasm.')}
             videos={videos}
           />
         </div>
@@ -498,8 +509,10 @@ export function HomePage({ data }: { data: HomeData }) {
           <SectionHeading
             level={3}
             anchor="install"
-            title="Install Omarchy"
-            description="Be up and running in as little as 35 seconds on the fastest machines, and in less than two minutes on the majority of computers."
+            title={t('Install Omarchy')}
+            description={t(
+              'Be up and running in as little as 35 seconds on the fastest machines, and in less than two minutes on the majority of computers.',
+            )}
             action={installGuide}
           />
 
@@ -508,12 +521,13 @@ export function HomePage({ data }: { data: HomeData }) {
               <div className="flex items-center gap-2.5">
                 <UsbIcon className="size-5 text-brand" />
                 <h4 className="text-lg font-medium tracking-tight text-text">
-                  Full-disk or dual-boot installation
+                  {t('Full-disk or dual-boot installation')}
                 </h4>
               </div>
               <p className="mt-3 text-[15px] leading-relaxed text-text-secondary [text-wrap:pretty]">
-                Write the ISO to a USB stick and answer five questions. It hands
-                back a finished desktop.
+                {t(
+                  'Write the ISO to a USB stick and answer five questions. It hands back a finished desktop.',
+                )}
               </p>
               <div className="mt-auto pt-6">
                 <Button
@@ -522,12 +536,12 @@ export function HomePage({ data }: { data: HomeData }) {
                   render={<a href={ISO_URL} />}
                 >
                   <DownloadIcon data-icon="inline-start" />
-                  Download Omarchy {release.version}
+                  {t('Download Omarchy')} {release.version}
                 </Button>
                 <p className="mt-2.5 text-[13px] text-text-muted">
-                  Under a minute from stick to desktop.{' '}
+                  {t('Under a minute from stick to desktop.')}{' '}
                   <span className="block @min-[44rem]:inline">
-                    Verify the file:{' '}
+                    {t('Verify the file:')}{' '}
                     <a
                       href={`${ISO_URL}.sha256`}
                       className={`${noteLink} whitespace-nowrap`}
@@ -536,7 +550,7 @@ export function HomePage({ data }: { data: HomeData }) {
                     </a>
                     ,{' '}
                     <a href={`${ISO_URL}.sig`} className={noteLink}>
-                      signature
+                      {t('signature')}
                     </a>
                     .
                   </span>
@@ -548,12 +562,13 @@ export function HomePage({ data }: { data: HomeData }) {
               <div className="flex items-center gap-2.5">
                 <DisplayIcon className="size-5 text-brand" />
                 <h4 className="text-lg font-medium tracking-tight text-text">
-                  Try it first
+                  {t('Try it first')}
                 </h4>
               </div>
               <p className="mt-3 text-[15px] leading-relaxed text-text-secondary [text-wrap:pretty]">
-                All of Omarchy running in a virtual machine, so you can get a
-                taste first.
+                {t(
+                  'All of Omarchy running in a virtual machine, so you can get a taste first.',
+                )}
               </p>
               <div className="mt-auto pt-6">
                 <div className="flex flex-wrap gap-2">
@@ -575,9 +590,9 @@ export function HomePage({ data }: { data: HomeData }) {
                   })}
                 </div>
                 <p className="mt-2.5 text-[13px] text-text-muted">
-                  Apple Silicon Macs, Windows 10 and 11.
+                  {t('Apple Silicon Macs, Windows 10 and 11.')}
                   <span className="block">
-                    On Linux, the ISO is the way in.
+                    {t('On Linux, the ISO is the way in.')}
                   </span>
                 </p>
               </div>
@@ -585,13 +600,13 @@ export function HomePage({ data }: { data: HomeData }) {
           </div>
 
           <p className="mt-6 text-[13px] leading-relaxed text-text-muted [text-wrap:pretty]">
-            The manual also covers{' '}
+            {t('The manual also covers')}{' '}
             <ManualLink slug="dual-boot-install">
-              dual booting beside Windows
+              {t('dual booting beside Windows')}
             </ManualLink>{' '}
-            and{' '}
+            {t('and')}{' '}
             <ManualLink slug="unattended-installs">
-              unattended installs
+              {t('unattended installs')}
             </ManualLink>
             .
           </p>
@@ -613,8 +628,10 @@ export function HomePage({ data }: { data: HomeData }) {
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <SectionHeading
             anchor="plugins"
-            title="A plugin for every dream, every desire"
-            description="Thousands of community plugins are available for Omarchy. Don't find what you need? Just put your agent on the job, then share when done."
+            title={t('A plugin for every dream, every desire')}
+            description={t(
+              "Thousands of community plugins are available for Omarchy. Don't find what you need? Just put your agent on the job, then share when done.",
+            )}
             action={allPlugins}
           />
           <CardRail className="mt-6 lg:mt-10 sm:grid-cols-2 lg:grid-cols-3">
@@ -636,18 +653,19 @@ export function HomePage({ data }: { data: HomeData }) {
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <SectionHeading
             anchor="themes"
-            title="Pick a theme, change everything"
+            title={t('Pick a theme, change everything')}
             description={
               <>
-                A theme restyles the whole system at once: terminal, bar,
-                notifications, wallpaper. Pick one and this site wears it too.
+                {t(
+                  'A theme restyles the whole system at once: terminal, bar, notifications, wallpaper. Pick one and this site wears it too.',
+                )}
                 <span className="hidden sm:inline">
                   {' '}
-                  Or press{' '}
+                  {t('Or press')}{' '}
                   <kbd className="border border-border-strong px-1.5 py-0.5 font-mono text-[11px] text-text-secondary">
                     T
                   </kbd>{' '}
-                  to flip through them.
+                  {t('to flip through them.')}
                 </span>
               </>
             }
@@ -686,7 +704,7 @@ export function HomePage({ data }: { data: HomeData }) {
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <SectionHeading
             anchor="news"
-            title="What's been happening"
+            title={t("What's been happening")}
             action={allNews}
           />
           <ul className="mt-6 lg:mt-8 grid border-t border-border-subtle sm:grid-cols-2 sm:gap-x-10">
@@ -734,8 +752,10 @@ export function HomePage({ data }: { data: HomeData }) {
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <SectionHeading
             anchor="figures"
-            title="Momentum by the numbers"
-            description="Donations, downloads, and contributions. Momentum is based on all of it."
+            title={t('Momentum by the numbers')}
+            description={t(
+              'Donations, downloads, and contributions. Momentum is based on all of it.',
+            )}
           />
           <Figures />
         </div>
@@ -745,10 +765,15 @@ export function HomePage({ data }: { data: HomeData }) {
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <SectionHeading
             anchor="voices"
-            title="People love Omarchy"
-            description="What people posted on X after installing it."
+            title={t('People love Omarchy')}
+            description={t('What people posted on X after installing it.')}
             action={moreOnX}
           />
+          {language !== 'en' && (
+            <p className="mt-3 text-xs text-text-muted">
+              {t('Posts are shown in their original language.')}
+            </p>
+          )}
           <Voices />
           <SectionActions>{moreOnX}</SectionActions>
         </div>
@@ -758,8 +783,10 @@ export function HomePage({ data }: { data: HomeData }) {
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <SectionHeading
             anchor="teams"
-            title="It takes a village to raise a distro"
-            description="Omarchy Core sets the direction, the Security team keeps your system safe, Design shapes how it looks and feels, and the Rangers help others find their way."
+            title={t('It takes a village to raise a distro')}
+            description={t(
+              'Omarchy Core sets the direction, the Security team keeps your system safe, Design shapes how it looks and feels, and the Rangers help others find their way.',
+            )}
             action={allTeams}
           />
           <TeamClusters />
@@ -771,8 +798,10 @@ export function HomePage({ data }: { data: HomeData }) {
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <SectionHeading
             anchor="patrons"
-            title="Backed by the oligarchy"
-            description="The billionaires, mere millionaires, and corporations funding the lion's share of the development, maintenance, and spread of Omarchy."
+            title={t('Backed by the oligarchy')}
+            description={t(
+              "The billionaires, mere millionaires, and corporations funding the lion's share of the development, maintenance, and spread of Omarchy.",
+            )}
             action={allPatrons}
           />
           <PatronHighlights />
@@ -792,8 +821,10 @@ export function HomePage({ data }: { data: HomeData }) {
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <SectionHeading
             anchor="community"
-            title="Get involved with Omarchy"
-            description="Command your agent, and hang out with the people doing the same."
+            title={t('Get involved with Omarchy')}
+            description={t(
+              'Command your agent, and hang out with the people doing the same.',
+            )}
           />
           <div className="mt-6 lg:mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {communityCards.map((card) => {
@@ -846,8 +877,9 @@ function DhhQuote() {
         cite={DHH_QUOTE_URL}
         className="font-sans text-xl leading-snug font-medium text-text [text-wrap:balance]"
       >
-        When you can vibe code whatever app comes to your mind, you should be
-        able to vibe code your operating system.
+        {t(
+          'When you can vibe code whatever app comes to your mind, you should be able to vibe code your operating system.',
+        )}
       </blockquote>
       <figcaption className="mt-6 flex items-center gap-3.5">
         <img
@@ -864,14 +896,14 @@ function DhhQuote() {
             David Heinemeier Hansson
           </span>
           <span className="text-[13px] text-text-muted">
-            Creator of Omarchy
+            {t('Creator of Omarchy')}
           </span>
         </span>
         <a
           href={DHH_QUOTE_URL}
           target="_blank"
           rel="noreferrer"
-          aria-label="Watch him say it, on YouTube"
+          aria-label={t('Watch him say it, on YouTube')}
           className="ml-auto text-text-muted transition-colors duration-150 ease-out group-hover:text-text focus-visible:outline-none before:absolute before:inset-0"
         >
           <PlayIcon className="size-5" />

@@ -1,3 +1,4 @@
+import { t, locale } from '@/i18n/site'
 import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { SectionActions, SectionHeading } from '@/components/SectionHeading'
@@ -34,7 +35,7 @@ export function MeetupShowcase({ action }: { action?: ReactNode }) {
       <Button
         variant="outline"
         size="icon"
-        aria-label="Previous meetups"
+        aria-label={t('Previous meetups')}
         disabled={rail.atStart}
         onClick={() => turn(-1)}
       >
@@ -43,7 +44,7 @@ export function MeetupShowcase({ action }: { action?: ReactNode }) {
       <Button
         variant="outline"
         size="icon"
-        aria-label="Next meetups"
+        aria-label={t('Next meetups')}
         disabled={rail.atEnd}
         onClick={() => turn(1)}
       >
@@ -58,13 +59,16 @@ export function MeetupShowcase({ action }: { action?: ReactNode }) {
         <SectionHeading
           roomy
           anchor="meetups"
-          title="Share the love of beautiful, fun & agentic Linux"
+          title={t('Share the love of beautiful, fun & agentic Linux')}
           description={
             <>
-              Get together with others who love computers as much as you do.{' '}
+              {t(
+                'Get together with others who love computers as much as you do.',
+              )}{' '}
               <span className="md:block">
-                Share plugins, present work, and help newcomers into the
-                community.
+                {t(
+                  'Share plugins, present work, and help newcomers into the community.',
+                )}
               </span>
             </>
           }
@@ -80,7 +84,7 @@ export function MeetupShowcase({ action }: { action?: ReactNode }) {
       <ul
         ref={rail.scroller}
         {...rail.scrollerProps}
-        aria-label="Upcoming Omarchy meetups"
+        aria-label={t('Upcoming Omarchy meetups')}
         className="rail-bare rail-column mt-6 lg:mt-10 flex cursor-grab snap-x snap-mandatory gap-6 overflow-x-auto select-none active:cursor-grabbing motion-reduce:scroll-auto"
       >
         {upcoming.map((event, i) => (
@@ -116,7 +120,7 @@ export function MeetupShowcase({ action }: { action?: ReactNode }) {
               )}
               <p className="mt-3 font-mono text-xs text-text-muted">
                 <time dateTime={event.start}>
-                  {new Intl.DateTimeFormat('en-US', {
+                  {new Intl.DateTimeFormat(locale.formatLocale, {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric',
@@ -136,12 +140,12 @@ export function MeetupShowcase({ action }: { action?: ReactNode }) {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <RailBar rail={rail} />
         <p className="mt-6 text-[15px] leading-relaxed text-text-secondary">
-          Don't see a meetup in your city?{' '}
+          {t("Don't see a meetup in your city?")}{' '}
           <a
             href="/meetups/"
             className="whitespace-nowrap underline decoration-border-strong underline-offset-4 hover:text-brand hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
           >
-            Start your own
+            {t('Start your own')}
           </a>
           .
         </p>

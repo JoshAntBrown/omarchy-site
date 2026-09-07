@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { Link } from '@tanstack/react-router'
 import { PageHeading } from '@/components/PageHeading'
 import { ArrowLeftIcon, ArrowRightIcon } from '@/components/icons'
@@ -14,7 +15,7 @@ export function ManualChapterView({ data }: { data: ChapterData }) {
   return (
     <div className="manual-chapter">
       <article>
-        <PageHeading title="Manual" as="p" />
+        <PageHeading title={t('Manual')} as="p" />
         <h1 className="mx-auto w-full max-w-(--measure) text-3xl font-semibold tracking-tight text-text">
           {chapter.title}
         </h1>

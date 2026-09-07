@@ -1,5 +1,6 @@
 ---
 import '../styles.css'
+import { language, locale, locales, hasTranslation, t } from '../i18n/site'
 import { ClientRouter } from 'astro:transitions'
 import { SiteHeader } from '@/components/SiteHeader'
 import { SiteFooter } from '@/components/SiteFooter'
@@ -34,7 +35,7 @@ const url = `${SITE_URL}${path}`
 ---
 
 <!doctype html>
-<html lang="en" transition:name="root" transition:animate="none">
+<html lang={language} transition:name="root" transition:animate="none">
   <head>
     <ClientRouter fallback="swap" />
     <meta charset="utf-8" />
@@ -42,7 +43,6 @@ const url = `${SITE_URL}${path}`
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:site_name" content="Omarchy" />
-    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={type} />
@@ -61,6 +61,11 @@ const url = `${SITE_URL}${path}`
     <meta name="theme-color" content="#1a1b26" />
     <link rel="icon" href="/brand/omarchy-logo.svg" type="image/svg+xml" data-theme-icon transition:persist="theme-icon" />
     <link rel="canonical" href={url} />
+    {Object.entries(locales).filter(([code]) => hasTranslation(code, path)).map(([code, entry]) => (
+      <link rel="alternate" hreflang={code} href={`${entry.domain}${path}`} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={`${locales.en.domain}${path}`} />
+    <meta property="og:locale" content={locale.ogLocale} />
     <link rel="preload" href="/brand/omarchy-wordmark.svg" as="image" type="image/svg+xml" crossorigin="anonymous" />
     <link rel="preload" href={geistWoff2} as="font" type="font/woff2" crossorigin="anonymous" />
     <link rel="preload" href={monoWoff2} as="font" type="font/woff2" crossorigin="anonymous" />
@@ -72,12 +77,12 @@ const url = `${SITE_URL}${path}`
       href="#main"
       class="bg-bg text-text focus-visible:outline-ring absolute left-4 z-(--z-modal) -translate-y-[120%] px-3 py-2 text-sm font-medium underline outline-offset-2 focus:translate-y-4 focus-visible:outline-2"
     >
-      Skip to content
+      {t('Skip to content')}
     </a>
     <div class="flex min-h-dvh flex-col">
       <SiteHeader client:load path={Astro.url.pathname} transition:persist="site-header" />
       <div id="main" class="relative z-10 min-h-dvh flex-1 bg-bg"><slot /></div>
-      <SiteFooter client:visible={{ rootMargin: "300px" }} />
+      <SiteFooter path={Astro.url.pathname} client:visible={{ rootMargin: "300px" }} />
     </div>
     <ThemePicker client:load />
     <SearchPalette client:load />

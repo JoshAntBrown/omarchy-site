@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { Link } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react'
 import { ArrowUpRightIcon } from '@/components/icons'
@@ -72,10 +73,10 @@ export function TeamClusters({
               className="flex flex-col items-start gap-1 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
               <span className="font-sans text-sm font-medium text-text">
-                {team.name.replace(/^Omarchy /, '')}
+                {t(team.name.replace(/^Omarchy /, ''))}
               </span>
               <span className="font-mono text-xs text-text-muted">
-                {team.description}
+                {t(team.description)}
               </span>
             </button>
             <ul

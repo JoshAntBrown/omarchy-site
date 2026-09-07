@@ -1,17 +1,22 @@
+import locales from './src/i18n/locales.json' with { type: 'json' }
 import { defineConfig } from 'astro/config'
 import react from '@astrojs/react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
 import { devPassthrough } from './scripts/dev-passthrough.mjs'
 
+const language = process.env.PUBLIC_SITE_LOCALE || 'en'
+if (!Object.hasOwn(locales, language))
+  throw new Error(`Unknown site language: ${language}`)
+
 // The static assembler and deployment workflows share dist/client.
 export default defineConfig({
   server: { port: 3113 },
   output: 'static',
-  site: 'https://omarchy.org',
+  site: locales[language].domain,
   trailingSlash: 'ignore',
   build: { format: 'directory' },
-  outDir: './dist/client',
+  outDir: language === 'en' ? './dist/client' : `./dist/${language}`,
   integrations: [react()],
   vite: {
     plugins: [tailwindcss(), devPassthrough()],
@@ -19,6 +24,10 @@ export default defineConfig({
     resolve: {
       // Array form: exact entries first, so the shims win over the prefixes.
       alias: [
+        {
+          find: './current-messages.ts',
+          replacement: path.resolve(`./src/i18n/messages/${language}.json`),
+        },
         {
           find: '@/lib/content',
           replacement: path.resolve('./src/astro/content-client.ts'),

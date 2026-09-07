@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { Link } from '@tanstack/react-router'
 import { ArrowLeftIcon, ArrowRightIcon } from '@/components/icons'
 import { NewsHeader } from '@/components/NewsHeader'
@@ -48,7 +49,7 @@ export function NewsPostPage({ post }: { post: NewsPost }) {
       <article>
         <header>
           <p className="font-mono text-xs text-text-muted">
-            By{' '}
+            {t('By')}{' '}
             <a
               href="https://dhh.dk"
               rel="author"
@@ -56,7 +57,7 @@ export function NewsPostPage({ post }: { post: NewsPost }) {
             >
               DHH
             </a>{' '}
-            on <time dateTime={post.date}>{post.dateStr}</time>
+            {t('on')} <time dateTime={post.date}>{post.dateStr}</time>
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-text">
             {post.title}
@@ -73,7 +74,7 @@ export function NewsPostPage({ post }: { post: NewsPost }) {
         className="mt-10 inline-flex items-center gap-1.5 text-sm text-text-secondary transition-colors duration-150 ease-out hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
       >
         <ArrowLeftIcon className="size-5" />
-        All news
+        {t('All news')}
       </Link>
     </main>
   )

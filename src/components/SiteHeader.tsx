@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { Link, useLocation } from '@tanstack/react-router'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { ReactElement, RefObject } from 'react'
@@ -49,11 +50,11 @@ function NavTooltip({
 }
 
 const navLinks = [
-  { to: '/news/', label: 'News' },
-  { to: '/manual/', label: 'Manual' },
+  { to: '/news/', label: t('News') },
+  { to: '/manual/', label: t('Manual') },
   // Old /plugins/ addresses redirect to the standalone directory.
   { href: 'https://plugins.omarchy.org', label: 'Plugins' },
-  { to: '/themes/', label: 'Themes' },
+  { to: '/themes/', label: t('Themes') },
 ] as const
 
 /** Observe the live hero sentinel; the header and blended labels share this state. */
@@ -422,7 +423,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
   }, [menuOpen])
   useEffect(() => {
     const root = document.documentElement
-    if (menuOpen) root.dataset.navMenu = 'open'
+    if (menuOpen) root.dataset.navMenu = t('open')
     else delete root.dataset.navMenu
     return () => {
       delete root.dataset.navMenu
@@ -435,7 +436,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
   const glyph = (
     <Link
       to="/"
-      aria-label="Omarchy home"
+      aria-label={t('Omarchy home')}
       onClick={homeLink}
       className="mark-draw-trigger relative flex items-center"
     >
@@ -448,7 +449,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
     <Button
       variant="ghost"
       size="icon"
-      aria-label="Search Omarchy"
+      aria-label={t('Search Omarchy')}
       data-nav-glyph
       className="relative h-8 w-8 text-text-secondary transition-[background-color,transform] hover:text-text before:absolute before:-inset-1 lg:h-[calc(var(--pxr)*3)] lg:w-[calc(var(--pxr)*3)]"
       onClick={() => window.dispatchEvent(new CustomEvent(OPEN_SEARCH_EVENT))}
@@ -461,7 +462,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
     <Button
       variant="ghost"
       size="icon"
-      aria-label="Change website theme"
+      aria-label={t('Change website theme')}
       data-nav-glyph
       className="relative h-8 w-8 text-text-secondary transition-[background-color,transform] hover:text-text before:absolute before:-inset-1 lg:h-[calc(var(--pxr)*3)] lg:w-[calc(var(--pxr)*3)]"
       onClick={() => window.dispatchEvent(new CustomEvent(OPEN_PICKER_EVENT))}
@@ -477,7 +478,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
       onClick={installLink}
       render={<Link to="/" hash="install" />}
     >
-      Install
+      {t('Install')}
     </Button>
   )
 
@@ -506,7 +507,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:px-6">
           {glyph}
 
-          <nav aria-label="Main" className="hidden items-center sm:flex">
+          <nav aria-label={t('Main')} className="hidden items-center sm:flex">
             {navLinks.map((link) =>
               'href' in link ? (
                 <a
@@ -532,17 +533,17 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
           <div className="ml-auto flex items-center gap-2.5">
             <div className="hidden items-center gap-1 sm:flex">
               <TooltipProvider delay={300}>
-                <NavTooltip label="Search Omarchy" shortcut="⌘K / Ctrl+K">
+                <NavTooltip label={t('Search Omarchy')} shortcut="⌘K / Ctrl+K">
                   {search}
                 </NavTooltip>
-                <NavTooltip label="Change website theme" shortcut="T">
+                <NavTooltip label={t('Change website theme')} shortcut="T">
                   {theme}
                 </NavTooltip>
-                <NavTooltip label="Subscribe via RSS">
+                <NavTooltip label={t('Subscribe via RSS')}>
                   <Button
                     variant="ghost"
                     size="icon"
-                    aria-label="Omarchy RSS feed"
+                    aria-label={t('Omarchy RSS feed')}
                     data-nav-glyph
                     className="relative h-8 w-8 text-text-secondary transition-[background-color,transform] hover:text-text before:absolute before:-inset-1 lg:h-[calc(var(--pxr)*3)] lg:w-[calc(var(--pxr)*3)]"
                     nativeButton={false}
@@ -551,11 +552,11 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
                     <RssIcon className="size-5" />
                   </Button>
                 </NavTooltip>
-                <NavTooltip label="View Omarchy on GitHub">
+                <NavTooltip label={t('View Omarchy on GitHub')}>
                   <Button
                     variant="ghost"
                     size="icon"
-                    aria-label="Omarchy on GitHub"
+                    aria-label={t('Omarchy on GitHub')}
                     data-nav-glyph
                     className="relative h-8 w-8 text-text-secondary transition-[background-color,transform] hover:text-text before:absolute before:-inset-1 lg:h-[calc(var(--pxr)*3)] lg:w-[calc(var(--pxr)*3)]"
                     nativeButton={false}
@@ -607,7 +608,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
         className="absolute inset-x-0 top-(--nav-h) border-b border-border-subtle bg-bg/95 backdrop-blur-lg sm:hidden"
       >
         <nav
-          aria-label="Main pages"
+          aria-label={t('Main pages')}
           className="mx-auto flex max-w-6xl flex-col px-4 py-2"
         >
           {navLinks.map((link) =>
@@ -641,7 +642,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
             className="mt-2 flex items-center gap-2.5 border-t border-border-subtle py-3 pt-4 text-left text-[15px] text-text-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
           >
             <SearchIcon className="size-5" />
-            Search Omarchy
+            {t('Search Omarchy')}
           </button>
           <button
             type="button"
@@ -652,7 +653,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
             className="flex items-center gap-2.5 py-3 text-left text-[15px] text-text-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
           >
             <PaletteIcon className="size-5" />
-            Change the theme
+            {t('Change the theme')}
           </button>
           <MusicMenuControl open={menuOpen} path={pathname} />
           <div className="mt-2 flex flex-wrap items-center gap-2.5 border-t border-border-subtle pt-4 pb-2">
@@ -666,7 +667,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
               render={<Link to="/" hash="install" />}
             >
               <DownloadIcon className="size-5" />
-              Install
+              {t('Install')}
             </Button>
             <Button
               variant="outline"
@@ -757,7 +758,7 @@ export function HeroNavGhost() {
               className="ml-2 inline-flex h-8 items-center border border-transparent px-4 text-sm font-medium lg:h-[calc(var(--pxr)*3)]"
               style={{ color: 'transparent' }}
             >
-              Install
+              {t('Install')}
             </span>
           </span>
 

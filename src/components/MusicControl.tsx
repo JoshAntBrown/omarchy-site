@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from '@tanstack/react-router'
 import { VolumeIcon, VolumeOffIcon } from '@/components/icons'
@@ -279,7 +280,7 @@ export function MusicControl({ path = '/' }: { path?: string }) {
         max={1000}
         step={5}
         defaultValue={0}
-        aria-label="Position in the track"
+        aria-label={t('Position in the track')}
         onPointerDown={() => {
           scrubbing.current = true
         }}

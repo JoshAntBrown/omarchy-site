@@ -1,3 +1,5 @@
+import { siteUrl, t } from '../i18n/site.ts'
+
 /**
  * The tags social sites read when a link is pasted: Open Graph for Slack,
  * Discord, iMessage, LinkedIn and Facebook, and Twitter Cards for X.
@@ -15,7 +17,7 @@
  * Every absolute URL in the head is built from this. Open Graph forbids
  * relative image URLs, and a canonical is only meaningful as an absolute.
  */
-export const SITE_URL = 'https://omarchy.org'
+export const SITE_URL = siteUrl
 
 export const SITE_DESCRIPTION =
   'The malleable OS for the age of agents. Vibe your way through every alteration, tweak, and desire.'
@@ -56,6 +58,8 @@ export function seo({
   published,
   robots,
 }: SeoInput) {
+  title = t(title)
+  description = t(description)
   const url = `${SITE_URL}${canonicalPath(path)}`
   return {
     meta: [
