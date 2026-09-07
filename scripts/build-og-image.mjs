@@ -1,19 +1,18 @@
 /** Build the 1200x630 social card at public/brand/omarchy-og.png. */
-import { execFileSync } from 'node:child_process'
+import sharp from 'sharp'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const out = path.join(root, 'public/brand/omarchy-og.png')
-const CHROME =
-  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 
 const W = 1200
 const H = 630
 
 const BG = '#0e0e14'
 const RAMP = ['#39482e', '#4f6a3b', '#678549', '#9ece6a']
+const WORDMARK_INKS = ['#daecc6', '#bbdd97', '#9ece6a', '#678549', '#39482e']
 
 // The wordmark's own grid: 81 cells across, 19 down, each cell 51 wide by
 // 50 tall in the SVG's units. The card keeps that aspect exactly.
@@ -31,7 +30,7 @@ const COLS = Math.ceil(W / CW)
 const GRID_ROWS = Math.ceil(H / CH)
 
 const WM_COL = Math.round((COLS - 81) / 2)
-const WM_ROW = 19
+const WM_ROW = 10
 
 // Deterministic: the card should be the same picture every time it is built.
 const rand = (() => {
@@ -48,7 +47,8 @@ const lit = (r, c) => r >= 0 && r < 19 && c >= 0 && c < 81 && ROWS[r][c] === '1'
 // Is any letter cell within `reach` cells of this one?
 const within = (r, c, reach) => {
   for (let dr = -reach; dr <= reach; dr++)
-    for (let dc = -reach; dc <= reach; dc++) if (lit(r + dr, c + dc)) return true
+    for (let dc = -reach; dc <= reach; dc++)
+      if (lit(r + dr, c + dc)) return true
   return false
 }
 
@@ -58,6 +58,8 @@ for (let row = 0; row < GRID_ROWS; row++) {
     const wr = row - WM_ROW
     const wc = col - WM_COL
     if (lit(wr, wc)) continue
+    if (row * CH > 365 && row * CH < 535 && col * CW > 90 && col * CW < 1110)
+      continue
 
     const near1 = within(wr, wc, 1)
     if (near1) continue
@@ -83,42 +85,81 @@ for (let row = 0; row < GRID_ROWS; row++) {
               ? 3
               : 2
     cells.push(
-      `<i style="left:${(col * CW).toFixed(2)}px;top:${(row * CH).toFixed(2)}px;background:${RAMP[tier]}"></i>`,
+      `<rect x="${col * CW}" y="${row * CH}" width="${CW}" height="${CH}" fill="${RAMP[tier]}"/>`,
     )
   }
 }
 
-const wordmark = fs
-  .readFileSync(path.join(root, 'public/brand/omarchy-wordmark.svg'), 'utf8')
-  .replace(/width="\d+" height="\d+"/, `width="${81 * CW}" height="${19 * CH}"`)
+const wordmark = []
+for (let row = 0; row < 19; row++) {
+  const ink =
+    WORDMARK_INKS[row < 5 ? 0 : row < 7 ? 1 : row < 11 ? 2 : row < 14 ? 3 : 4]
+  for (let col = 0; col < 81; col++) {
+    if (lit(row, col)) {
+      wordmark.push(
+        `<rect x="${(WM_COL + col) * CW}" y="${(WM_ROW + row) * CH}" width="${CW}" height="${CH}" fill="${ink}"/>`,
+      )
+    }
+  }
+}
 
-const html = `<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{width:${W}px;height:${H}px;background:${BG};position:relative;overflow:hidden}
-i{position:absolute;width:${CW}px;height:${CH}px;display:block}
-svg{position:absolute;left:${WM_COL * CW}px;top:${WM_ROW * CH}px;display:block}
-</style>
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+<rect width="${W}" height="${H}" fill="${BG}"/>
 ${cells.join('')}
-${wordmark}
-`
+${wordmark.join('')}
+</svg>`
 
-const tmp = path.join(root, 'node_modules/.cache-og.html')
-fs.mkdirSync(path.dirname(tmp), { recursive: true })
-fs.writeFileSync(tmp, html)
-
-execFileSync(CHROME, [
-  '--headless',
-  '--disable-gpu',
-  '--hide-scrollbars',
-  '--force-device-scale-factor=2',
-  `--window-size=${W},${H}`,
-  `--screenshot=${out}`,
-  `file://${tmp}`,
-], { stdio: 'pipe' })
-
-// Chrome shot it at 2x; halve it so the file is a plain 1200x630.
-execFileSync('sips', ['-z', String(H), String(W), out], { stdio: 'pipe' })
-fs.unlinkSync(tmp)
+const fontfile = path.join(
+  root,
+  'node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2',
+)
+const labels = [
+  {
+    text: 'Beautiful, fun &amp; agentic Linux by DHH',
+    size: 28,
+    weight: 'Medium',
+    color: '#c0caf5',
+    top: 390,
+  },
+  {
+    text: 'The malleable OS for the age of agents.',
+    size: 17,
+    weight: 'Regular',
+    color: '#a9b1d6',
+    top: 454,
+  },
+  {
+    text: 'Vibe your way through every alteration, tweak, or trouble.',
+    size: 17,
+    weight: 'Regular',
+    color: '#a9b1d6',
+    top: 482,
+  },
+]
+const overlays = await Promise.all(
+  labels.map(async (label) => {
+    const { data, info } = await sharp({
+      text: {
+        text: `<span foreground="${label.color}">${label.text}</span>`,
+        font: `JetBrains Mono ${label.weight} ${label.size}`,
+        fontfile,
+        rgba: true,
+        dpi: 72,
+      },
+    })
+      .png()
+      .toBuffer({ resolveWithObject: true })
+    return {
+      input: data,
+      left: Math.round((W - info.width) / 2),
+      top: label.top,
+    }
+  }),
+)
+await sharp(Buffer.from(svg))
+  .composite(overlays)
+  .png({ palette: true })
+  .toFile(out)
 
 const { size } = fs.statSync(out)
 console.log(
