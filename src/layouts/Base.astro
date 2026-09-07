@@ -77,7 +77,7 @@ const url = `${SITE_URL}${path}`
     <div class="flex min-h-dvh flex-col">
       <SiteHeader client:load path={Astro.url.pathname} transition:persist="site-header" />
       <div id="main" class="relative z-10 min-h-dvh flex-1 bg-bg"><slot /></div>
-      <SiteFooter client:load />
+      <SiteFooter client:visible={{ rootMargin: "300px" }} />
     </div>
     <ThemePicker client:load />
     <SearchPalette client:load />

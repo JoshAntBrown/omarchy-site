@@ -20,5 +20,5 @@ if (!post || post.year !== Astro.params.year || post.month !== Astro.params.mont
 const head = headProps(newsPostSeo(post), post.path)
 ---
 <Base {...head}>
-  <NewsPostPage client:load post={post} />
+  <NewsPostPage post={post} />
 </Base>

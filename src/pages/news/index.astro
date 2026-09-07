@@ -9,5 +9,5 @@ const news = await getNewsIndex()
 const head = headProps(newsIndexSeo(), '/news/')
 ---
 <Base {...head}>
-  <NewsIndexPage client:load news={news} />
+  <NewsIndexPage news={news} />
 </Base>

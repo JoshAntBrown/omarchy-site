@@ -15,7 +15,7 @@ import { pluginUrl } from '@/lib/plugins'
  * the button and the search itself opens over the page - the same shape the
  * theme picker uses, and the same shape on a phone as on a desktop.
  *
- * The index is 280kB of prose and loads on opening, not with the page. After
+ * The index loads once on opening, not with the page. After
  * that a query is a pass over an array: results come back on the keystroke,
  * with no debounce and no request to fall out of order.
  */
@@ -46,7 +46,6 @@ export function SearchPalette() {
     setQuery('')
     setHits([])
     setActive(0)
-    setIndex((held) => held)
     void getSearchIndex().then(setIndex)
   }, [])
 

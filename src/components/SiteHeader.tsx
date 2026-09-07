@@ -793,7 +793,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
           </button>
           {/* On a phone the sound control lives here rather than as a card
               over the hero, where it covered a good part of the screen. */}
-          <MusicMenuControl open={menuOpen} />
+          <MusicMenuControl open={menuOpen} path={pathname} />
           <div className="mt-2 flex flex-wrap items-center gap-2.5 border-t border-border-subtle pt-4 pb-2">
             <Button
               className="flex-1"

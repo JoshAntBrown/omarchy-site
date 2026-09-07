@@ -36,6 +36,10 @@ const clock = (seconds: number) => {
  *  page shows a control at all: always on the home page, elsewhere only once
  *  the sound has been touched. */
 function useMusicState(path = '/') {
+  const home = useLocation({
+    serverPath: path,
+    select: (at) => at.pathname === '/',
+  })
   // Starts from what the sound is doing now, not from "muted": the
   // control can be mounted fresh while the sound is already on.
   const [state, setState] = useState<MusicState>(() => music.state)
@@ -43,13 +47,10 @@ function useMusicState(path = '/') {
     const onState = (event: Event) =>
       setState((event as CustomEvent<MusicState>).detail)
     window.addEventListener(MUSIC_EVENT, onState)
-    void loadMusic()
+    if (home) void loadMusic()
     return () => window.removeEventListener(MUSIC_EVENT, onState)
-  }, [])
-  const home = useLocation({
-    serverPath: path,
-    select: (at) => at.pathname === '/',
-  })
+  }, [home])
+
   return {
     state,
     on: state === 'playing' || state === 'loading',
@@ -68,8 +69,14 @@ function useMusicState(path = '/') {
  * while the menu is open and the sound is on. The whole row is the button.
  * The ring and seeking stay with the card.
  */
-export function MusicMenuControl({ open }: { open: boolean }) {
-  const { state, on, shown } = useMusicState()
+export function MusicMenuControl({
+  open,
+  path,
+}: {
+  open: boolean
+  path: string
+}) {
+  const { state, on, shown } = useMusicState(path)
   const bars = useRef<Array<HTMLSpanElement | null>>([])
   useEffect(() => {
     if (!open || !on) return
@@ -196,8 +203,9 @@ export function MusicControl({ path = '/' }: { path?: string }) {
   const bars = useRef<Array<HTMLSpanElement | null>>([])
   const scrubbing = useRef(false)
   useEffect(() => {
+    if (!shown) return
     const levels = new Float32Array(METER_BARS)
-    const shown = new Float32Array(METER_BARS)
+    const smoothed = new Float32Array(METER_BARS)
     let frame = 0
     const tick = () => {
       frame = requestAnimationFrame(tick)
@@ -210,16 +218,16 @@ export function MusicControl({ path = '/' }: { path?: string }) {
       }
       music.meter(levels)
       for (let i = 0; i < METER_BARS; i++) {
-        const rise = levels[i] > shown[i]
-        shown[i] += (levels[i] - shown[i]) * (rise ? 0.7 : 0.2)
+        const rise = levels[i] > smoothed[i]
+        smoothed[i] += (levels[i] - smoothed[i]) * (rise ? 0.7 : 0.2)
         const bar = bars.current[i]
         if (bar)
-          bar.style.height = `${Math.max(1, Math.round(shown[i] * METER_STEPS)) * 2}px`
+          bar.style.height = `${Math.max(1, Math.round(smoothed[i] * METER_STEPS)) * 2}px`
       }
     }
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [])
+  }, [shown])
 
   /** The range moved, by hand or key: show it at once, and go there. */
   const onScrub = (value: number) => {

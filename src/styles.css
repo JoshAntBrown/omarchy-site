@@ -2,12 +2,15 @@
 @import 'tw-animate-css';
 @import './theme-transition.css';
 
+/* Archived routes do not contribute utilities to the live site. */
+@source not './parked';
+
 /* Typefaces from Fontsource. Latin and latin-ext only: the site is English
    with a few European names (Lütke, Øverli). The full packages also ship
    Cyrillic, Greek and Vietnamese, which the homepage was downloading for
    nothing. swap, not block: block hid every heading and every line of copy
    until the face arrived, which made a reload feel like a hang. The latin
-   files are preloaded in __root.tsx. */
+   files are preloaded in layouts/Base.astro. */
 @font-face {
   font-family: 'Geist Variable';
   font-style: normal;

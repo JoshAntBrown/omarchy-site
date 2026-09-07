@@ -18,5 +18,5 @@ if (!page) throw new Error(`Ported page not found: ${slug}`)
 const head = headProps(portedSeo(page, slug ?? ''), `/${slug}/`)
 ---
 <Base {...head}>
-  <PortedPage client:load page={page} slug={slug ?? ''} />
+  <PortedPage page={page} slug={slug ?? ''} />
 </Base>
