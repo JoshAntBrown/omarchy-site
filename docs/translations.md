@@ -29,7 +29,7 @@ Use `t('English source copy')` for shared interface text and add each language's
 
 Imported main-page prose uses exact HTML keys. When editing its English source, update the corresponding block key and translation. The automated check covers UI calls, catalogue coverage, prose links, and news freshness; prose wording, dynamic labels, accessibility attributes, and layout still need editorial review.
 
-Video titles, event names, theme names, and product names retain their original wording. Quoted article prose is translated with its attribution preserved. Danish uses Danish dates and number formatting, while funding amounts remain in USD.
+Video titles, event names, theme names, and product names retain their original wording. Quoted article prose is translated with its attribution preserved. Each language uses its own date and number formatting, while funding amounts remain in USD. Write those amounts with an explicit currency — `1,000,000 USD`, not `$1,000,000` — because a bare `$` is the local currency sign in several countries.
 
 The separate `translate-news.yml` workflow runs after a successful English deployment, on manual dispatch, and hourly to retry unfinished translations. Adding a language to the registry includes it automatically.
 
