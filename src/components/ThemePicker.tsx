@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import {
@@ -243,17 +244,18 @@ export function ThemePicker() {
             <BrushIcon className="mt-0.5 size-5 shrink-0 text-brand" />
             <span>
               <span className="block font-sans text-sm font-medium text-text">
-                Change the theme
+                {t('Change the theme')}
               </span>
               <span className="mt-1 block text-[13px] leading-relaxed text-text-secondary">
-                Press T, or tap here. Inside Omarchy it is Super + Ctrl + Shift
-                + Space.
+                {t(
+                  'Press T, or tap here. Inside Omarchy it is Super + Ctrl + Shift + Space.',
+                )}
               </span>
             </span>
           </button>
           <button
             type="button"
-            aria-label="Dismiss"
+            aria-label={t('Dismiss')}
             onClick={markHintSeen}
             className="absolute top-2 right-2 flex size-8 items-center justify-center text-text-muted transition-colors duration-150 ease-out hover:text-text"
           >
@@ -274,7 +276,7 @@ export function ThemePicker() {
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Theme picker"
+        aria-label={t('Theme picker')}
         tabIndex={-1}
         // Swipe walks the deck. Touch only: a mouse drag across the dimmer is
         // how someone closes this, and stepping the cards instead would be a
@@ -434,7 +436,7 @@ export function ThemePicker() {
 
         <button
           type="button"
-          aria-label="Previous theme"
+          aria-label={t('Previous theme')}
           onClick={(e) => {
             e.stopPropagation()
             step(-1)
@@ -447,7 +449,7 @@ export function ThemePicker() {
         </button>
         <button
           type="button"
-          aria-label="Next theme"
+          aria-label={t('Next theme')}
           onClick={(e) => {
             e.stopPropagation()
             step(1)

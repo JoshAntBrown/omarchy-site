@@ -1,3 +1,4 @@
+import { t, localizedHref } from '@/i18n/site'
 import { SectionActions, SectionHeading } from '@/components/SectionHeading'
 import { ArrowRightIcon } from '@/components/icons'
 
@@ -5,33 +6,39 @@ const games = [
   {
     name: 'Steam',
     image: 'gaming-steam.webp',
-    alt: 'Steam showing its game store on Omarchy',
+    alt: t('Steam showing its game store on Omarchy'),
     section: 'steam',
-    description:
+    description: t(
       'Your PC gaming library, right at home on Linux. Steam and Proton bring a huge world of modern games to Omarchy.',
+    ),
   },
   {
     name: 'RetroArch',
     image: 'gaming-retroarch.webp',
-    alt: 'A classic arcade game running with RetroArch’s CRT shader',
+    alt: t('A classic arcade game running with RetroArch’s CRT shader'),
     section: 'retroarch',
-    description:
+    description: t(
       'Revisit the classics with a full set of emulator cores and the beautiful CRT Royale shader, already configured for that retro look.',
+    ),
   },
   {
     name: 'Minecraft',
     image: 'gaming-minecraft.webp',
-    alt: 'Minecraft running on Omarchy',
+    alt: t('Minecraft running on Omarchy'),
     section: 'minecraft',
-    description:
+    description: t(
       'Build, explore, and make a world of your own. Install Minecraft straight from the Omarchy gaming menu and let your imagination run.',
+    ),
   },
 ]
 
 export function GamingShowcase() {
   const action = (
-    <a href="/manual/gaming/" className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 py-2 text-sm font-medium whitespace-nowrap text-text underline decoration-current underline-offset-4 transition-colors duration-150 hover:text-brand hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring [&_svg]:size-5 [&_svg]:shrink-0">
-      Get your game on
+    <a
+      href={localizedHref('/manual/gaming/')}
+      className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 py-2 text-sm font-medium whitespace-nowrap text-text underline decoration-current underline-offset-4 transition-colors duration-150 hover:text-brand hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring [&_svg]:size-5 [&_svg]:shrink-0"
+    >
+      {t('Get your game on')}
       <ArrowRightIcon aria-hidden="true" />
     </a>
   )
@@ -40,14 +47,16 @@ export function GamingShowcase() {
       <SectionHeading
         action={action}
         anchor="gaming"
-        title="All work and all play is all good"
-        description="Omarchy comes ready for Steam, RetroArch, and a whole world of gaming. Graphics drivers and configuration, including NVIDIA on supported hardware, are sorted during installation."
+        title={t('All work and all play is all good')}
+        description={t(
+          'Omarchy comes ready for Steam, RetroArch, and a whole world of gaming. Graphics drivers and configuration, including NVIDIA on supported hardware, are sorted during installation.',
+        )}
       />
       <div className="mt-6 grid gap-6 md:grid-cols-3 lg:mt-10 lg:gap-8">
         {games.map((game) => (
           <a
             key={game.name}
-            href={`/manual/gaming/#${game.section}`}
+            href={localizedHref(`/manual/gaming/#${game.section}`)}
             className="group block min-w-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
           >
             <img
@@ -69,7 +78,7 @@ export function GamingShowcase() {
         ))}
       </div>
       <p className="mt-6 text-[15px] leading-relaxed text-text-secondary">
-        Also available:{' '}
+        {t('Also available:')}{' '}
         {[
           ['Battle.net', 'battlenet'],
           ['Lutris', 'lutris-windows-games'],
@@ -79,9 +88,9 @@ export function GamingShowcase() {
           ['Xbox Cloud Gaming', 'xbox-cloud-gaming'],
         ].map(([name, section], index) => (
           <span key={section}>
-            {index > 0 && (index === 5 ? ', and ' : ', ')}
+            {index > 0 && (index === 5 ? t(', and ') : ', ')}
             <a
-              href={`/manual/gaming/#${section}`}
+              href={localizedHref(`/manual/gaming/#${section}`)}
               className="whitespace-nowrap underline decoration-border-strong underline-offset-4 hover:text-brand hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
             >
               {name}

@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { useEffect, useState } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon, PlayIcon } from '@/components/icons'
 import { OmarchyMark } from '@/components/Brand'
@@ -47,7 +48,7 @@ export function VideoCarousel({
       <Button
         variant="outline"
         size="icon"
-        aria-label="Previous video"
+        aria-label={t('Previous video')}
         onClick={() => goTo(index - 1)}
       >
         <ChevronLeftIcon className="size-5" />
@@ -55,7 +56,7 @@ export function VideoCarousel({
       <Button
         variant="outline"
         size="icon"
-        aria-label="Next video"
+        aria-label={t('Next video')}
         onClick={() => goTo(index + 1)}
       >
         <ChevronRightIcon className="size-5" />

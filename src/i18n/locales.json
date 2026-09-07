@@ -1,0 +1,16 @@
+{
+  "en": {
+    "name": "English",
+    "domain": "https://omarchy.org",
+    "formatLocale": "en-US",
+    "ogLocale": "en_US",
+    "manual": true
+  },
+  "da": {
+    "name": "Dansk",
+    "domain": "https://omarchy.dk",
+    "formatLocale": "da-DK",
+    "ogLocale": "da_DK",
+    "manual": false
+  }
+}

@@ -1,24 +1,25 @@
+import { t } from '@/i18n/site'
 import { PageHeading } from '@/components/PageHeading'
 import themes from '@/data/themes.json'
 
 export function ThemesPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <PageHeading title="Community themes">
+      <PageHeading title={t('Community themes')}>
         <div className="mx-auto mt-6 max-w-xl text-center">
           <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs text-text-secondary sm:text-sm">
-            <span>Make it yours:</span>
+            <span>{t('Make it yours:')}</span>
             <span className="inline-flex items-center gap-2 font-mono text-text">
               <span>Install</span>
               <span aria-hidden="true" className="text-text-muted">
                 →
               </span>
-              <span className="sr-only">then</span>
+              <span className="sr-only">{t('then')}</span>
               <span>Style</span>
               <span aria-hidden="true" className="text-text-muted">
                 →
               </span>
-              <span className="sr-only">then</span>
+              <span className="sr-only">{t('then')}</span>
               <span>Themes</span>
             </span>
           </p>
@@ -26,7 +27,7 @@ export function ThemesPage() {
             href="https://github.com/omacom/omarchy-site/compare"
             className="mt-3 inline-flex min-h-10 items-center gap-1.5 text-xs text-text-secondary underline decoration-border-strong underline-offset-4 transition-colors hover:text-brand hover:decoration-brand sm:text-sm"
           >
-            Share your theme
+            {t('Share your theme')}
             <span aria-hidden="true">↗</span>
           </a>
         </div>

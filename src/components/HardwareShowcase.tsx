@@ -1,30 +1,34 @@
+import { t, localizedHref } from '@/i18n/site'
 import { SectionHeading } from '@/components/SectionHeading'
 import { AppleIcon, ArrowRightIcon, DisplayIcon } from '@/components/icons'
 
 const examples = [
   {
-    title: 'The latest laptops',
-    description:
+    title: t('The latest laptops'),
+    description: t(
       'Ready for something new? Laptops like the latest Dell XPS make amazing Omarchy machines, with our core team helping the newest hardware work properly.',
+    ),
     icon: DisplayIcon,
     href: '/news/2026/09/the-omarchy-core-team/',
-    link: 'Meet the team behind it',
+    link: t('Meet the team behind it'),
   },
   {
-    title: 'Vintage Macs',
-    description:
+    title: t('Vintage Macs'),
+    description: t(
       'Give that old Intel Mac a second life. Omarchy brings a fresh desktop to the hardware you already love.',
+    ),
     icon: AppleIcon,
     href: '/manual/mac-support/',
-    link: 'Mac support',
+    link: t('Mac support'),
   },
   {
-    title: 'Potato PCs',
-    description:
+    title: t('Potato PCs'),
+    description: t(
       'Even a 2011 ThinkPad X220 with 2GB of RAM can run Omarchy, with room to spare. Your old PC might have plenty left to give.',
+    ),
     icon: DisplayIcon,
     href: '/potato/',
-    link: 'Watch the potato run',
+    link: t('Watch the potato run'),
   },
 ]
 
@@ -33,8 +37,10 @@ export function HardwareShowcase() {
     <>
       <SectionHeading
         anchor="hardware"
-        title="It runs on almost anything"
-        description="You don't need a new machine to try Omarchy. But if you get one, today's laptops are amazing."
+        title={t('It runs on almost anything')}
+        description={t(
+          "You don't need a new machine to try Omarchy. But if you get one, today's laptops are amazing.",
+        )}
       />
       <div className="mt-6 grid gap-6 md:grid-cols-3 lg:mt-10 lg:gap-8">
         {examples.map(({ title, description, icon: Icon, href, link }) => (
@@ -52,7 +58,7 @@ export function HardwareShowcase() {
               {description}
             </p>
             <a
-              href={href}
+              href={localizedHref(href)}
               className="mt-auto inline-flex min-h-10 items-center gap-2 self-start pt-4 text-sm font-medium text-text underline-offset-4 hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring [&:hover_span]:decoration-current"
             >
               <span className="underline decoration-current">{link}</span>

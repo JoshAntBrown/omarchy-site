@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import locales from '../src/i18n/locales.json' with { type: 'json' }
 /** Copy passthrough files and generate redirects in dist/client after the Astro build. */
 import { cp, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
@@ -8,7 +9,14 @@ import { ASSETS_ONLY, createRedirects, WHOLE } from './site-passthrough.mjs'
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const SITE = path.resolve(process.env.OMARCHY_SITE_DIR ?? ROOT)
-const OUT = path.join(ROOT, 'dist/client')
+const LANGUAGE = process.env.PUBLIC_SITE_LOCALE || 'en'
+if (!Object.hasOwn(locales, LANGUAGE))
+  throw new Error(`Unknown site language: ${LANGUAGE}`)
+const SITE_URL = locales[LANGUAGE].domain
+const OUT = path.join(
+  ROOT,
+  LANGUAGE === 'en' ? 'dist/client' : `dist/${LANGUAGE}`,
+)
 
 const copied = []
 const missing = []
@@ -62,13 +70,13 @@ const { plugins } = JSON.parse(
 )
 const redirects = createRedirects(plugins)
 for (const [from, to] of Object.entries(redirects)) {
-  const canonical = to.startsWith('http') ? to : `https://omarchy.org${to}`
+  const canonical = to.startsWith('http') ? to : `${SITE_URL}${to}`
   const file = path.join(OUT, from, 'index.html')
   await mkdir(path.dirname(file), { recursive: true })
   await writeFile(
     file,
     `<!doctype html>
-<html lang="en">
+<html lang="${LANGUAGE}">
 <head>
 <meta charset="utf-8">
 <title>Redirecting to ${escapeHtml(to)}</title>
@@ -96,4 +104,51 @@ console.log(`assemble: from ${SITE}`)
 for (const c of copied) console.log(`  + ${c}`)
 for (const m of missing) console.log(`  ! not in checkout: ${m}`)
 const total = (await stat(OUT)).isDirectory() ? 'ok' : 'missing'
-console.log(`assemble: dist/client ${total}`)
+console.log(`assemble: ${path.relative(ROOT, OUT)} ${total}`)
+
+// Each language build owns its domain; never ship the English CNAME to Denmark.
+await writeFile(path.join(OUT, 'CNAME'), new URL(SITE_URL).hostname + '\n')
+
+if (LANGUAGE !== 'en') {
+  const posts = JSON.parse(
+    await readFile(path.join(ROOT, 'src/data/news-posts.json'), 'utf8'),
+  )
+  const translations = JSON.parse(
+    await readFile(path.join(ROOT, `src/i18n/${LANGUAGE}/news.json`), 'utf8'),
+  )
+  const messages = JSON.parse(
+    await readFile(
+      path.join(ROOT, `src/i18n/messages/${LANGUAGE}.json`),
+      'utf8',
+    ),
+  )
+  const feedTitle = messages['News'] || 'News'
+  const feedDescription =
+    messages[
+      'Announcements, releases, and other news from the Omarchy project.'
+    ] || feedTitle
+  const items = await Promise.all(
+    posts.map(async (post) => {
+      const rawBody = await readFile(
+        path.join(ROOT, `src/i18n/${LANGUAGE}/news`, `${post.slug}.html`),
+        'utf8',
+      )
+      const body = rawBody.replace(
+        /(href|src)="(\/[^" ]*)"/g,
+        (_, attribute, href) => {
+          const domain =
+            !locales[LANGUAGE].manual && /^\/manual(?:[/?#]|$)/.test(href)
+              ? locales.en.domain
+              : SITE_URL
+          return `${attribute}="${domain}${href}"`
+        },
+      )
+      const url = `${SITE_URL}${post.path}`
+      return `<item><title>${escapeHtml(translations[post.slug].title)}</title><link>${escapeHtml(url)}</link><guid isPermaLink="true">${escapeHtml(url)}</guid><pubDate>${new Date(post.date + 'T00:00:00Z').toUTCString()}</pubDate><description>${escapeHtml(body)}</description></item>`
+    }),
+  )
+  await writeFile(
+    path.join(OUT, 'news/rss.xml'),
+    `<?xml version="1.0" encoding="utf-8"?><rss version="2.0"><channel><title>Omarchy – ${escapeHtml(feedTitle)}</title><link>${SITE_URL}/news/</link><description>${escapeHtml(feedDescription)}</description><language>${LANGUAGE}</language>${items.join('')}</channel></rss>`,
+  )
+}

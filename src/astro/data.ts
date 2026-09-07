@@ -1,3 +1,5 @@
+import { translateHtml } from '../i18n/content'
+import { t } from '../i18n/site'
 import manualJson from '../data/manual.json'
 import pagesJson from '../data/pages.json'
 import pluginsJson from '../data/plugins.json'
@@ -64,7 +66,8 @@ export async function getNewsPost(slug: string): Promise<NewsPost | null> {
 const pages = pagesJson as Record<string, PortedPage>
 
 export function getPortedPage(path: string): PortedPage | null {
-  return pages[path] ?? null
+  const page = pages[path]
+  return page ? { title: t(page.title), html: translateHtml(page.html) } : null
 }
 
 export function getPortedSlugs(): Array<string> {

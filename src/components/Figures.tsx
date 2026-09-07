@@ -1,3 +1,4 @@
+import { t, locale } from '@/i18n/site'
 import { Link } from '@tanstack/react-router'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
@@ -10,7 +11,7 @@ const CHART_ROWS = 8
 const EIGHTHS = ' ▁▂▃▄▅▆▇'
 
 const shortDate = (iso: string) =>
-  new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-US', {
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString(locale.formatLocale, {
     month: 'short',
     day: 'numeric',
     timeZone: 'UTC',
@@ -23,7 +24,7 @@ function weekOf(checked: string, back: number) {
   d.setUTCDate(d.getUTCDate() - back * 7)
   // With the year: a year of weeks reaches back into the last one, and
   // "Sep 12" on its own reads as this month.
-  return d.toLocaleDateString('en-US', {
+  return d.toLocaleDateString(locale.formatLocale, {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -95,7 +96,7 @@ function Count({
   return (
     <>
       {prefix}
-      {shown.toLocaleString('en-US', {
+      {shown.toLocaleString(locale.formatLocale, {
         minimumFractionDigits: digits,
         maximumFractionDigits: digits,
       })}
@@ -206,10 +207,11 @@ function WeekHover({
             }
           >
             <span className="block text-[13px] text-text">
-              {count.toLocaleString('en-US')} commit{count === 1 ? '' : 's'}
+              {count.toLocaleString(locale.formatLocale)} commit
+              {count === 1 ? '' : 's'}
             </span>
             <span className="block text-[11px] text-text-muted">
-              week of {weekOf(checked, weeks.length - 1 - at)}
+              {t('week of')} {weekOf(checked, weeks.length - 1 - at)}
             </span>
           </motion.div>
         ) : null}
@@ -239,7 +241,7 @@ export function Figures() {
           />
           <BankIcon className="size-5 shrink-0 text-brand md:hidden" />
         </span>
-        <span className={label}>pledged to the Omacom Foundation</span>
+        <span className={label}>{t('pledged to the Omacom Foundation')}</span>
         <div className="figure-chart mt-4 font-mono text-[min(0.75rem,4.4cqw)] leading-relaxed whitespace-pre">
           {[...foundation.steps].reverse().map((step) => (
             <Link
@@ -262,7 +264,7 @@ export function Figures() {
           ))}
         </div>
         <Link to="/$/" params={{ _splat: 'foundation' }} className={more}>
-          About the foundation
+          {t('About the foundation')}
         </Link>
       </Card>
 
@@ -275,10 +277,10 @@ export function Figures() {
           <Count value={downloads.total} live={isos.inView} />
           <DownloadIcon className="size-5 shrink-0 text-brand md:hidden" />
         </span>
-        <span className={label}>ISO downloads in year one</span>
+        <span className={label}>{t('ISO downloads in year one')}</span>
         <div className="flex flex-1 items-center pt-4">
           <table className="w-full font-mono text-xs leading-relaxed">
-            <caption className="sr-only">Recent ISO downloads</caption>
+            <caption className="sr-only">{t('Recent ISO downloads')}</caption>
             <tbody className="divide-y-2 divide-border-strong">
               {downloads.periods.map((period) => (
                 <tr key={period.label}>
@@ -289,7 +291,7 @@ export function Figures() {
                     {period.label}
                   </th>
                   <td className="py-2 text-right text-text-secondary tabular-nums">
-                    {period.count.toLocaleString('en-US')}
+                    {period.count.toLocaleString(locale.formatLocale)}
                   </td>
                 </tr>
               ))}
@@ -297,7 +299,7 @@ export function Figures() {
           </table>
         </div>
         <Link to={downloads.post} className={more}>
-          The numbers
+          {t('The numbers')}
         </Link>
       </Card>
 
@@ -310,7 +312,7 @@ export function Figures() {
           <Count value={github.stars} live={repo.inView} />
           <GithubIcon className="size-5 shrink-0 text-brand md:hidden" />
         </span>
-        <span className={label}>stars on GitHub</span>
+        <span className={label}>{t('stars on GitHub')}</span>
         {/* One column per week, the last 52, scaled to the busiest week.
             The chart is drawn as text, so the weeks are not elements to hover;
             a row of targets sits over it instead, one per column, each
@@ -325,11 +327,11 @@ export function Figures() {
           <WeekHover weeks={github.weeks} checked={momentum.checked} />
         </div>
         <p className={`${meta} mt-[14px]`}>
-          {github.pullRequests.toLocaleString('en-US')} pull requests ·{' '}
-          {github.contributors} contributors
+          {github.pullRequests.toLocaleString(locale.formatLocale)}{' '}
+          {t('pull requests ·')} {github.contributors} {t('contributors')}
         </p>
         <a href="https://github.com/omacom/omarchy" className={more}>
-          The repo
+          {t('The repo')}
         </a>
       </Card>
     </div>

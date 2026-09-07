@@ -1,3 +1,4 @@
+import { t, language, locales, hasTranslation } from '@/i18n/site'
 import { Link } from '@tanstack/react-router'
 import { OmarchyWordmark } from '@/components/Brand'
 import { PixelBackdrop } from '@/components/HeroShader'
@@ -9,40 +10,40 @@ import { useTopLink } from '@/lib/hash-scroll'
 
 const columns = [
   {
-    title: 'Explore',
+    title: t('Explore'),
     links: [
-      { label: 'News', to: '/news/' },
-      { label: 'Manual', to: '/manual/' },
+      { label: t('News'), to: '/news/' },
+      { label: t('Manual'), to: '/manual/' },
       { label: 'Plugins', href: 'https://plugins.omarchy.org' },
-      { label: 'Themes', to: '/themes/' },
+      { label: t('Themes'), to: '/themes/' },
     ],
   },
   {
-    title: 'Community',
+    title: t('Community'),
     links: [
       { label: 'Discord', href: 'https://discord.gg/tXFUdasqhY' },
-      { label: 'Meetups', to: '/meetups/' },
-      { label: 'Teams', to: '/teams/' },
-      { label: 'Workstations', splat: 'workstations' },
+      { label: t('Meetups'), to: '/meetups/' },
+      { label: t('Teams'), to: '/teams/' },
+      { label: t('Workstations'), splat: 'workstations' },
     ],
   },
   {
-    title: 'Foundation',
+    title: t('Foundation'),
     links: [
-      { label: 'About', splat: 'foundation' },
-      { label: 'Patrons', splat: 'patrons' },
-      { label: 'Sponsorships', splat: 'sponsorships' },
-      { label: 'Artists in Residence', splat: 'air' },
+      { label: t('About'), splat: 'foundation' },
+      { label: t('Patrons'), splat: 'patrons' },
+      { label: t('Sponsorships'), splat: 'sponsorships' },
+      { label: t('Artists in Residence'), splat: 'air' },
     ],
   },
   {
-    title: 'Project',
+    title: t('Project'),
     links: [
-      { label: 'Security', splat: 'security' },
+      { label: t('Security'), splat: 'security' },
       { label: 'GitHub', href: 'https://github.com/omacom/omarchy' },
-      { label: 'Brand', splat: 'brand' },
+      { label: t('Brand'), splat: 'brand' },
       {
-        label: 'Merch',
+        label: t('Merch'),
         href: 'https://supply.37signals.com/collections/omarchy',
       },
     ],
@@ -56,8 +57,9 @@ const footerLink = `text-text-secondary transition-colors duration-150 ease-out 
 
 const creditLink = `text-text-secondary transition-colors duration-150 ease-out hover:text-text ${focusRing}`
 
-export function SiteFooter() {
+export function SiteFooter({ path }: { path: string }) {
   const homeLink = useTopLink()
+  const currentPath = path
   return (
     <footer
       className="relative isolate overflow-hidden border-t border-border-subtle"
@@ -75,7 +77,7 @@ export function SiteFooter() {
           <div className="flex w-full shrink-0 flex-col sm:w-max lg:w-96">
             <Link
               to="/"
-              aria-label="Omarchy home"
+              aria-label={t('Omarchy home')}
               onClick={homeLink}
               data-quiet
               className={`group block ${focusRing}`}
@@ -87,22 +89,22 @@ export function SiteFooter() {
               className="mt-4 text-sm leading-relaxed text-text-muted [text-wrap:pretty]"
             >
               <span className="block">
-                Beautiful, fun &amp; agentic Linux{' '}
+                {t('Beautiful, fun & agentic Linux')}{' '}
                 <span className="whitespace-nowrap">
-                  by{' '}
+                  {t('by')}{' '}
                   <a href="https://dhh.dk" className={footerLink}>
                     DHH
                   </a>
                 </span>
               </span>
               <span className="block">
-                The malleable OS for the age of agents.
+                {t('The malleable OS for the age of agents.')}
               </span>
             </p>
 
             <div className="mt-4 flex flex-col text-sm leading-relaxed text-text-muted [text-wrap:pretty] lg:mt-auto">
               <p data-quiet>
-                Incubated at{' '}
+                {t('Incubated at')}{' '}
                 {/* Keep the link inline to preserve the paragraph baseline. */}
                 <a href="https://37signals.com" className={creditLink}>
                   <ThirtySevenSignalsMark className="mr-[3px] inline-block size-4 shrink-0 align-[-0.28em]" />
@@ -110,7 +112,7 @@ export function SiteFooter() {
                 </a>
               </p>
               <p data-quiet>
-                Hosting by{' '}
+                {t('Hosting by')}{' '}
                 <a href="https://cloudflare.com" className={creditLink}>
                   <CloudflareMark className="mr-[5px] inline-block h-3 w-auto shrink-0 align-[-0.15em]" />
                   Cloudflare
@@ -153,15 +155,31 @@ export function SiteFooter() {
           </div>
         </div>
 
+        <nav aria-label={t('Language')} className="mt-8 flex gap-4 text-sm">
+          {Object.entries(locales)
+            .filter(([code]) => hasTranslation(code, currentPath))
+            .map(([code, entry]) => (
+              <a
+                key={code}
+                href={`${entry.domain}${currentPath}`}
+                hrefLang={code}
+                lang={code}
+                aria-current={language === code ? 'page' : undefined}
+                className={footerLink}
+              >
+                {entry.name}
+              </a>
+            ))}
+        </nav>
         <div className="mt-12 flex flex-col gap-2 border-t border-border-subtle pt-6 text-[13px] text-text-muted sm:flex-row sm:items-center sm:justify-between">
           <p data-quiet>
             <Link to="/$/" params={{ _splat: 'brand' }} className={footerLink}>
               Omarchy™
             </Link>
-            . All rights reserved.
+            {t('. All rights reserved.')}
           </p>
           <p data-quiet>
-            Partner inquiries:{' '}
+            {t('Partner inquiries:')}{' '}
             <a href="mailto:foundation@omarchy.org" className={footerLink}>
               foundation@omarchy.org
             </a>

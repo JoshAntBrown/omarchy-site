@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { useEffect, useRef, useState } from 'react'
 import mapData from '@/data/meetup-map.json'
 import { cn } from '@/lib/utils'
@@ -320,7 +321,7 @@ export function MeetupMap({
             </div>
           </div>
           <p className="border-t border-border-subtle px-3 py-1.5 font-mono text-[11px] text-text-muted">
-            {hovered.past ? 'Already happened' : 'Coming up'} · opens on Luma
+            {hovered.past ? t('Already happened') : 'Coming up'} · opens on Luma
           </p>
         </div>
       ) : null}

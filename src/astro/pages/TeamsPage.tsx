@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { Link } from '@tanstack/react-router'
 import { ArrowUpRightIcon, DiscordIcon, GithubIcon } from '@/components/icons'
 import { Button } from '@/components/ui/button'
@@ -11,6 +12,11 @@ function TeamNote({
 }: {
   note: { text: string; href: string | null; linkText: string | null }
 }) {
+  note = {
+    ...note,
+    text: t(note.text),
+    linkText: note.linkText ? t(note.linkText) : null,
+  }
   if (!note.href || !note.linkText) return note.text
   const at = note.text.indexOf(note.linkText)
   if (at < 0) return note.text
@@ -42,7 +48,7 @@ const noteLink =
 export function TeamsPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <PageHeading title="Teams" />
+      <PageHeading title={t('Teams')} />
 
       {teams.map((team) => (
         <section
@@ -62,10 +68,10 @@ export function TeamsPage() {
               id={`team-${team.id}-name`}
               className="font-sans text-lg font-medium text-text"
             >
-              {team.name.replace(/^Omarchy /, '')}
+              {t(team.name.replace(/^Omarchy /, ''))}
             </h2>
             <p className="font-mono text-xs text-text-muted">
-              {team.description}
+              {t(team.description)}
             </p>
           </div>
           <ul className="mt-7 grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-[repeat(auto-fill,minmax(9rem,1fr))]">
@@ -123,13 +129,13 @@ export function TeamsPage() {
         <div className="ring-elevation flex flex-col gap-6 bg-surface p-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-xl">
             <h2 className="text-lg font-medium tracking-tight text-text">
-              Not on a team? Neither is almost everyone.
+              {t('Not on a team? Neither is almost everyone.')}
             </h2>
             <p className="mt-2 text-[15px] leading-relaxed text-text-secondary [text-wrap:pretty]">
               <span className="md:block">
-                Most of Omarchy happens in the Discord and on GitHub:
+                {t('Most of Omarchy happens in the Discord and on GitHub:')}
               </span>{' '}
-              Questions, themes, plugins, pull requests.
+              {t('Questions, themes, plugins, pull requests.')}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -139,7 +145,7 @@ export function TeamsPage() {
               render={<a href="https://discord.gg/tXFUdasqhY" />}
             >
               <DiscordIcon data-icon="inline-start" />
-              Join the Discord
+              {t('Join the Discord')}
             </Button>
             <Button
               variant="outline"

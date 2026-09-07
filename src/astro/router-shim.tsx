@@ -1,3 +1,4 @@
+import { localizedHref } from '@/i18n/site'
 import React, { createContext, useContext, useSyncExternalStore } from 'react'
 import { navigate } from 'astro:transitions/client'
 
@@ -65,7 +66,7 @@ export function resolveHref({ to, params, hash, search }: HrefOpts): string {
     if (q) href += (href.includes('?') ? '&' : '?') + q
   }
   if (hash) href += `#${hash}`
-  return href
+  return localizedHref(href)
 }
 
 const bare = (p: string) => (p === '/' ? p : p.replace(/\/+$/, ''))

@@ -1,3 +1,4 @@
+import { t } from '@/i18n/site'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { CrossIcon, SearchIcon } from '@/components/icons'
@@ -155,7 +156,7 @@ export function SearchPalette() {
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Search Omarchy"
+      aria-label={t('Search Omarchy')}
       onKeyDown={onKeyDown}
       className="fixed inset-0 z-(--z-modal) flex justify-center px-4 pt-[12vh]"
     >
@@ -173,8 +174,8 @@ export function SearchPalette() {
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search Omarchy"
-            aria-label="Search Omarchy"
+            placeholder={t('Search Omarchy')}
+            aria-label={t('Search Omarchy')}
             autoComplete="off"
             spellCheck={false}
             enterKeyHint="search"
@@ -183,7 +184,7 @@ export function SearchPalette() {
           <button
             type="button"
             onClick={close}
-            aria-label="Close search"
+            aria-label={t('Close search')}
             className="relative -mr-1 flex size-8 shrink-0 items-center justify-center text-text-muted transition-colors duration-150 ease-out hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
           >
             <CrossIcon className="size-4" />
@@ -204,13 +205,13 @@ export function SearchPalette() {
         >
           {query.trim().length === 0 ? (
             <p className="px-4 py-8 text-sm text-text-muted">
-              The manual, the news, every plugin and every theme.
+              {t('The manual, the news, every plugin and every theme.')}
             </p>
           ) : hits.length === 0 ? (
             <p className="px-4 py-8 text-sm text-text-muted">
               {index ? (
                 <>
-                  Nothing matches{' '}
+                  {t('Nothing matches')}{' '}
                   <span className="text-text-secondary">{query.trim()}</span>.
                 </>
               ) : (
@@ -218,7 +219,7 @@ export function SearchPalette() {
               )}
             </p>
           ) : (
-            <ul ref={list} role="listbox" aria-label="Search results">
+            <ul ref={list} role="listbox" aria-label={t('Search results')}>
               {hits.map((hit, at) => (
                 <li key={`${hit.kind}-${hit.slug}-${at}`}>
                   <button
@@ -251,7 +252,7 @@ export function SearchPalette() {
                           : hit.meta}
                       </span>
                       <span className="ml-auto shrink-0 border border-border-subtle px-1.5 font-mono text-[10px] tracking-wide text-text-muted uppercase">
-                        {KIND_LABEL[hit.kind]}
+                        {t(KIND_LABEL[hit.kind])}
                       </span>
                     </span>
                     {hit.snippet ? (
@@ -273,13 +274,13 @@ export function SearchPalette() {
         <div className="flex shrink-0 items-center gap-4 border-t border-border-subtle px-4 py-2.5 font-mono text-[11px] text-text-muted">
           <span>
             <Key>↑</Key>
-            <Key>↓</Key> move
+            <Key>↓</Key> {t('move')}
           </span>
           <span>
-            <Key>↵</Key> open
+            <Key>↵</Key> {t('open')}
           </span>
           <span>
-            <Key>esc</Key> close
+            <Key>esc</Key> {t('close')}
           </span>
         </div>
       </div>
