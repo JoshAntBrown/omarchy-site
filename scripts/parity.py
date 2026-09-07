@@ -28,8 +28,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SITE = Path(os.environ.get('OMARCHY_SITE_DIR', ROOT)).resolve()
 OUT = ROOT / 'dist' / 'client'
-SKIP_DIRS = {'.git', 'bin', 'templates', 'content', '.github', '.claude', '.agents', '.codex', '.idea', '.tanstack', 'node_modules', 'src', 'scripts', 'dist', 'public', '__pycache__'}
-SKIP_FILES = {'README.md', '.gitignore', '.assetsignore', '.DS_Store', 'package.json', 'package-lock.json', 'wrangler.jsonc', 'vite.config.ts', 'tsconfig.json', 'tsr.config.json', 'components.json', 'eslint.config.js', 'prettier.config.js', '.prettierignore', '.cta.json'}
+SKIP_DIRS = {'.astro', '.git', 'bin', 'templates', 'content', '.github', '.claude', '.agents', '.codex', '.idea', '.tanstack', 'node_modules', 'src', 'scripts', 'dist', 'public', '__pycache__'}
+SKIP_FILES = {'astro.config.mjs', 'README.md', '.gitignore', '.assetsignore', '.DS_Store', 'package.json', 'package-lock.json', 'wrangler.jsonc', 'vite.config.ts', 'tsconfig.json', 'tsr.config.json', 'components.json', 'eslint.config.js', 'prettier.config.js', '.prettierignore', '.cta.json'}
 
 
 def addresses():

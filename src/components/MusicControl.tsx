@@ -35,7 +35,7 @@ const clock = (seconds: number) => {
 /** What the sound is doing, kept in step with the track, and whether this
  *  page shows a control at all: always on the home page, elsewhere only once
  *  the sound has been touched. */
-function useMusicState() {
+function useMusicState(path = '/') {
   // Starts from what the sound is doing now, not from "muted": the
   // control can be mounted fresh while the sound is already on.
   const [state, setState] = useState<MusicState>(() => music.state)
@@ -46,7 +46,10 @@ function useMusicState() {
     void loadMusic()
     return () => window.removeEventListener(MUSIC_EVENT, onState)
   }, [])
-  const home = useLocation({ select: (at) => at.pathname === '/' })
+  const home = useLocation({
+    serverPath: path,
+    select: (at) => at.pathname === '/',
+  })
   return {
     state,
     on: state === 'playing' || state === 'loading',
@@ -128,7 +131,11 @@ export function MusicMenuControl({ open }: { open: boolean }) {
               : 'translate-y-0 transition-transform duration-150 ease-in')
           }
         >
-          {state === 'failed' ? 'Sound unavailable' : on ? 'Sound on' : 'Sound off'}
+          {state === 'failed'
+            ? 'Sound unavailable'
+            : on
+              ? 'Sound on'
+              : 'Sound off'}
         </span>
         <span
           aria-hidden={!on}
@@ -176,8 +183,8 @@ export function MusicMenuControl({ open }: { open: boolean }) {
   )
 }
 
-export function MusicControl() {
-  const { state, on, shown, untouched } = useMusicState()
+export function MusicControl({ path = '/' }: { path?: string }) {
+  const { state, on, shown, untouched } = useMusicState(path)
 
   // The progress line, the meter and the readout are driven straight from
   // the track each frame, outside React, so the card never re-renders for

@@ -128,3 +128,10 @@
     animation: none;
   }
 }
+
+/* Page navigation swaps immediately; the split wipe belongs to theme changes. */
+:root[data-astro-transition]::view-transition-old(root) {
+  animation: none;
+  mask-image: none;
+  opacity: 0;
+}

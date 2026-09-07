@@ -1,4 +1,3 @@
-import React from 'react'
 import { LoaderProvider } from './router-shim'
 import { HomePage } from './pages/HomePage'
 import type { HomeData } from './pages/HomePage'

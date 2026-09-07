@@ -6,7 +6,7 @@ See https://github.com/omacom/omarchy for more.
 
 ## Working on the site
 
-Run `npm ci`, then `npm run dev` (or `bin/serve`) to preview the React site.
+Run `npm ci`, then `npm run dev` (or `bin/serve`) to preview the Astro site.
 `npm run build` produces the static site in `dist/client`; `npm run parity`
 checks its page URLs and verifies that passthrough files are unchanged.
 
@@ -21,7 +21,7 @@ After editing content inputs, run `npm run port` to refresh the dev data.
 - Run `bin/build-news` after editing Markdown in `content/news/`; it updates
   article inputs, images, and the RSS feed.
 - Run `bin/build-manual [path/to/omarchy/manual]` to refresh manual inputs and
-  images. The React site builds its table of contents and search index.
+  images. The Astro site builds its table of contents and search index.
 
 The screensaver and the Discord redirect are still served
 directly. Their styles, fonts, and scripts remain under `assets/`, alongside

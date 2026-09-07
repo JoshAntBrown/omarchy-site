@@ -107,7 +107,7 @@ function useHeroInView(seed: boolean) {
      *  hero page unblended. Tracking the element makes the swap visible:
      *  the live sentinel is no longer the watched one, so watch it instead.
      */
-    let watched: Element | null = null
+    let watched: Element | null | undefined
 
     // The same question the observer answers, asked directly: is the hero's
     // bottom edge still below the bar's? Asking it at once matters because
@@ -191,7 +191,10 @@ function useHeroInView(seed: boolean) {
     // the DOM says when the hero changes, and the DOM is what is being
     // watched, so there is nothing for the route to add.
     const arrivals = new MutationObserver(sync)
-    arrivals.observe(document.body, { childList: true, subtree: true })
+    arrivals.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    })
     sync()
 
     return () => {
@@ -472,7 +475,10 @@ function useNavSurface(
     const arrivals = new MutationObserver(() => {
       if (document.querySelector('main') !== surveyed) relayout()
     })
-    arrivals.observe(document.body, { childList: true, subtree: true })
+    arrivals.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    })
 
     el.addEventListener('pointerenter', onEnter)
     el.addEventListener('pointerleave', onLeave)
@@ -500,8 +506,8 @@ function useNavSurface(
   }, [sheetOpen, blended, bar, pathname])
 }
 
-export function SiteHeader() {
-  const { pathname } = useLocation()
+export function SiteHeader({ path = '/' }: { path?: string }) {
+  const { pathname } = useLocation({ serverPath: path })
   // Seeded with the one page the server can be sure about, then handed over
   // to the sentinel.
   const heroInView = useHeroInView(pathname === '/')

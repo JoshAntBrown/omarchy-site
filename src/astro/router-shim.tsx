@@ -1,4 +1,5 @@
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useContext, useSyncExternalStore } from 'react'
+import { navigate } from 'astro:transitions/client'
 
 // Astro static-render stand-in for @tanstack/react-router. Every Link below
 // renders the same <a> the router would have prerendered; the router hooks
@@ -126,8 +127,10 @@ export function Link({
   )
 }
 
+type NavigateOptions = HrefOpts & { replace?: boolean; resetScroll?: boolean }
+
 export function useNavigate() {
-  return (opts?: string | (HrefOpts & { replace?: boolean })) => {
+  return (opts?: string | NavigateOptions) => {
     if (typeof window === 'undefined') return Promise.resolve()
     const href =
       typeof opts === 'string'
@@ -138,33 +141,56 @@ export function useNavigate() {
             hash: opts?.hash,
             search: opts?.search,
           })
-    // Same-document hash moves stay in place; anything else loads fully.
-    const here = window.location.pathname
-    const there = href.split(/[?#]/)[0] || '/'
     const replace = typeof opts === 'object' && opts.replace === true
-    if (bare(there) === bare(here) || (!opts?.to && opts?.hash)) {
-      if (replace) window.history.replaceState(null, '', href)
-      else window.history.pushState(null, '', href)
-    } else if (replace) {
-      window.location.replace(href)
-    } else {
-      window.location.assign(href)
+    // These callers already placed the scroll. Preserve Astro's history
+    // metadata so back/forward restoration still works.
+    if (
+      typeof opts === 'object' &&
+      opts.resetScroll === false &&
+      bare(href.split(/[?#]/)[0]) === bare(window.location.pathname)
+    ) {
+      if (replace) window.history.replaceState(window.history.state, '', href)
+      else window.history.pushState(window.history.state, '', href)
+      window.dispatchEvent(new Event('omarchy:location'))
+      return Promise.resolve()
     }
-    return Promise.resolve()
+    return navigate(href, { history: replace ? 'replace' : 'push' })
   }
 }
 
-export function useLocation() {
-  const active = useContext(ActivePathCtx)
-  if (typeof window !== 'undefined') {
-    return {
-      pathname: window.location.pathname,
-      href: window.location.href,
-      search: window.location.search,
-      hash: window.location.hash,
-    }
+type Location = { pathname: string; href: string; search: string; hash: string }
+
+function subscribeLocation(onChange: () => void) {
+  document.addEventListener('astro:after-swap', onChange)
+  window.addEventListener('popstate', onChange)
+  window.addEventListener('hashchange', onChange)
+  window.addEventListener('omarchy:location', onChange)
+  return () => {
+    document.removeEventListener('astro:after-swap', onChange)
+    window.removeEventListener('popstate', onChange)
+    window.removeEventListener('hashchange', onChange)
+    window.removeEventListener('omarchy:location', onChange)
   }
-  return { pathname: active, href: active, search: '', hash: '' }
+}
+
+export function useLocation<T = Location>(options?: {
+  select?: (location: Location) => T
+  serverPath?: string
+}): T {
+  const active = useContext(ActivePathCtx)
+  const href = useSyncExternalStore(
+    subscribeLocation,
+    () => window.location.href,
+    () => options?.serverPath ?? active,
+  )
+  const url = new URL(href, 'https://omarchy.org')
+  const location = {
+    pathname: url.pathname,
+    href,
+    search: url.search,
+    hash: url.hash,
+  }
+  return options?.select ? options.select(location) : (location as T)
 }
 
 export function useParams() {

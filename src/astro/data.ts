@@ -85,7 +85,7 @@ const FEATURED_PLUGIN_IDS = [
   'raiden-meixelysia.omarchy-pets',
 ]
 
-type PluginRecord = CatalogueEntry & { id: string }
+type PluginRecord = Omit<CatalogueEntry, 'stats'>
 
 export function getPluginHighlights(): {
   top: Array<CatalogueEntry>
