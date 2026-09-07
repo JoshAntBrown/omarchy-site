@@ -29,7 +29,7 @@ Use `t('English source copy')` for shared interface text and add each language's
 
 Imported main-page prose uses exact HTML keys. When editing its English source, update the corresponding block key and translation. The automated check covers UI calls, catalogue coverage, prose links, and news freshness; prose wording, dynamic labels, accessibility attributes, and layout still need editorial review.
 
-Third-party post quotes, video titles, event names, theme names, and product names retain their original wording. Danish uses Danish dates and number formatting, while funding amounts remain in USD.
+Third-party post quotes, video titles, event names, theme names, and product names retain their original wording. Each language uses its own date and number formatting, while funding amounts remain in USD. Write those amounts with an explicit currency — `1,000,000 USD`, not `$1,000,000` — because a bare `$` is the local currency sign in several of the country editions.
 
 The translation CI job builds every registered non-English language and uploads the output as an artifact. It does not deploy to regional domains. Adding another language does not require another fork, layout, or CI job.
 
