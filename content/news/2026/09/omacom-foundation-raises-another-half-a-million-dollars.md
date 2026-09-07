@@ -18,7 +18,7 @@ Here's how the Four Technologies team puts it:
 
 > We're an AI-forward fintech company, and companies like Four Technologies only get to build the way we do because of open-source infrastructure other people built first. Supporting the Omacom Foundation is how we put money behind that. We think the next stage for AI isn't another app layered on top of the operating system, it's AI built directly into the operating system, and that's the bet Omarchy is making. We wanted to be part of the community making that bet, not just benefiting from it later.
 
-And since [opening patronage to everyone](/news/2026/09/omacom-patronage-is-open-to-everyone), we've received roughly $60,000 from nearly 500 donors through [open patronage](https://www.zeffy.com/en-US/donation-form/omarchy-patronage). That's an incredible response from people who want to help make this happen. Every contribution adds to what we can do together.
+And since [opening patronage to everyone](/news/2026/09/omacom-patronage-is-open-to-everyone), we've received roughly $60,000 from [nearly 500 donors](/patrons/#everyone) through [open patronage](https://www.zeffy.com/en-US/donation-form/omarchy-patronage). That's an incredible response from people who want to help make this happen. Every contribution adds to what we can do together.
 
 Tokens to build with. Money to back the projects we depend on. People and companies willing to put something behind their belief in Linux on the desktop. This is how we keep going!
 
