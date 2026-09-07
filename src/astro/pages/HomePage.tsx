@@ -359,7 +359,7 @@ export function HomePage({ data }: { data: HomeData }) {
           >
             <h1
               data-hero-stagger
-              style={{ '--stagger': 0 } as React.CSSProperties}
+              style={{ '--stagger': 0, fontFamily: 'var(--font-mono)' } as React.CSSProperties}
               className="text-2xl font-medium tracking-tight text-text [text-wrap:balance] sm:text-3xl"
             >
               <SectionAnchor anchor="home">
