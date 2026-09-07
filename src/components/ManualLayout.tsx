@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import type { getManualToc } from '@/lib/content'
+import type { getManualToc } from '@/astro/data'
 
 type Toc = Awaited<ReturnType<typeof getManualToc>>
 

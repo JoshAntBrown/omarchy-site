@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro'
+import { ManualIsland } from '../../astro/islands'
+import { getManualChapter } from '../../astro/data'
+import { headProps } from '../../astro/head'
+import { manualIndexSeo } from '../../astro/page-seo'
+
+const data = getManualChapter('index')
+const head = headProps(manualIndexSeo(), '/manual/')
+---
+<Base {...head}>
+  <ManualIsland
+    client:load
+    toc={data.toc}
+    chapter={data.chapter}
+    prev={data.prev}
+    next={data.next}
+    activePath="/manual/"
+  />
+</Base>

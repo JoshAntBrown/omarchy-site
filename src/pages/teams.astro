@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro'
+import { TeamsIsland } from '../astro/islands'
+import { headProps } from '../astro/head'
+import { teamsSeo } from '../astro/page-seo'
+
+const head = headProps(teamsSeo(), '/teams/')
+---
+<Base {...head}>
+  <TeamsIsland client:load />
+</Base>

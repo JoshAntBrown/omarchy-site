@@ -1,0 +1,232 @@
+import React, { createContext, useContext } from 'react'
+
+// Astro static-render stand-in for @tanstack/react-router. Every Link below
+// renders the same <a> the router would have prerendered; the router hooks
+// read from the contexts the Astro page wrappers provide.
+
+export const LoaderDataCtx = createContext<unknown>(null)
+export const RouteParamsCtx = createContext<Record<string, string>>({})
+export const ActivePathCtx = createContext<string>('/')
+export const OutletCtx = createContext<React.ReactNode>(null)
+
+export function LoaderProvider({
+  value,
+  params,
+  activePath,
+  outlet,
+  children,
+}: {
+  value: unknown
+  params?: Record<string, string>
+  activePath?: string
+  outlet?: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <LoaderDataCtx.Provider value={value}>
+      <RouteParamsCtx.Provider value={params ?? {}}>
+        <ActivePathCtx.Provider value={activePath ?? '/'}>
+          <OutletCtx.Provider value={outlet ?? null}>
+            {children}
+          </OutletCtx.Provider>
+        </ActivePathCtx.Provider>
+      </RouteParamsCtx.Provider>
+    </LoaderDataCtx.Provider>
+  )
+}
+
+type HrefOpts = {
+  to?: string
+  params?: Record<string, string>
+  hash?: string
+  search?: string | Record<string, string>
+}
+
+// Fills $placeholders the way the file routes do. `/$/` with a _splat is the
+// ported-page catch-all; every other `to` in the tree already ends in '/'.
+export function resolveHref({ to, params, hash, search }: HrefOpts): string {
+  let href = to ?? '/'
+  if (params) {
+    href = href.replace(
+      /\$_splat|\$([A-Za-z_]\w*)/g,
+      (m, name: string | undefined) =>
+        String(params[name ?? '_splat'] ?? m).replace(/^\/+|\/+$/g, ''),
+    )
+  }
+  if (search) {
+    const q =
+      typeof search === 'string'
+        ? search
+        : new URLSearchParams(search).toString()
+    if (q) href += (href.includes('?') ? '&' : '?') + q
+  }
+  if (hash) href += `#${hash}`
+  return href
+}
+
+const bare = (p: string) => (p === '/' ? p : p.replace(/\/+$/, ''))
+
+type LinkProps = {
+  to?: string
+  params?: Record<string, string>
+  hash?: string
+  search?: string | Record<string, string>
+  activeProps?: { className?: string }
+  activeOptions?: unknown
+  inactiveProps?: unknown
+  preload?: unknown
+  preloadDelay?: unknown
+  preloadStaleTime?: unknown
+  replace?: unknown
+  resetScroll?: unknown
+  state?: unknown
+  from?: unknown
+  mask?: unknown
+} & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'onClick'> & {
+    onClick?: React.MouseEventHandler<HTMLAnchorElement>
+  }
+
+export function Link({
+  to,
+  params,
+  hash,
+  search,
+  activeProps,
+  activeOptions: _activeOptions,
+  inactiveProps: _inactiveProps,
+  preload: _preload,
+  preloadDelay: _preloadDelay,
+  preloadStaleTime: _preloadStaleTime,
+  replace: _replace,
+  resetScroll: _resetScroll,
+  state: _state,
+  from: _from,
+  mask: _mask,
+  className,
+  onClick,
+  ...rest
+}: LinkProps) {
+  const activePath = useContext(ActivePathCtx)
+  const href = resolveHref({ to, params, hash, search })
+  // Prerendered active state, exact: the manual sidebar's current chapter.
+  const active =
+    activeProps?.className && bare(href.split(/[?#]/)[0]) === bare(activePath)
+  return (
+    <a
+      href={href}
+      className={
+        active ? `${className ?? ''} ${activeProps.className}` : className
+      }
+      onClick={onClick}
+      {...rest}
+    />
+  )
+}
+
+export function useNavigate() {
+  return (opts?: string | (HrefOpts & { replace?: boolean })) => {
+    if (typeof window === 'undefined') return Promise.resolve()
+    const href =
+      typeof opts === 'string'
+        ? opts
+        : resolveHref({
+            to: opts?.to ?? window.location.pathname,
+            params: opts?.params,
+            hash: opts?.hash,
+            search: opts?.search,
+          })
+    // Same-document hash moves stay in place; anything else loads fully.
+    const here = window.location.pathname
+    const there = href.split(/[?#]/)[0] || '/'
+    const replace = typeof opts === 'object' && opts.replace === true
+    if (bare(there) === bare(here) || (!opts?.to && opts?.hash)) {
+      if (replace) window.history.replaceState(null, '', href)
+      else window.history.pushState(null, '', href)
+    } else if (replace) {
+      window.location.replace(href)
+    } else {
+      window.location.assign(href)
+    }
+    return Promise.resolve()
+  }
+}
+
+export function useLocation() {
+  const active = useContext(ActivePathCtx)
+  if (typeof window !== 'undefined') {
+    return {
+      pathname: window.location.pathname,
+      href: window.location.href,
+      search: window.location.search,
+      hash: window.location.hash,
+    }
+  }
+  return { pathname: active, href: active, search: '', hash: '' }
+}
+
+export function useParams() {
+  return useContext(RouteParamsCtx)
+}
+
+export function useSearch(): Record<string, string> {
+  return {}
+}
+
+export function useRouter() {
+  return { navigate: useNavigate() }
+}
+
+export function Outlet() {
+  return <>{useContext(OutletCtx)}</>
+}
+
+export function notFound(): never {
+  throw Object.assign(new Error('Not Found'), { isNotFound: true })
+}
+
+export function isNotFound(e: unknown) {
+  return (
+    e instanceof Error && (e as { isNotFound?: boolean }).isNotFound === true
+  )
+}
+
+export function redirect(opts: string | HrefOpts): never {
+  throw Object.assign(new Error(`Redirect: ${JSON.stringify(opts)}`), {
+    isRedirect: true,
+  })
+}
+
+function makeRouteFactory() {
+  return (_path?: string) => (config: Record<string, unknown>) => ({
+    ...config,
+    useLoaderData: () => useContext(LoaderDataCtx),
+    useParams: () => useContext(RouteParamsCtx),
+    useSearch: () => ({}),
+  })
+}
+
+export const createFileRoute = makeRouteFactory()
+export const createRootRoute = makeRouteFactory()
+
+export function createRouter(_opts?: unknown) {
+  return { subscribe: () => () => {}, navigate: () => Promise.resolve() }
+}
+
+export function HeadContent() {
+  return null
+}
+
+export function Scripts() {
+  return null
+}
+
+export function getRouteApi() {
+  return {
+    useLoaderData: () => useContext(LoaderDataCtx),
+    useParams: () => useContext(RouteParamsCtx),
+  }
+}
+
+export type AnyRouter = {
+  subscribe: (...args: Array<unknown>) => () => void
+}

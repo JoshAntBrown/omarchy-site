@@ -1,4 +1,4 @@
-import { Link, createFileRoute } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { useEffect, useLayoutEffect, useState } from 'react'
 import {
   AppleIcon,
@@ -42,32 +42,16 @@ import { Voices } from '@/components/Voices'
 import { Button } from '@/components/ui/button'
 import { useHashLink } from '@/lib/hash-scroll'
 import { cn } from '@/lib/utils'
-import { getNewsIndex } from '@/lib/content'
-import { getPluginHighlights } from '@/lib/plugins'
 import bannerData from '@/data/banner.json'
-import release from '@/data/version.json'
-import { SITE_DESCRIPTION, seo } from '@/lib/seo'
+import type { CatalogueEntry } from '@/lib/plugin-filter'
+import type { NewsSummary } from '@/lib/news'
 
-export const Route = createFileRoute('/')({
-  // The plugin highlights and the news teasers are independent reads, and
-  // the news is live from omarchy.org's feed - so a post published this
-  // morning is on the home page this morning. Both are cached server-side,
-  // so a cold isolate is the only one that waits on either.
-  loader: async () => {
-    const [highlights, news] = await Promise.all([
-      getPluginHighlights(),
-      getNewsIndex(),
-    ])
-    return { ...highlights, news }
-  },
-  head: () =>
-    seo({
-      title: 'Omarchy - Beautiful, fun & agentic Linux by DHH',
-      description: SITE_DESCRIPTION,
-      path: '/',
-    }),
-  component: Home,
-})
+export interface HomeData {
+  top: Array<CatalogueEntry>
+  total: number
+  news: Array<NewsSummary>
+}
+import release from '@/data/version.json'
 
 /** The two ways to run the whole desktop in a window without installing
  *  anything: an app for Apple Silicon Macs, an app for Windows 10 and 11. */
@@ -173,7 +157,8 @@ const videos = [
   },
   {
     id: 'NYFGCESmikA',
-    title: 'DHH: Future of Programming, AI, Agentic Engineering, Vibe Coding & Linux | Lex Fridman Podcast #501',
+    title:
+      'DHH: Future of Programming, AI, Agentic Engineering, Vibe Coding & Linux | Lex Fridman Podcast #501',
     channel: 'Lex Fridman',
     thumb: '/images/video/lex-fridman-dhh.webp',
     start: 2326,
@@ -251,8 +236,8 @@ function HeroCallout({ href, html }: { href: string; html: string }) {
   )
 }
 
-function Home() {
-  const { top, news } = Route.useLoaderData()
+export function HomePage({ data }: { data: HomeData }) {
+  const { top, news } = data
   const device = useTryDevice()
   const [intro, setIntro] = useState(false)
   const installLink = useHashLink('install')
@@ -749,7 +734,10 @@ function Home() {
         </div>
       </section>
 
-      <section id="developers" className="border-t border-border-subtle bg-bg-deep">
+      <section
+        id="developers"
+        className="border-t border-border-subtle bg-bg-deep"
+      >
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <DeveloperShowcase />
         </div>
@@ -765,7 +753,10 @@ function Home() {
           sit beside it and made one screen answer four questions at once;
           they have the section after this one now, so each can be read on
           its own. */}
-      <section id="windows" className="border-t border-border-subtle bg-bg-deep">
+      <section
+        id="windows"
+        className="border-t border-border-subtle bg-bg-deep"
+      >
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <WindowsShowcase />
         </div>
@@ -885,17 +876,17 @@ function Home() {
         </div>
       </section>
 
-      <section id="meetups" className="border-t border-border-subtle bg-bg-deep">
+      <section
+        id="meetups"
+        className="border-t border-border-subtle bg-bg-deep"
+      >
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <MeetupShowcase />
         </div>
       </section>
 
       {/* community */}
-      <section
-        id="community"
-        className="border-t border-border-subtle"
-      >
+      <section id="community" className="border-t border-border-subtle">
         <div className="mx-auto max-w-6xl px-4 py-12 lg:py-24 sm:px-6">
           <SectionHeading
             anchor="community"

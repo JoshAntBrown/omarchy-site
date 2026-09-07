@@ -1,20 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { PageWordmark } from '@/components/PageWordmark'
 import themes from '@/data/themes.json'
-import { seo } from '@/lib/seo'
 
-export const Route = createFileRoute('/themes')({
-  head: () =>
-    seo({
-      title: 'Themes - Omarchy',
-      description:
-        'Community themes for Omarchy. Install them via Install > Style > Themes in Omarchy.',
-      path: '/themes',
-    }),
-  component: ThemesPage,
-})
-
-function ThemesPage() {
+export function ThemesPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <PageWordmark />

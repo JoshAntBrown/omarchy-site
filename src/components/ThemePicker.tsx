@@ -207,7 +207,6 @@ export function ThemePicker() {
       img.decoding = 'async'
       img.src = previewSrc(theme.id)
       // Not every browser has decode(), whatever lib.dom promises.
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       img.decode?.().catch(() => {})
     }
   }, [])

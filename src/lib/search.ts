@@ -1,4 +1,4 @@
-import type { SearchEntry } from '@/lib/content'
+import type { SearchEntry } from '@/astro/search-index'
 
 /**
  * Ranking and snippets for the site-wide search. The index itself is built on

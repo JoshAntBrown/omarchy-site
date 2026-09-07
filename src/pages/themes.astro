@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro'
+import { ThemesIsland } from '../astro/islands'
+import { headProps } from '../astro/head'
+import { themesSeo } from '../astro/page-seo'
+
+const head = headProps(themesSeo(), '/themes/')
+---
+<Base {...head}>
+  <ThemesIsland client:load />
+</Base>

@@ -1,26 +1,9 @@
-import { Link, createFileRoute } from '@tanstack/react-router'
-import { ArrowRightIcon } from '@/components/icons'
+import { Link } from '@tanstack/react-router'
+import { ArrowLeftIcon, ArrowRightIcon } from '@/components/icons'
 import { NewsHeader } from '@/components/NewsHeader'
-import { getNewsIndex } from '@/lib/content'
-import { seo } from '@/lib/seo'
+import type { NewsPost, NewsSummary } from '@/lib/news'
 
-export const Route = createFileRoute('/news/')({
-  // Live from omarchy.org's feed, so a post published this morning is on
-  // this page this morning, no import and no deploy in between.
-  loader: () => getNewsIndex(),
-  head: () =>
-    seo({
-      title: 'News - Omarchy',
-      description:
-        'Announcements, releases, and other news from the Omarchy project.',
-      path: '/news',
-    }),
-  component: NewsPage,
-})
-
-function NewsPage() {
-  const news = Route.useLoaderData()
-
+export function NewsIndexPage({ news }: { news: Array<NewsSummary> }) {
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <NewsHeader />
@@ -54,6 +37,44 @@ function NewsPage() {
           )
         })}
       </ul>
+    </main>
+  )
+}
+
+export function NewsPostPage({ post }: { post: NewsPost }) {
+  return (
+    <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+      <NewsHeader article />
+      <article>
+        <header>
+          <p className="font-mono text-xs text-text-muted">
+            By{' '}
+            <a
+              href="https://dhh.dk"
+              rel="author"
+              className="text-text-secondary"
+            >
+              DHH
+            </a>{' '}
+            on <time dateTime={post.date}>{post.dateStr}</time>
+          </p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-text">
+            {post.title}
+          </h1>
+        </header>
+        <div
+          className="prose mt-8"
+          dangerouslySetInnerHTML={{ __html: post.html }}
+        />
+      </article>
+
+      <Link
+        to="/news/"
+        className="mt-10 inline-flex items-center gap-1.5 text-sm text-text-secondary transition-colors duration-150 ease-out hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+      >
+        <ArrowLeftIcon className="size-5" />
+        All news
+      </Link>
     </main>
   )
 }

@@ -1,20 +1,33 @@
 //  @ts-check
 
-import { tanstackConfig } from '@tanstack/eslint-config'
+import tseslint from 'typescript-eslint'
 
 export default [
-  ...tanstackConfig,
+  ...tseslint.configs.recommended,
   {
     rules: {
-      'import/no-cycle': 'off',
-      'import/order': 'off',
-      'sort-imports': 'off',
       '@typescript-eslint/array-type': 'off',
       '@typescript-eslint/require-await': 'off',
-      'pnpm/json-enforce-catalog': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          varsIgnorePattern: '^_',
+          argsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
     },
   },
   {
-    ignores: ['eslint.config.js', 'prettier.config.js', 'src/parked/**'],
+    ignores: [
+      'eslint.config.js',
+      'prettier.config.js',
+      'src/parked/**',
+      'dist/**',
+      '.astro/**',
+      // Vendored and generated web assets, not source.
+      'assets/**',
+      'public/**',
+    ],
   },
 ]

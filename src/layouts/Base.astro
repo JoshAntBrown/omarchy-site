@@ -1,0 +1,76 @@
+---
+import '../styles.css'
+import { SiteHeader } from '@/components/SiteHeader'
+import { SiteFooter } from '@/components/SiteFooter'
+import { ThemePicker } from '@/components/ThemePicker'
+import { SearchPalette } from '@/components/SearchPalette'
+import { PixelSnap } from '@/components/PixelSnap'
+import { MusicControl } from '@/components/MusicControl'
+import { themeInitScript } from '@/lib/theme'
+import { etchInitScript } from '@/lib/etch'
+import { OG_IMAGE, SITE_DESCRIPTION } from '@/lib/seo'
+import geistWoff2 from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url'
+import monoWoff2 from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url'
+
+export interface Props {
+  title?: string
+  description?: string
+  path?: string
+  type?: 'website' | 'article'
+}
+
+const {
+  title = 'Omarchy - Beautiful, fun & agentic Linux by DHH',
+  description = SITE_DESCRIPTION,
+  path = '/',
+  type = 'website',
+} = Astro.props
+const url = `https://omarchy.org${path}`
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:site_name" content="Omarchy" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={url} />
+    <meta property="og:image" content={OG_IMAGE.url} />
+    <meta property="og:image:width" content={OG_IMAGE.width} />
+    <meta property="og:image:height" content={OG_IMAGE.height} />
+    <meta property="og:image:alt" content={OG_IMAGE.alt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={OG_IMAGE.url} />
+    <meta name="twitter:image:alt" content={OG_IMAGE.alt} />
+    <meta name="theme-color" content="#1a1b26" />
+    <link rel="canonical" href={url} />
+    <link rel="preload" href="/brand/omarchy-wordmark.svg" as="image" type="image/svg+xml" crossorigin="anonymous" />
+    <link rel="preload" href={geistWoff2} as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href={monoWoff2} as="font" type="font/woff2" crossorigin="anonymous" />
+    <script is:inline set:html={themeInitScript} />
+    <script is:inline set:html={etchInitScript} />
+  </head>
+  <body>
+    <div class="flex min-h-dvh flex-col">
+      <SiteHeader client:load />
+      <div class="relative z-10 min-h-dvh flex-1 bg-bg"><slot /></div>
+      <SiteFooter client:load />
+    </div>
+    <ThemePicker client:load />
+    <SearchPalette client:load />
+    <MusicControl client:load />
+    <PixelSnap client:load />
+    <script>
+      import { watchOutbound } from '@/lib/outbound'
+      watchOutbound()
+    </script>
+  </body>
+</html>

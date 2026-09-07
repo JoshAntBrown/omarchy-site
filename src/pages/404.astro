@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro'
+import { NotFoundIsland } from '../astro/islands'
+import { headProps } from '../astro/head'
+import { notFoundSeo } from '../astro/page-seo'
+
+const head = headProps(notFoundSeo(), '/404/')
+---
+<Base {...head}>
+  <NotFoundIsland client:load />
+</Base>

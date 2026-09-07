@@ -26,14 +26,6 @@ const MP_RAW =
 
 const noEmDash = (s) => String(s ?? '').replace(/\s*—\s*/g, ' - ')
 
-const decode = (s) =>
-  s
-    .replaceAll('&amp;', '&')
-    .replaceAll('&#39;', "'")
-    .replaceAll('&quot;', '"')
-    .replaceAll('&lt;', '<')
-    .replaceAll('&gt;', '>')
-
 async function fetchText(url) {
   const res = await fetch(url)
   if (!res.ok) throw new Error(`${url} → ${res.status}`)

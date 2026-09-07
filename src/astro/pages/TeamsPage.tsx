@@ -1,8 +1,7 @@
-import { Link, createFileRoute } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { ArrowUpRightIcon, DiscordIcon, GithubIcon } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import teams from '@/data/teams.json'
-import { seo } from '@/lib/seo'
 import { PageWordmark } from '@/components/PageWordmark'
 
 /**
@@ -13,17 +12,6 @@ import { PageWordmark } from '@/components/PageWordmark'
  * the foot says where the rest of the project happens, so the page ends on
  * a door rather than a last name.
  */
-export const Route = createFileRoute('/teams')({
-  head: () =>
-    seo({
-      title: 'Teams - Omarchy',
-      description:
-        'The people guiding Omarchy: Core sets the direction, Security keeps the system safe, Design shapes how it looks and feels, and the Rangers help everyone else find their way.',
-      path: '/teams',
-    }),
-  component: TeamsPage,
-})
-
 /** The line under a team, with its one link live: the security page for
  *  the Security team, the address to apply at for the Rangers. */
 function TeamNote({
@@ -62,7 +50,7 @@ function TeamNote({
 const noteLink =
   'text-text underline decoration-border-strong underline-offset-4 transition-colors duration-150 ease-out hover:decoration-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring'
 
-function TeamsPage() {
+export function TeamsPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <PageWordmark />

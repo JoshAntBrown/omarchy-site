@@ -1,4 +1,10 @@
-import type { AnyRouter } from '@tanstack/react-router'
+export interface HashRouter {
+  subscribe: (
+    event: string,
+    handler: (update: { fromLocation?: unknown }) => void,
+  ) => () => void
+}
+type AnyRouter = HashRouter
 
 /**
  * Hash scrolling. Only arrivals are placed here - never back or forward,
