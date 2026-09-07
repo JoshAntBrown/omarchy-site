@@ -1,4 +1,4 @@
-name: Translate news and deploy languages
+name: Translate site and deploy languages
 
 on:
   workflow_run:
@@ -51,11 +51,20 @@ jobs:
       - run: gem install kramdown kramdown-parser-gfm --no-document
       - run: bin/build-news
       - run: npm run port
-      - name: Find pending stories
+      - name: Find pending site and news translations
         id: pending
         run: |
           node scripts/check-translations.mjs --pending-news > "$RUNNER_TEMP/pending-news.json"
-          echo "count=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))))' "$RUNNER_TEMP/pending-news.json")" >> "$GITHUB_OUTPUT"
+          node scripts/check-translations.mjs --pending-site > "$RUNNER_TEMP/pending-site.json"
+          python3 - <<'PYCOUNTS'
+          import json, os
+          from pathlib import Path
+          directory = Path(os.environ['RUNNER_TEMP'])
+          news = len(json.loads((directory / 'pending-news.json').read_text()))
+          site = len(json.loads((directory / 'pending-site.json').read_text()))
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write(f'news={news}\nsite={site}\ncount={news + site}\n')
+          PYCOUNTS
       - name: Install Muse
         if: steps.pending.outputs.count != '0'
         run: |
@@ -83,9 +92,16 @@ jobs:
           auth.write_text(json.dumps({'schema_version': 1, 'providers': {'meta': {'api_key': key}}}))
           auth.chmod(0o600)
           PY
+      - name: Translate pending site strings in parallel
+        if: steps.pending.outputs.site != '0'
+        id: generate_site
+        continue-on-error: true
+        env:
+          MUSE_MODEL: ${{ vars.MUSE_MODEL || 'muse-spark-1.3-contributor' }}
+        run: python3 scripts/translate-site.py --concurrency 8
       - name: Translate pending stories in parallel
-        if: steps.pending.outputs.count != '0'
-        id: generate
+        if: steps.pending.outputs.news != '0'
+        id: generate_news
         continue-on-error: true
         env:
           MUSE_MODEL: ${{ vars.MUSE_MODEL || 'muse-spark-1.3-contributor' }}
@@ -98,12 +114,12 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          git add src/i18n/*/news.json src/i18n/*/news/ news src/data/news-posts.json
+          git add src/i18n/messages/*.json src/i18n/*/blocks.json src/i18n/*/news.json src/i18n/*/news/ news src/data/news-posts.json
           changed=false
           if ! git diff --cached --quiet; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'Translate published news'
+            git commit -m 'Translate published site content'
             # Discard only generated data from npm run port before rebasing.
             git restore src/data public/data
             git pull --rebase origin master
@@ -121,12 +137,16 @@ jobs:
         if: always()
         run: |
           node scripts/check-translations.mjs --pending-news > "$RUNNER_TEMP/pending-news.json"
+          node scripts/check-translations.mjs --pending-site > "$RUNNER_TEMP/pending-site.json"
           python3 - <<'PY'
           import json, os
           from pathlib import Path
-          pending = json.loads((Path(os.environ['RUNNER_TEMP']) / 'pending-news.json').read_text())
+          directory = Path(os.environ['RUNNER_TEMP'])
+          news = json.loads((directory / 'pending-news.json').read_text())
+          site = json.loads((directory / 'pending-site.json').read_text())
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as out:
-              out.write(f'Pending news translations: **{len(pending)}**.\n\n')
+              out.write(f'Pending news translations: **{len(news)}**.\n\n')
+              out.write(f'Pending UI and prose translations: **{len(site)}**.\n\n')
               out.write('English remains available while translations catch up. Unfinished work is retried hourly.\n')
           PY
       - name: Remove Muse credentials

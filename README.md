@@ -99,4 +99,4 @@ which has its own submission guide.
 ## Translations
 
 The site uses shared components with separate language catalogues and domain builds.
-See [the translation guide](docs/translations.md) to preview Danish or add another language.
+English changes publish immediately. GitHub Actions fills in missing main-site copy and news translations with Muse afterward, then deploys the language sites. Existing human translations are preserved. See [the translation guide](docs/translations.md) for queues, local previews, and adding a language or domain.
