@@ -4,6 +4,45 @@ Beautiful, Fun & Agentic Linux by DHH.
 
 See https://github.com/omacom/omarchy for more.
 
+## Working on the site
+
+Use Node 24 or newer and Python 3.13. Run `npm ci`, then `npm run dev` (or `bin/serve`) to preview the Astro site.
+`npm run build` produces the static site in `dist/client`; `npm run parity`
+checks its page URLs and verifies that passthrough files are unchanged.
+Run `npm run lint`, `npm run typecheck`, and `npm test` before pushing.
+Pull requests run those checks, a build, and parity in GitHub Actions;
+merging to `master` deploys the checked output to GitHub Pages.
+
+Cloudflare Workers previews use the same static output. `wrangler.jsonc`
+runs `npm run build` before uploading `dist/client`, including the installers
+and legacy assets. In Workers Builds, use the repository root, leave the
+separate build command empty, and keep `npx wrangler versions upload` as the
+non-production deploy command. The configured Worker name is `omarchy`.
+Wrangler is pinned in the lockfile; it does not need an Astro server adapter.
+Run `npx wrangler deploy --dry-run` to check the build and configuration
+without uploading or deploying.
+
+Development serves the same installers, downloads, legacy pages, and redirects
+as the assembled site. Page components have separate browser entries so a
+manual or news visit does not load the homepage's interactive showcases.
+
+The HTML under the standalone page directories, `themes/`, `manual/`, and
+dated `news/` directories is **content input**, not a second site design.
+`scripts/port_content.py` extracts it into `src/data` on every build. Keep
+layout, navigation, and styling in `src/`; preview through the dev server.
+After editing content inputs, run `npm run port` to refresh the dev data.
+
+- Edit standalone page content in its existing `index.html`.
+- Edit the homepage announcement in `src/data/banner.json` (`null` hides it).
+- Run `bin/build-news` after editing Markdown in `content/news/`; it updates
+  article inputs, images, and the RSS feed.
+- Run `bin/build-manual [path/to/omarchy/manual]` to refresh manual inputs and
+  images. The Astro site builds its table of contents and search index.
+
+The screensaver and the Discord redirect are still served
+directly. Their styles, fonts, and scripts remain under `assets/`, alongside
+shared images and public downloads.
+
 ## Adding your theme
 
 Community themes are listed on [omarchy.org/themes](https://omarchy.org/themes/).
@@ -23,8 +62,16 @@ order among the others:
 
 ```html
 <figure class="themes__theme">
-  <a href="https://github.com/you/your-theme"><img src="/assets/themes/your-theme.webp" alt="Your Theme theme" loading="lazy" decoding="async"></a>
-  <figcaption><a href="https://github.com/you/your-theme">Your Theme</a></figcaption>
+  <a href="https://github.com/you/your-theme"
+    ><img
+      src="/assets/themes/your-theme.webp"
+      alt="Your Theme theme"
+      loading="lazy"
+      decoding="async"
+  /></a>
+  <figcaption>
+    <a href="https://github.com/you/your-theme">Your Theme</a>
+  </figcaption>
 </figure>
 ```
 

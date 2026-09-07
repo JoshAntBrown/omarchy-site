@@ -1,0 +1,162 @@
+[
+ {
+  "id": "core",
+  "name": "Omarchy Core",
+  "description": "Setting the direction",
+  "members": [
+   {
+    "name": "DHH",
+    "meta": "USA/Denmark",
+    "href": "https://dhh.dk",
+    "avatar": "/assets/images/team/dhh.webp"
+   },
+   {
+    "name": "Ryan R. Hughes",
+    "meta": "USA",
+    "href": "https://x.com/ryanrhughes",
+    "avatar": "/assets/images/team/ryan-hughes.webp"
+   },
+   {
+    "name": "Tobi L\u00fctke",
+    "meta": "Canada",
+    "href": "https://x.com/tobi",
+    "avatar": "/assets/images/team/tobi-lutke.webp"
+   },
+   {
+    "name": "Bjarne \u00d8verli",
+    "meta": "Norway",
+    "href": "https://x.com/iamdothash",
+    "avatar": "/assets/images/team/bjarne-overli.webp"
+   },
+   {
+    "name": "HANCORE",
+    "meta": "Germany",
+    "href": "https://github.com/HANCORE-linux",
+    "avatar": "/assets/images/team/hancore.webp"
+   },
+   {
+    "name": "Spencer Bull",
+    "meta": "USA",
+    "href": "https://x.com/SpencerGBull",
+    "avatar": "/assets/images/team/spencer-bull.webp"
+   },
+   {
+    "name": "Krzysztof Wilczy\u0144ski",
+    "meta": "Japan",
+    "href": "https://x.com/kwilczynski",
+    "avatar": "/assets/images/team/krzysztof-wilczynski.webp"
+   }
+  ],
+  "note": null
+ },
+ {
+  "id": "security",
+  "name": "Omarchy Security",
+  "description": "Keeping your system safe",
+  "members": [
+   {
+    "name": "Adrian Rangel",
+    "meta": "Mexico",
+    "href": "https://x.com/acrogenesis",
+    "avatar": "/assets/images/team/adrian-rangel.webp"
+   },
+   {
+    "name": "Mehmet \u0130nce",
+    "meta": "UK/T\u00fcrkiye",
+    "href": "https://x.com/mdisec",
+    "avatar": "/assets/images/team/mehmet-ince.webp"
+   },
+   {
+    "name": "Erik Melton",
+    "meta": "Norway",
+    "href": "https://x.com/meltonaerik",
+    "avatar": "/assets/images/team/erik-melton.webp"
+   },
+   {
+    "name": "Sayem Chowdhury",
+    "meta": "Bangladesh",
+    "href": "https://x.com/Sayem314",
+    "avatar": "/assets/images/team/sayem-chowdhury.webp"
+   },
+   {
+    "name": "Sebastian Stange",
+    "meta": "Germany",
+    "href": "https://x.com/bastidotnet",
+    "avatar": "/assets/images/team/sebastian-stange.webp"
+   }
+  ],
+  "note": {
+   "text": "Report a security issue",
+   "href": "/security/",
+   "linkText": "Report a security issue"
+  }
+ },
+ {
+  "id": "design",
+  "name": "Omarchy Design",
+  "description": "Shaping how it looks and feels",
+  "members": [
+   {
+    "name": "Bar\u0131\u015f Giri\u015fmen",
+    "meta": "T\u00fcrkiye",
+    "href": "https://x.com/BarisGirismen",
+    "avatar": "/assets/images/team/baris-girismen.webp"
+   },
+   {
+    "name": "Christoffer Hallas",
+    "meta": "USA",
+    "href": "https://x.com/hicsfh",
+    "avatar": "/assets/images/team/christoffer-hallas.webp"
+   },
+   {
+    "name": "Daniel Schmier",
+    "meta": "Germany",
+    "href": "https://x.com/captainscorch",
+    "avatar": "/assets/images/team/daniel-schmier.webp"
+   },
+   {
+    "name": "Andr\u00e9s Villagr\u00e1n",
+    "meta": "Chile",
+    "href": "https://x.com/avillagran",
+    "avatar": "/assets/images/team/andres-villagran.webp"
+   },
+   {
+    "name": "Niklas Jul",
+    "meta": "Denmark",
+    "href": "https://github.com/SirJul1337",
+    "avatar": "/assets/images/team/niklas-jul.webp"
+   }
+  ],
+  "note": null
+ },
+ {
+  "id": "rangers",
+  "name": "Omarchy Rangers",
+  "description": "Helping others find their way",
+  "members": [
+   {
+    "name": "Mihai",
+    "meta": "Romania",
+    "href": "https://x.com/SandorhaziM",
+    "avatar": "/assets/images/team/mihai.webp"
+   },
+   {
+    "name": "Mateo Vaz",
+    "meta": "Uruguay",
+    "href": "https://x.com/Mateo_VX",
+    "avatar": "/assets/images/team/mateo-vaz.webp"
+   },
+   {
+    "name": "Nira",
+    "meta": "Nepal",
+    "href": "https://x.com/niraletter",
+    "avatar": "/assets/images/team/nira.webp"
+   }
+  ],
+  "note": {
+   "text": "Want to help? Apply to rangers@omarchy.org",
+   "href": "mailto:rangers@omarchy.org",
+   "linkText": "rangers@omarchy.org"
+  }
+ }
+]
