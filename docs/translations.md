@@ -1,6 +1,6 @@
 # Translations
 
-One site, shared components, separate static builds. English remains the source of truth. Each of the 29 languages has one primary address, either a registered domain or a language subdomain under omarchy.org. English uses omarchy.org. Manual links currently lead to the canonical English manual.
+One site, shared components, separate static builds. English remains the source of truth. Each of the 30 languages has one primary address, either a registered domain or a language subdomain under omarchy.org. English uses omarchy.org. Manual links currently lead to the canonical English manual.
 
 ## Build and preview
 
@@ -29,7 +29,7 @@ Use `t('English source copy')` for shared interface text. Push English edits nor
 
 Imported main-page prose uses exact English HTML keys. Changing the source creates a new translation task; old translations are never reused for changed copy. Missing UI/prose uses English while Muse catches up. Existing nonempty translations are preserved, including human-reviewed edits. The extractor in `scripts/translation-sources.mjs` reads literal `t()` calls and maintained adapters for dynamic copy such as team descriptions, page prose, SEO, banners, and featured plugin descriptions. New dynamic `t(variable)` sources need an extractor adapter and a test. Use `npm run site:pending` to inspect current gaps, or `npm run check:translations -- --strict-site` to require complete UI/prose coverage.
 
-Video titles, event names, theme names, and product names retain their original wording. Quoted article prose is translated with its attribution preserved. Each language uses its own date and number formatting, while funding amounts remain explicitly in USD.
+Video titles, event names, theme names, and product names retain their original wording. Quoted article prose is translated with its attribution preserved. Each language uses its own date and number formatting, while funding amounts remain in USD. Write those amounts with an explicit currency — `1,000,000 USD`, not `$1,000,000` — because a bare `$` is the local currency sign in several countries.
 
 The separate `translate-news.yml` workflow runs after a successful English deployment, on manual dispatch, and hourly to retry unfinished translations. Adding a language to the registry includes it automatically.
 
@@ -88,6 +88,7 @@ Cloudflare custom domains handle routing and TLS directly. Registered national d
 | Polski           | [pl.omarchy.org](https://pl.omarchy.org) |
 | Lietuvių         | [lt.omarchy.org](https://lt.omarchy.org) |
 | Gaeilge          | [ga.omarchy.org](https://ga.omarchy.org) |
+| Nederlands | [nl.omarchy.org](https://nl.omarchy.org) |
 
 ## Pointing a new domain to a language site
 
