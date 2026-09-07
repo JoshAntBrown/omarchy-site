@@ -8,12 +8,15 @@ export type Locale = {
   formatLocale: string
   ogLocale: string
   manual: boolean
+  contentLocale?: string
+  direction?: 'ltr' | 'rtl'
 }
-export const locales: Record<string, Locale> = registry
+export const locales = registry as Record<string, Locale>
 export const language = import.meta.env?.PUBLIC_SITE_LOCALE || 'en'
 if (!locales[language]) throw new Error(`Unknown site language: ${language}`)
 export const locale = locales[language]
 export const siteUrl = locale.domain
+export const contentLocale = locale.contentLocale ?? language
 
 /** English is the source copy; each language keeps its own reviewed catalogue. */
 export function t(english: string): string {

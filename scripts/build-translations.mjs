@@ -9,3 +9,8 @@ for (const code of Object.keys(locales).filter((code) => code !== 'en')) {
   )
   if (result.status !== 0) process.exit(result.status ?? 1)
 }
+
+const verification = spawnSync('python3', ['scripts/verify-locales.py'], {
+  stdio: 'inherit',
+})
+process.exit(verification.status ?? 1)

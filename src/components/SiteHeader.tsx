@@ -12,6 +12,8 @@ import {
   SearchIcon,
 } from '@/components/icons'
 import { OmarchyMarkDrawn, OmarchyWordmark } from '@/components/Brand'
+import { GlobeIcon } from '@/components/icons/GlobeIcon'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { MusicMenuControl } from '@/components/MusicControl'
 import { Button } from '@/components/ui/button'
 import {
@@ -483,7 +485,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
   )
 
   return (
-    <header className="pixel-container sticky top-0 z-(--z-nav)">
+    <header dir="ltr" className="pixel-container sticky top-0 z-(--z-nav)">
       <div
         ref={bar}
         data-nav-blend={transparent ? '' : undefined}
@@ -539,6 +541,7 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
                 <NavTooltip label={t('Change website theme')} shortcut="T">
                   {theme}
                 </NavTooltip>
+                <LanguageSwitcher path={pathname} />
                 <NavTooltip label={t('Subscribe via RSS')}>
                   <Button
                     variant="ghost"
@@ -567,6 +570,10 @@ export function SiteHeader({ path = '/' }: { path?: string }) {
                 </NavTooltip>
               </TooltipProvider>
               <span className="ml-2 flex">{install}</span>
+            </div>
+            <div className="flex items-center gap-1 sm:hidden">
+              {theme}
+              <LanguageSwitcher path={pathname} />
             </div>
             <Button
               variant="ghost"
@@ -700,6 +707,7 @@ export function HeroNavGhost() {
   return (
     <div
       aria-hidden="true"
+      dir="ltr"
       data-nav-ghost
       className="pointer-events-none fixed inset-x-0 top-0 z-(--z-nav) mix-blend-difference"
       // The header hydrates before the hero does, and its effect writes this
@@ -740,6 +748,9 @@ export function HeroNavGhost() {
             </span>
             <span className="flex h-8 w-8 items-center justify-center lg:h-[calc(var(--pxr)*3)] lg:w-[calc(var(--pxr)*3)]">
               <PaletteIcon className="size-5" />
+            </span>
+            <span className="flex h-8 w-8 items-center justify-center lg:h-[calc(var(--pxr)*3)] lg:w-[calc(var(--pxr)*3)]">
+              <GlobeIcon className="size-5" />
             </span>
             <span className="flex h-8 w-8 items-center justify-center lg:h-[calc(var(--pxr)*3)] lg:w-[calc(var(--pxr)*3)]">
               <RssIcon className="size-5" />

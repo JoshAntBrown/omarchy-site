@@ -1,5 +1,6 @@
 ---
 import '../styles.css'
+import '../i18n/international.css'
 import { language, locale, locales, hasTranslation, t } from '../i18n/site'
 import { ClientRouter } from 'astro:transitions'
 import { SiteHeader } from '@/components/SiteHeader'
@@ -35,7 +36,7 @@ const url = `${SITE_URL}${path}`
 ---
 
 <!doctype html>
-<html lang={language} transition:name="root" transition:animate="none">
+<html lang={language} dir={locale.direction ?? 'ltr'} transition:name="root" transition:animate="none">
   <head>
     <ClientRouter fallback="swap" />
     <meta charset="utf-8" />

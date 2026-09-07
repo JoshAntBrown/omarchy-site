@@ -26,7 +26,9 @@ export default defineConfig({
       alias: [
         {
           find: './current-messages.ts',
-          replacement: path.resolve(`./src/i18n/messages/${language}.json`),
+          replacement: path.resolve(
+            `./src/i18n/messages/${locales[language].contentLocale ?? language}.json`,
+          ),
         },
         {
           find: '@/lib/content',
