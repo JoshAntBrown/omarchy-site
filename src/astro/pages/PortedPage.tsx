@@ -43,7 +43,7 @@ export function PortedPage({
       )}
     >
       <PageHeading
-        title={page.title}
+        title={path === 'patrons' ? 'Patrons' : page.title}
         brand={path === 'foundation' ? 'oma' : 'omarchy'}
       />
       <div
