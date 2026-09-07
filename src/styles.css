@@ -1731,7 +1731,9 @@ h6 {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
   gap: 0.75rem;
-  margin-top: 1.5em;
+}
+.ported .workstations__images figure {
+  margin: 0;
 }
 .ported .workstations__images img {
   width: 100%;
