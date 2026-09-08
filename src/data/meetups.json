@@ -648,6 +648,23 @@
       "coverHeight": 800
     },
     {
+      "id": "evt-r4p4VN2OdsP8pEU",
+      "title": "Omarchy Meetup Austin, TX",
+      "url": "https://luma.com/cvpft021",
+      "start": "2026-09-20T22:00:00.000Z",
+      "end": "2026-09-21T03:00:00.000Z",
+      "timezone": "America/Chicago",
+      "address": "Austin, TX",
+      "city": "Austin",
+      "country": "US",
+      "online": false,
+      "geo": { "lat": 30.263046261699948, "lon": -97.71510712449106 },
+      "hosts": [],
+      "cover": "/images/meetups/evt-r4p4VN2OdsP8pEU-full.webp",
+      "coverWidth": 537,
+      "coverHeight": 800
+    },
+    {
       "id": "evt-PxPJVCnzOvx3MSu",
       "title": "Linux & Omarchy Meetup - Northampton, UK",
       "url": "https://luma.com/da9jp6p4",
