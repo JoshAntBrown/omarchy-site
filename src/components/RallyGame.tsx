@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog'
 import { PICKER_STATE_EVENT, THEME_EVENT } from '@/lib/theme'
+import { t } from '@/i18n/site'
 import {
   Dialog,
   DialogPortal,
@@ -40,6 +41,15 @@ const INITIAL: View = {
 const MAP_PATH = STAGE.filter((_, i) => i % 3 === 0)
   .map((p, i) => `${i ? 'L' : 'M'}${p.x},${p.y}`)
   .join(' ')
+// The stage library stays free of the catalogue so Node can test it.
+const PACE_NOTES: Record<string, string> = {
+  'Finish ahead': t('Finish ahead'),
+  'Flat out': t('Flat out'),
+  'Tight left': t('Tight left'),
+  'Tight right': t('Tight right'),
+  'Easy left': t('Easy left'),
+  'Easy right': t('Easy right'),
+}
 
 export function RallyGame({ onClose }: { onClose: () => void }) {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
@@ -211,18 +221,18 @@ export function RallyGame({ onClose }: { onClose: () => void }) {
               disabled={!view.audioAvailable}
               aria-label={
                 !view.audioAvailable
-                  ? 'Rally sound unavailable'
+                  ? t('Rally sound unavailable')
                   : view.muted
-                    ? 'Unmute rally sound'
-                    : 'Mute rally sound'
+                    ? t('Unmute rally sound')
+                    : t('Mute rally sound')
               }
               aria-pressed={!view.muted && view.audioAvailable}
               title={
                 !view.audioAvailable
-                  ? 'Sound unavailable'
+                  ? t('Sound unavailable')
                   : view.muted
-                    ? 'Sound off'
-                    : 'Sound on'
+                    ? t('Sound off')
+                    : t('Sound on')
               }
             >
               {view.muted || !view.audioAvailable ? (
@@ -231,28 +241,29 @@ export function RallyGame({ onClose }: { onClose: () => void }) {
                 <VolumeIcon />
               )}
             </button>
-            <DialogClose className="rally-exit" aria-label="Close rally">
+            <DialogClose className="rally-exit" aria-label={t('Close rally')}>
               ESC <span aria-hidden="true">×</span>
             </DialogClose>
           </header>
           <DialogDescription className="sr-only">
-            A timed gravel rally. Use W or up to accelerate, S or down to brake
-            and reverse, A/D or left/right to steer, Space for the handbrake, P
-            to pause, R to recover with a three-second penalty, Enter to start
-            or resume, and Escape to exit.
+            {t(
+              'A timed gravel rally. Use W or up to accelerate, S or down to brake and reverse, A/D or left/right to steer, Space for the handbrake, P to pause, R to recover with a three-second penalty, Enter to start or resume, and Escape to exit.',
+            )}
           </DialogDescription>
           <div className={`rally-stage rally-stage--${view.phase}`}>
             <canvas
               ref={setCanvas}
               className="rally-canvas"
               tabIndex={0}
-              aria-label="Rally course. Driving controls are described above."
+              aria-label={t(
+                'Rally course. Driving controls are described above.',
+              )}
             />
             <div className="rally-grain" aria-hidden="true" />
             {view.phase === 'ready' && (
               <div className="rally-intro">
                 <div className="rally-eyebrow">
-                  <span /> SECRET STAGE UNLOCKED
+                  <span /> {t('Secret stage unlocked')}
                 </div>
                 <h2>
                   <span className="sr-only">Omarchy Rally</span>
@@ -262,16 +273,17 @@ export function RallyGame({ onClose }: { onClose: () => void }) {
                   </span>
                 </h2>
                 <p>
-                  A gravel sprint through the pines.
+                  {t('A gravel sprint through the pines.')}
                   <br />
-                  Keep it tidy. Or take it sideways.
+                  {t('Keep it tidy. Or take it sideways.')}
                 </p>
                 <div className="rally-stage-label">
                   <span>01</span>
                   <div>
-                    <strong>NORTH FOREST</strong>
+                    <strong>{t('North Forest')}</strong>
                     <small>
-                      {stageKm} KM <b>·</b> GRAVEL <b>·</b> TIME ATTACK
+                      {stageKm} km <b>·</b> {t('Gravel')} <b>·</b>{' '}
+                      {t('Time attack')}
                     </small>
                   </div>
                 </div>
@@ -280,40 +292,40 @@ export function RallyGame({ onClose }: { onClose: () => void }) {
                   className="rally-primary"
                   onClick={() => engine.current?.start()}
                 >
-                  Start your engine <span aria-hidden="true">↗</span>
+                  {t('Start your engine')} <span aria-hidden="true">↗</span>
                 </button>
                 <div className="rally-best">
                   {view.best
-                    ? `PERSONAL BEST  ${formatTime(view.best)}`
-                    : 'NO RECORD. YOUR ROAD.'}
+                    ? `${t('Personal best')}  ${formatTime(view.best)}`
+                    : t('No record. Your road.')}
                 </div>
               </div>
             )}
             {isDriving && (
               <>
                 <div className="rally-clock">
-                  <span>STAGE TIME</span>
+                  <span>{t('Stage time')}</span>
                   <strong>{formatTime(view.time)}</strong>
                   <small>
                     {view.best
-                      ? `BEST ${formatTime(view.best)}`
-                      : 'SET THE FIRST TIME'}
+                      ? `${t('Best')} ${formatTime(view.best)}`
+                      : t('Set the first time')}
                   </small>
                 </div>
                 <div className="rally-pace">
                   <strong aria-hidden="true">{note.arrow}</strong>
-                  <span>{note.text}</span>
+                  <span>{PACE_NOTES[note.text] ?? note.text}</span>
                 </div>
                 <button
                   className="rally-pause"
                   onClick={() => engine.current?.pause()}
-                  aria-label="Pause rally"
+                  aria-label={t('Pause rally')}
                 >
                   Ⅱ
                 </button>
                 <div className="rally-speed">
                   <strong>{String(view.speed).padStart(3, '0')}</strong>
-                  <span>KM/H</span>
+                  <span>{t('km/h')}</span>
                   <div className="rally-revs">
                     {Array.from({ length: 12 }, (_, i) => (
                       <i key={i} className={view.speed > i * 13 ? 'lit' : ''} />
@@ -322,7 +334,7 @@ export function RallyGame({ onClose }: { onClose: () => void }) {
                 </div>
                 <div
                   className="rally-map"
-                  aria-label={`Stage ${Math.round(completion)} percent complete`}
+                  aria-label={`${t('Stage progress')}: ${Math.round(completion)}%`}
                 >
                   <svg viewBox="-100 -3950 1900 4300" aria-hidden="true">
                     <path
@@ -361,16 +373,16 @@ export function RallyGame({ onClose }: { onClose: () => void }) {
                     {(
                       Math.max(0, STAGE_LENGTH - point.distance) / 3000
                     ).toFixed(1)}{' '}
-                    KM TO GO
+                    {t('km to go')}
                   </span>
                 </div>
                 {(view.offroad || view.penalty) && (
                   <div className="rally-warning" role="status">
                     {view.penalty ? (
-                      '+3 SEC · BACK ON TRACK'
+                      t('+3 sec · Back on track')
                     ) : (
                       <button onClick={() => engine.current?.recover()}>
-                        OFF ROAD · RECOVER +3S
+                        {t('Off road · Recover +3s')}
                       </button>
                     )}
                   </div>
@@ -380,27 +392,27 @@ export function RallyGame({ onClose }: { onClose: () => void }) {
             {view.phase === 'countdown' && (
               <div className="rally-countdown" aria-live="polite">
                 <strong>{view.countdown}</strong>
-                <span>GET READY</span>
+                <span>{t('Get ready')}</span>
               </div>
             )}
             {view.phase === 'paused' && (
               <div className="rally-scrim">
                 <div className="rally-card">
-                  <div className="rally-eyebrow">TAKE A BREATHER</div>
-                  <h2>In the service park.</h2>
-                  <p>The clock is stopped.</p>
+                  <div className="rally-eyebrow">{t('Take a breather')}</div>
+                  <h2>{t('In the service park.')}</h2>
+                  <p>{t('The clock is stopped.')}</p>
                   <button
                     ref={primaryRef}
                     className="rally-primary"
                     onClick={() => engine.current?.resume()}
                   >
-                    Back to the stage <span>↗</span>
+                    {t('Back to the stage')} <span>↗</span>
                   </button>
                   <button
                     className="rally-secondary"
                     onClick={() => engine.current?.start()}
                   >
-                    Restart stage
+                    {t('Restart stage')}
                   </button>
                 </div>
               </div>
@@ -409,44 +421,47 @@ export function RallyGame({ onClose }: { onClose: () => void }) {
               <div className="rally-scrim">
                 <div className="rally-card">
                   <div className="rally-eyebrow">
-                    {view.record ? 'NEW PERSONAL BEST' : 'STAGE COMPLETE'}
+                    {view.record ? t('New personal best') : t('Stage complete')}
                   </div>
-                  <h2>That’s a wrap.</h2>
+                  <h2>{t('That’s a wrap.')}</h2>
                   <div className="rally-result">{formatTime(view.time)}</div>
                   <p>
-                    North Forest <b>·</b> {stageKm} km of gravel
+                    {t('North Forest')} <b>·</b> {stageKm} {t('km of gravel')}
                   </p>
                   <button
                     ref={primaryRef}
                     className="rally-primary"
                     onClick={() => engine.current?.start()}
                   >
-                    One more run <span>↗</span>
+                    {t('One more run')} <span>↗</span>
                   </button>
                   <DialogClose className="rally-secondary">
-                    Back to Omarchy
+                    {t('Back to Omarchy')}
                   </DialogClose>
                 </div>
               </div>
             )}
             {isDriving && (
-              <div className="rally-touch" aria-label="Touch driving controls">
+              <div
+                className="rally-touch"
+                aria-label={t('Touch driving controls')}
+              >
                 <div>
-                  <button aria-label="Steer left" {...touch('a')}>
+                  <button aria-label={t('Steer left')} {...touch('a')}>
                     ←
                   </button>
-                  <button aria-label="Steer right" {...touch('d')}>
+                  <button aria-label={t('Steer right')} {...touch('d')}>
                     →
                   </button>
                 </div>
                 <div>
                   <button className="rally-touch-drift" {...touch(' ')}>
-                    DRIFT
+                    {t('Drift')}
                   </button>
-                  <button aria-label="Brake and reverse" {...touch('s')}>
+                  <button aria-label={t('Brake and reverse')} {...touch('s')}>
                     ↓
                   </button>
-                  <button aria-label="Accelerate" {...touch('w')}>
+                  <button aria-label={t('Accelerate')} {...touch('w')}>
                     ↑
                   </button>
                 </div>
@@ -455,21 +470,23 @@ export function RallyGame({ onClose }: { onClose: () => void }) {
           </div>
           <footer className="rally-footer">
             <span>
-              <kbd>WASD</kbd> / <kbd>↑ ↓ ← →</kbd> DRIVE
+              <kbd>WASD</kbd> / <kbd>↑ ↓ ← →</kbd> {t('Drive')}
             </span>
             <span>
-              <kbd>SPACE</kbd> HANDBRAKE
+              <kbd>SPACE</kbd> {t('Handbrake')}
             </span>
             <span>
-              <kbd>R</kbd> RECOVER +3S
+              <kbd>R</kbd> {t('Recover')} +3s
             </span>
             <span>
-              <kbd>P</kbd> PAUSE
+              <kbd>P</kbd> {t('Pause')}
             </span>
             <span>
-              <kbd>ENTER</kbd> START
+              <kbd>ENTER</kbd> {t('Start')}
             </span>
-            <span className="rally-footer-tag">BUILT FOR THE DETOUR.</span>
+            <span className="rally-footer-tag">
+              {t('Built for the detour.')}
+            </span>
           </footer>
         </DialogPrimitive.Popup>
       </DialogPortal>

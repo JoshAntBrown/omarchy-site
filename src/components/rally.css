@@ -612,3 +612,19 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+/* Copy is authored in sentence case so translations read naturally; the HUD sets it in caps. */
+.rally-eyebrow,
+.rally-stage-label strong,
+.rally-stage-label small,
+.rally-best,
+.rally-clock span,
+.rally-clock small,
+.rally-speed > span,
+.rally-map > span,
+.rally-warning,
+.rally-countdown span,
+.rally-footer,
+.rally-touch-drift {
+  text-transform: uppercase;
+}
